@@ -70,7 +70,7 @@ export const NavBar = () => {
                 </div>
                 ) : (
                 <div>
-                    <h3>
+                     <h3 style={{ marginRight: "140px", marginTop: "-5px", color: "white"}}>
                         Unloged
                     </h3>
                 </div>

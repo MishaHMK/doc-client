@@ -21,10 +21,11 @@ export const Login: React.FC = () => {
         await authService.login(values);
         const token = AuthLocalStorage.getToken() as string;
         user = jwt(token);
-        console.log(user);
-        navigate("../home", { replace: true });
-        window.location.reload();
-    } 
+        if(user){
+            navigate("../home", { replace: true });
+            window.location.reload();
+        } 
+    }
 
     return (
         <div> 
@@ -68,7 +69,7 @@ export const Login: React.FC = () => {
                         htmlType="submit">
                         Login
                     </Button>
-                    )}f
+                    )}
                 </Form.Item>
          </Form>
 

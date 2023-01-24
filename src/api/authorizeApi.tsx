@@ -1,6 +1,7 @@
 import AuthLocalStorage from "../AuthLocalStorage";
 import axios from "axios";
 import { ILogin } from '../interfaces/ILogin';
+import { IRegister } from '../interfaces/IRegister';
 
 export default class AuthorizeApi { 
 
@@ -18,7 +19,12 @@ export default class AuthorizeApi {
 
         return response;
       };
-    
+
+    register = async (registerForm: IRegister) => {
+        const response = await axios.post("https://localhost:44375/api/Account/register", registerForm);
+        return response;
+      };
+
     logout = () => {
         AuthLocalStorage.removeToken();
       };

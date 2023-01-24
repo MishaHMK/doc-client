@@ -4,13 +4,14 @@ import Link from 'antd/es/typography/Link';
 import { useNavigate } from "react-router-dom";
 import { IRegister } from '../interfaces/IRegister';
 import { useUserStore } from '../stores/user.store';
+import AuthorizeApi from "../api/authorizeApi";
 
 export const Register: React.FC = () => {
 
     const [state, actions] = useUserStore();
     const navigate = useNavigate();
     const [value, setValue] = useState();
-
+    let authService = new AuthorizeApi();
 
     useEffect(() => {
         actions.getAllRoles();
@@ -19,7 +20,7 @@ export const Register: React.FC = () => {
     const register = async (values: IRegister) => {
         const regForm : IRegister = {name: values.name, email: values.email, password: values.password,
                                      confirmPassword: values.confirmPassword, roleName: values.roleName};
-        actions.registerUser(regForm);
+        authService.register(regForm);
         navigate("../", { replace: true });
     }
 
@@ -29,10 +30,8 @@ export const Register: React.FC = () => {
 
     return (
         <div> 
-        <div className="create">
         <Form 
-          onFinish = {register}
-          wrapperCol = {{ span: 18 }}>
+          onFinish = {register}>
 
             <Form.Item>
                 <h2> Register </h2>
@@ -114,6 +113,5 @@ export const Register: React.FC = () => {
             </Form.Item>
      </Form>
     </div>
-</div>
     );
  };
