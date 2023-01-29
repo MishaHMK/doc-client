@@ -6,12 +6,14 @@ import Link from 'antd/es/typography/Link';
 import { useNavigate } from "react-router-dom";
 import jwt from "jwt-decode";
 import jwt_decode from "jwt-decode";
+import { useUserStore } from '../stores/user.store';
 
 export const Login: React.FC = () => {
     const [form] = Form.useForm();
     let authService = new AuthorizeApi();
     let user: any;
     const navigate = useNavigate();
+    const [state, actions] = useUserStore();
 
     const register = () => {
         navigate("../register", { replace: true });
@@ -21,6 +23,7 @@ export const Login: React.FC = () => {
         await authService.login(values);
         const token = AuthLocalStorage.getToken() as string;
         user = jwt(token);
+        console.log(token);
         if(user){
             navigate("../home", { replace: true });
             window.location.reload();

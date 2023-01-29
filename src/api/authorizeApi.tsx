@@ -2,6 +2,8 @@ import AuthLocalStorage from "../AuthLocalStorage";
 import axios from "axios";
 import { ILogin } from '../interfaces/ILogin';
 import { IRegister } from '../interfaces/IRegister';
+import { useUserStore } from '../stores/user.store';
+import React, { useState } from 'react';
 
 export default class AuthorizeApi { 
 
