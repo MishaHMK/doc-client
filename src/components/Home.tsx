@@ -43,10 +43,15 @@ export const Home: React.FC = () => {
 
     const handleChange = (value : any) => {
         state.doctorIdSelected = value;
+        state.doctorId = value;
+        actions.getAppointments(state.doctorId, state.patientId,
+            state.currentRole);
     };
 
     const handleEvents  = (value : any) => {
-        //state.appointments = values;
+        state.currentEventId = value.event.extendedProps.id;
+        actions.makeModalVisible();
+        console.log(state.currentEventId);
     };    
 
     const setUp = () => {
@@ -63,9 +68,10 @@ export const Home: React.FC = () => {
 
     function renderEventContent(eventContent: EventContentArg) {
         return (
-          <div className = "s">
+          <div >
             <i>{eventContent.event.title + ' '}</i>
-            <b>{eventContent.timeText}</b>
+            <b>{eventContent.timeText + ' '}</b>
+            <b>{eventContent.event.extendedProps.approved ? 'approved' : 'not-approved' }</b>
          </div>
         )
       }
@@ -87,6 +93,7 @@ export const Home: React.FC = () => {
             
             <FullCalendar
                     timeZone = 'local'
+                    height = '800px'
                     plugins = {[ dayGridPlugin, interactionPlugin ]}   
                     headerToolbar = {{ 
                         left: 'prev, next, today', 
@@ -99,15 +106,25 @@ export const Home: React.FC = () => {
                     selectMirror={true}
                     dayMaxEvents={true}
                     select = {showModal}
-                    eventContent={renderEventContent} 
-                    eventColor = 'green'
-                   events= {state.appointments.map((app : IAppointment) => 
-                        ({ title: app.title, 
+                    eventContent={renderEventContent}
+                    events = {state.appointments.map(app => 
+                        ({                     
+                           title: app.title, 
                            start: app.startDate,
-                           end:  app.endDate,
-                           color: 'purple'})) } 
-
-                    eventsSet={handleEvents}
+                           extendedProps: {
+                            approved: app.isApproved,
+                            id: app.id
+                          }
+                        })
+                        )
+                    }
+                    eventTimeFormat = {({ 
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            meridiem: false
+                          })}
+                    eventColor = '#378006'
+                    eventClick = {handleEvents}
             />  
 
             <CalendarModal/> 

@@ -37,3 +37,7 @@
     transform: rotate(360deg);
   }
 }
+
+.fc-sat, .fc-sun {
+  background-color: rgb(232, 134, 134) !important;
+}

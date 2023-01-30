@@ -2,10 +2,11 @@ import { createStore, createHook, Action } from 'react-sweet-state';
 import { IPatient } from '../interfaces/IPatient';
 import { IDoctor } from '../interfaces/IDoctor';
 import axios from "axios";
+import { IAppointment } from '../interfaces/IAppointment';
 
-type State = { roles: any, users: any, doctors: IDoctor[], patients: IPatient[], appointments:any[], 
+type State = { roles: any, users: any, doctors: IDoctor[], patients: IPatient[], appointments: IAppointment[], 
                times: any, IsShown: any, doctorIdSelected: any, doctorId: any, patientId: any,
-               currentRole: any};
+               currentRole: any, eventEditingOn: any, currentEventId: number};
 type Actions = typeof actions;
 
 
@@ -17,10 +18,12 @@ const initialState: State = {
     appointments:[],
     times: [],
     IsShown: false,
-    doctorIdSelected: '',
+    doctorIdSelected: '29f40225-fc3b-4ee3-8758-baae8aaf4300',
     doctorId: '',
     patientId: '',
-    currentRole: ''
+    currentRole: '',
+    eventEditingOn: false,
+    currentEventId: 0
 };
 
 const actions = {
@@ -48,7 +51,6 @@ const actions = {
         setState({
           doctors: doctors.data
         });
-        console.log(doctors.data);
     }, 
 
     getPatients: () : Action<State> => 
@@ -71,13 +73,14 @@ const actions = {
     async ({ setState }) => 
     {
       setState({
-        IsShown: true,
+        IsShown: true
       });
     },
   
     makeModalInvisible: (): Action<State> => async ({ setState }) => {
       setState({
-        IsShown: false
+        IsShown: false, 
+        currentEventId: 0
       });
     },
 
@@ -88,7 +91,6 @@ const actions = {
             patientId: patientId, 
             role: role 
           }});
-          console.log(response.data);
         setState({
           appointments: response.data
         });
