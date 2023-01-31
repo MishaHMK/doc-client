@@ -22,25 +22,17 @@ export const CalendarModal: React.FC = () =>{
     const [state, actions] = useUserStore();
     const [dateChoice, setDate] = useState(" ");
     const [timeChoice, setTime] = useState(" ");
-
-    let appointmentService = new AppointmentApi();
-
+    
      useEffect(() => {  
-           actions.getPatients();
-           actions.getAllTimes();
-    }, []);
-
+        updateModal();
+    });
     
       const handleCreateCancel = () => {
         actions.makeModalInvisible();
-        console.log("create cancel");
-        console.log(state.currentEventId);
       };
     
       const handleEditCancel = () => {
         actions.makeModalInvisible();
-        console.log("edit cancel");
-        console.log(state.currentEventId);
       };
 
       const dayChange: DatePickerProps['onChange'] = (date, dateString) => {
@@ -52,6 +44,17 @@ export const CalendarModal: React.FC = () =>{
         console.log(timeChoice);
       };
       
+      const updateModal = () => {
+        editForm.setFieldsValue({
+            id: state.currentEventId,
+            title: state.currentEventTitle,
+            description: state.currentEventDescription,
+            patientId: state.currentEventPatientId,
+            doctorId: state.currentEventDoctorId,
+            //startDate: ' ',
+            //time: ' '
+        });
+    };
 
       const handleSubmit = (values: any) => {
         actions.makeModalInvisible();
@@ -71,9 +74,33 @@ export const CalendarModal: React.FC = () =>{
         };
         console.log(appoint);
 
-        appointmentService.makeAppointment(appoint);
+        actions.createAppointment(appoint);
+     };
 
-  };
+    const deleteAppointment = (id : any) : any => {
+      actions.deleteAppointment(id);
+      actions.makeModalInvisible();
+    }
+
+    const handleUpdate = (values: any) => {
+      actions.makeModalInvisible();
+
+      const appointToUpdate : IAppointment = 
+      {
+        id: state.currentEventId,
+        title: values.title,
+        description: values.description,
+        startDate: dateChoice + "T" + timeChoice,
+        endDate: "",
+        duration: 60,
+        doctorId: state.doctorIdSelected,
+        patientId: values.patientId,
+        isApproved: false,
+        adminId: ""
+      };
+
+      actions.updateAppointment(state.currentEventId, appointToUpdate);
+   };
 
       if(state.currentEventId == 0){
         return(  
@@ -138,14 +165,14 @@ export const CalendarModal: React.FC = () =>{
                     </Button>
                   </Form.Item>
               </Form>
-           </Modal>)
+        </Modal>)
       } 
       else return (
       <Modal title="Edit Appointment" 
             open={state.IsShown} 
             onCancel={handleEditCancel}
             footer={null}>
-         <Form form = {editForm} onFinish={handleSubmit} name="control-hooks">
+         <Form form = {editForm} onFinish={handleUpdate} name="control-hooks">
            <br></br>
 
             <Form.Item
@@ -211,7 +238,11 @@ export const CalendarModal: React.FC = () =>{
 
              <Form.Item>
                <Button type="primary" htmlType="submit">
-                 Submit
+                 Change
+               </Button>
+
+               <Button type="primary" onClick={() => {deleteAppointment(state.currentEventId)}} danger> 
+                  Delete 
                </Button>
              </Form.Item>
          </Form>

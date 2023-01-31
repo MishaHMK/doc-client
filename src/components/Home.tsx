@@ -33,6 +33,8 @@ export const Home: React.FC = () => {
     useEffect(() => {
         setUp();
         actions.getDoctors();
+        actions.getPatients();
+        actions.getAllTimes();
         actions.getAppointments(state.doctorId, state.patientId,
          state.currentRole);
     }, []);
@@ -51,7 +53,7 @@ export const Home: React.FC = () => {
     const handleEvents  = (value : any) => {
         state.currentEventId = value.event.extendedProps.id;
         actions.makeModalVisible();
-        console.log(state.currentEventId);
+        actions.getAppointment(value.event.extendedProps.id);
     };    
 
     const setUp = () => {
