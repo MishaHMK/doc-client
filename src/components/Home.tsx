@@ -15,10 +15,7 @@ import jwt_decode from "jwt-decode";
 import AuthLocalStorage from "../AuthLocalStorage";
 import {
     EventApi,
-    DateSelectArg,
-    EventClickArg,
     EventContentArg,
-    formatDate,
   } from '@fullcalendar/core'
 
 interface DemoAppState {
@@ -27,7 +24,6 @@ interface DemoAppState {
   }
 
 export const Home: React.FC = () => {
-    const navigate = useNavigate();
     const [state, actions] = useUserStore();
 
     useEffect(() => {
@@ -37,6 +33,16 @@ export const Home: React.FC = () => {
         actions.getAllTimes();
         actions.getAppointments(state.doctorId, state.patientId,
          state.currentRole);
+
+        if(state.currentRole == "Doctor"){
+            state.docSelected = true;
+            actions.getAppointments(state.doctorId, state.patientId,
+                state.currentRole);
+        }
+        else {
+            actions.getAppointments(state.doctorId, state.patientId,
+                state.currentRole);
+        }
     }, []);
 
     const showModal = () => {
@@ -44,6 +50,7 @@ export const Home: React.FC = () => {
     };
 
     const handleChange = (value : any) => {
+        state.docSelected = true;
         state.doctorIdSelected = value;
         state.doctorId = value;
         actions.getAppointments(state.doctorId, state.patientId,
@@ -81,19 +88,23 @@ export const Home: React.FC = () => {
     return (
         <div>
             <br></br>
-
-            <label> Select Doctor </label>
-            <Select
-                    defaultValue={state.doctors[0]}
+            {(state.currentRole == "Patient") ?  
+            <div>
+                <label> Select Doctor </label>
+                 <Select
                     style={{ width: 120 }}
-                    options={state.doctors.map((doc : IDoctor) => ({ label: "Doctor " + doc.name, value: doc.id  }))}
-                    onChange={handleChange}
-                />
+                    options={state.doctors.map((doc : IDoctor) => 
+                         ({ label: "Doctor " + doc.name, value: doc.id  }))}
+                    onChange={handleChange}/>
+            </div>
+             : <p></p>}
+           
+            <br></br>
+            <br></br>
 
-            <br></br>
-            <br></br>
-            
-            <FullCalendar
+            {(state.docSelected == true) ?  
+            <div>
+                <FullCalendar
                     timeZone = 'local'
                     height = '800px'
                     plugins = {[ dayGridPlugin, interactionPlugin ]}   
@@ -109,7 +120,7 @@ export const Home: React.FC = () => {
                     dayMaxEvents={true}
                     select = {showModal}
                     eventContent={renderEventContent}
-                    events = {state.appointments.map(app => 
+                    events = {state.appointments.map((app : any) => 
                         ({                     
                            title: app.title, 
                            start: app.startDate,
@@ -128,7 +139,9 @@ export const Home: React.FC = () => {
                     eventColor = '#378006'
                     eventClick = {handleEvents}
             />  
-
+            </div>
+             : <h1>Choose your Doctor</h1>}
+            
             <CalendarModal/> 
         </div>
     );

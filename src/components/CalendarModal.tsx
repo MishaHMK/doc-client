@@ -29,20 +29,19 @@ export const CalendarModal: React.FC = () =>{
     
       const handleCreateCancel = () => {
         actions.makeModalInvisible();
-      };
+      }
     
       const handleEditCancel = () => {
         actions.makeModalInvisible();
-      };
+      }
 
       const dayChange: DatePickerProps['onChange'] = (date, dateString) => {
         setDate(dateString);
-      };
+      }
 
       const timeChange: any = (time: Dayjs, timeString: string) => {
         setTime(timeString);
-        console.log(timeChoice);
-      };
+      }
       
       const updateModal = () => {
         editForm.setFieldsValue({
@@ -54,14 +53,13 @@ export const CalendarModal: React.FC = () =>{
             //startDate: ' ',
             //time: ' '
         });
-    };
+    }
 
       const handleSubmit = (values: any) => {
         actions.makeModalInvisible();
 
         const appoint : IAppointment = 
         {
-          id: 0,
           title: values.title,
           description: values.description,
           startDate: dateChoice + "T" + timeChoice,
@@ -72,10 +70,9 @@ export const CalendarModal: React.FC = () =>{
           isApproved: false,
           adminId: ""
         };
-        console.log(appoint);
 
         actions.createAppointment(appoint);
-     };
+     }
 
     const deleteAppointment = (id : any) : any => {
       actions.deleteAppointment(id);
@@ -104,12 +101,13 @@ export const CalendarModal: React.FC = () =>{
 
       if(state.currentEventId == 0){
         return(  
-        <Modal title="Create Appointment" 
+        <Modal title="Create Appointment"
            open={state.IsShown} 
            onCancel={handleCreateCancel}
            footer={null}>
-              <Form form = {createForm} onFinish={handleSubmit} name="control-hooks">
+              <Form form = {createForm} onFinish={handleSubmit}>
                 <br></br>
+                 <p></p>
                   <Form.Item
                       name="title"
                       label="Title"
@@ -131,7 +129,7 @@ export const CalendarModal: React.FC = () =>{
                         },
                       ]}>
                       <Input/>
-                  </Form.Item>
+                  </Form.Item>              
                   <Form.Item
                       name="patientId"
                       label="Select Patient">
@@ -141,7 +139,6 @@ export const CalendarModal: React.FC = () =>{
                             options={state.patients.map((pt : IPatient) => ({ label: pt.name, value: pt.id  }))}
                       />
                   </Form.Item>
-
                   <Form.Item
                       name="startDate"
                       label="Appointment Day">
@@ -159,10 +156,15 @@ export const CalendarModal: React.FC = () =>{
                         <Input type="hidden"/>
                   </Form.Item>  
 
-                  <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                      Submit
-                    </Button>
+                  <Form.Item shouldUpdate>
+                     {() => (
+                      <Button
+                          type="primary"
+                          style={{ background: "#52c41a", borderColor: "green" }}
+                          htmlType="submit">
+                          Add Task
+                      </Button>
+                      )}
                   </Form.Item>
               </Form>
         </Modal>)
