@@ -146,6 +146,18 @@ const actions = {
       return response.data;
     }, 
 
+    approveAppointment: (id: any, state: boolean) : Action<State> =>
+    async ({ setState, getState }) => {
+      const response = await axios.patch("https://localhost:44375/api/Appointment/Approve/" + id + "/" + !state); 
+      const updList = getState().appointments.map((app : any)=> {
+        if(id === app.id){
+           return response.data; }
+        return app;
+      })
+      setState({appointments: updList });
+      return response.data;
+    }, 
+
 
     createAppointment: (appToCreate: IAppointment) : Action<State> =>
     async ({ setState, getState }) => {

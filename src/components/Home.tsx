@@ -1,16 +1,11 @@
-import React, {ChangeEvent, FC, useState, useEffect} from 'react';
-import { useNavigate } from "react-router-dom";
+import React, {useEffect} from 'react';
 import { useUserStore } from '../stores/user.store';
 import { Select} from 'antd';
 import { CalendarModal } from '../components/CalendarModal';
 import { IDoctor } from '../interfaces/IDoctor';
-import { IAppointment } from '../interfaces/IAppointment';
 import FullCalendar from '@fullcalendar/react' 
 import dayGridPlugin from '@fullcalendar/daygrid' 
-import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from "@fullcalendar/interaction"
-import { DateTimePicker } from "@progress/kendo-react-dateinputs";
-import jwt from "jwt-decode";
 import jwt_decode from "jwt-decode";
 import AuthLocalStorage from "../AuthLocalStorage";
 import {
@@ -77,10 +72,10 @@ export const Home: React.FC = () => {
 
     function renderEventContent(eventContent: EventContentArg) {
         return (
-          <div >
-            <i>{eventContent.event.title + ' '}</i>
-            <b>{eventContent.timeText + ' '}</b>
-            <b>{eventContent.event.extendedProps.approved ? 'approved' : 'not-approved' }</b>
+            <div className={`${eventContent.event.extendedProps.approved? 'approved' : 'not-approved'}`} >
+            <i> {' ' + eventContent.event.title + ' '}</i>
+            <b> {eventContent.timeText}</b>
+            {/*<b>{eventContent.event.extendedProps.approved ? 'approved' : 'not-approved' }</b>*/}
          </div>
         )
       }
@@ -97,7 +92,7 @@ export const Home: React.FC = () => {
                          ({ label: "Doctor " + doc.name, value: doc.id  }))}
                     onChange={handleChange}/>
             </div>
-             : <p></p>}
+             : <br></br>}
            
             <br></br>
             <br></br>

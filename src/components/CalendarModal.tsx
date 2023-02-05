@@ -79,6 +79,11 @@ export const CalendarModal: React.FC = () =>{
       actions.makeModalInvisible();
     }
 
+    const approveAppointment = () : any => {
+      actions.approveAppointment(state.currentEventId, state.currentEventStatus);
+      actions.makeModalInvisible();
+    }
+
     const handleUpdate = (values: any) => {
       actions.makeModalInvisible();
 
@@ -246,6 +251,29 @@ export const CalendarModal: React.FC = () =>{
                <Button type="primary" onClick={() => {deleteAppointment(state.currentEventId)}} danger> 
                   Delete 
                </Button>
+
+              {(state.currentRole == "Doctor" && state.currentEventStatus == false) ? 
+              <div>
+                <br></br>
+                <Button type="primary" 
+                          onClick={() => {approveAppointment()}}
+                          style={{ background: "#52c41a", borderColor: "green" }}> 
+                    Approve  
+                </Button>
+              </div> 
+               : <br></br>}
+
+             {(state.currentRole == "Doctor" && state.currentEventStatus == true) ?  
+              <div>
+                <br></br>
+                <Button type="primary" 
+                    onClick={() => {approveAppointment()}}
+                    style={{ background: "#f6546a", borderColor: "red" }}> 
+                      Cancel  
+                </Button>
+              </div>
+             : <br></br>}
+
              </Form.Item>
          </Form>
       </Modal>)
