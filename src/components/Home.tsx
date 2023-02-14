@@ -13,11 +13,6 @@ import {
     EventContentArg,
   } from '@fullcalendar/core'
 
-interface DemoAppState {
-    weekendsVisible: boolean
-    currentEvents: EventApi[]
-  }
-
 export const Home: React.FC = () => {
     const [state, actions] = useUserStore();
 
@@ -75,7 +70,6 @@ export const Home: React.FC = () => {
             <div className={`${eventContent.event.extendedProps.approved? 'approved' : 'not-approved'}`} >
             <i> {' ' + eventContent.event.title + ' '}</i>
             <b> {eventContent.timeText}</b>
-            {/*<b>{eventContent.event.extendedProps.approved ? 'approved' : 'not-approved' }</b>*/}
          </div>
         )
       }
@@ -113,6 +107,7 @@ export const Home: React.FC = () => {
                     editable={true}
                     selectMirror={true}
                     dayMaxEvents={true}
+                    eventStartEditable={false}
                     select = {showModal}
                     eventContent={renderEventContent}
                     events = {state.appointments.map((app : any) => 
@@ -129,7 +124,8 @@ export const Home: React.FC = () => {
                     eventTimeFormat = {({ 
                             hour: '2-digit',
                             minute: '2-digit',
-                            meridiem: false
+                            meridiem: false,
+                            hour12: false
                           })}
                     eventColor = '#378006'
                     eventClick = {handleEvents}

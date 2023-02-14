@@ -1,6 +1,7 @@
 import AuthorizeApi from "../api/authorizeApi";
 import UserApi from "../api/userApi";
 import { Layout, Menu, Dropdown, Avatar, Badge, Button, Drawer } from "antd";
+import { useUserStore } from '../stores/user.store';
 import Link from 'antd/es/typography/Link';
 import React, { useState, useEffect, useRef } from "react";
 import jwt from "jwt-decode";
@@ -8,8 +9,9 @@ import AuthLocalStorage from "../AuthLocalStorage";
 import { useNavigate } from "react-router-dom";
 const { Header, Content, Footer } = Layout;
 
-export const NavBar = () => {
+export const NavBar: React.FC = () => {
     const user = AuthorizeApi.isSignedIn();
+    const [state, actions] = useUserStore();
     const [name, setName] = useState<string>();
     const [id, setId] = useState<string>("");
     const token = AuthLocalStorage.getToken() as string;
@@ -27,6 +29,8 @@ export const NavBar = () => {
         if (user) {
           const user: any = jwt(token);
           await userService.getById(user.NameIdentifier).then(async (response) => {
+            state.currentUserId = user.NameIdentifier;
+            console.log(state.currentUserId);
             setName(response.data.user.name);
             if (name !== undefined) {
               userState.current = true;
@@ -45,18 +49,10 @@ export const NavBar = () => {
     return (
         <div> 
             <Layout>
-                <Header style={{ position: 'sticky', top: 0, zIndex: 1, width: '100%' }}>
-                            <div
-                            style={{
-                                float: 'left',
-                                width: 120,
-                                height: 45,
-                                margin: '16px 24px 16px 0',
-                            }}
-                />
-                     {signedIn && userState.current ? (
+                <Header style={{ position: 'sticky', top: 0, zIndex: 1, width: '100%', height: "65px" }}>
+                {signedIn && userState.current ? (
                 <div>
-                        <h3 style={{ marginRight: "140px", marginTop: "-5px", color: "white"}}>
+                        <h3 style={{ marginLeft: "1000px", marginTop: "2px", color: "white"}}>
                             Welcome, { " "   }   
                             {name !== undefined
                             ? name?.length > 12

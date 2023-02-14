@@ -5,7 +5,7 @@ import axios from "axios";
 import { IAppointment } from '../interfaces/IAppointment';
 
 type State = { roles: any, users: any, doctors: IDoctor[], patients: IPatient[], appointments: any, 
-               times: any, IsShown: any, doctorIdSelected: any, doctorId: any, patientId: any,
+               times: any, IsShown: any, doctorIdSelected: any, doctorId: any, patientId: any, currentUserId: any,
                currentRole: any, eventEditingOn: any, currentEventId: number, currentEventTitle: any, 
               currentEventDescription: any, currentEventPatientId: any, currentEventDoctorId: any,
               currentEventStartDate: any, currentEventTime: any, currentEventStatus: any, docSelected : any};
@@ -21,10 +21,11 @@ const initialState: State = {
     times: [],
     IsShown: false,
     docSelected:false,
-    doctorIdSelected: '29f40225-fc3b-4ee3-8758-baae8aaf4300',
+    doctorIdSelected: '',
     doctorId: '',
     patientId: '',
     currentRole: '',
+    currentUserId: '',
     eventEditingOn: false,
     currentEventId: 0,
     currentEventTitle: '',

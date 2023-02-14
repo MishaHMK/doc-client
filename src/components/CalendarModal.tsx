@@ -10,19 +10,20 @@ import { TimePicker } from 'antd';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { Select } from 'antd';
-import AppointmentApi from "../api/appointmentApi";
 import type { DatePickerProps } from 'antd';
 import { DatePicker } from 'antd';
+import jwt from "jwt-decode";
+import AuthLocalStorage from "../AuthLocalStorage";
 
 export const CalendarModal: React.FC = () =>{ 
 
     const [createForm] = useForm();
     const [editForm] = useForm();
-    //const [isModalOpen, setIsModalOpen] = useState(false);
     const [state, actions] = useUserStore();
     const [dateChoice, setDate] = useState(" ");
     const [timeChoice, setTime] = useState(" ");
-    
+    const token = AuthLocalStorage.getToken() as string;
+
      useEffect(() => {  
         updateModal();
     });
@@ -50,13 +51,15 @@ export const CalendarModal: React.FC = () =>{
             description: state.currentEventDescription,
             patientId: state.currentEventPatientId,
             doctorId: state.currentEventDoctorId,
-            //startDate: ' ',
+            //startDate: '2023-02-17',
             //time: ' '
         });
+        console.log(state.currentEventTime);
     }
 
       const handleSubmit = (values: any) => {
         actions.makeModalInvisible();
+        const user: any = jwt(token);
 
         const appoint : IAppointment = 
         {
@@ -65,12 +68,11 @@ export const CalendarModal: React.FC = () =>{
           startDate: dateChoice + "T" + timeChoice,
           endDate: "",
           duration: 60,
-          doctorId: state.doctorIdSelected,
-          patientId: values.patientId,
+          doctorId: (state.currentRole == "Doctor") ? user.NameIdentifier: state.doctorIdSelected,
+          patientId: (state.currentRole == "Doctor") ? values.patientId: user.NameIdentifier,
           isApproved: false,
           adminId: ""
         };
-
         actions.createAppointment(appoint);
      }
 
@@ -86,7 +88,7 @@ export const CalendarModal: React.FC = () =>{
 
     const handleUpdate = (values: any) => {
       actions.makeModalInvisible();
-
+      const user: any = jwt(token);
       const appointToUpdate : IAppointment = 
       {
         id: state.currentEventId,
@@ -95,7 +97,7 @@ export const CalendarModal: React.FC = () =>{
         startDate: dateChoice + "T" + timeChoice,
         endDate: "",
         duration: 60,
-        doctorId: state.doctorIdSelected,
+        doctorId: (state.currentRole == "Doctor") ? user.NameIdentifier: state.doctorIdSelected,
         patientId: values.patientId,
         isApproved: false,
         adminId: ""
@@ -135,15 +137,7 @@ export const CalendarModal: React.FC = () =>{
                       ]}>
                       <Input/>
                   </Form.Item>              
-                  <Form.Item
-                      name="patientId"
-                      label="Select Patient">
-                      <Select
-                            defaultValue={state.patients[0]}
-                            style={{ width: 120 }}
-                            options={state.patients.map((pt : IPatient) => ({ label: pt.name, value: pt.id  }))}
-                      />
-                  </Form.Item>
+                
                   <Form.Item
                       name="startDate"
                       label="Appointment Day">
@@ -153,13 +147,22 @@ export const CalendarModal: React.FC = () =>{
                   <Form.Item
                       name="time"
                       label="Appointment Time">
-                          <TimePicker onChange={timeChange} defaultOpenValue={dayjs('00:00:00', 'HH:mm:ss')} />
+                          <TimePicker onChange={timeChange} />
                   </Form.Item>  
-
-                  <Form.Item
-                      name="id">
-                        <Input type="hidden"/>
-                  </Form.Item>  
+                  
+                  {(state.currentRole == "Doctor") ? 
+                      <div>
+                        <Form.Item
+                            name="patientId"
+                            label="Select Patient">
+                            <Select
+                                  defaultValue={state.patients[0]}
+                                  style={{ width: 120 }}
+                                  options={state.patients.map((pt : IPatient) => ({ label: pt.name, value: pt.id  }))}
+                            />
+                        </Form.Item>
+                      </div> 
+                  : <br></br>}
 
                   <Form.Item shouldUpdate>
                      {() => (
@@ -167,7 +170,7 @@ export const CalendarModal: React.FC = () =>{
                           type="primary"
                           style={{ background: "#52c41a", borderColor: "green" }}
                           htmlType="submit">
-                          Add Task
+                          Add 
                       </Button>
                       )}
                   </Form.Item>
@@ -221,26 +224,31 @@ export const CalendarModal: React.FC = () =>{
                  />
              </Form.Item>
 
-             <Form.Item
-                 name="doctorId"
-                 label="Change Doctor">
-                 <Select
-                       defaultValue={state.doctors[0]}
-                       style={{ width: 120 }}
-                       options={state.doctors.map((dr : IDoctor) => ({ label: dr.name, value: dr.id  }))}
-                 />
-             </Form.Item>
+             {(state.currentRole == "Patient") ? 
+                      <div>
+                       <Form.Item
+                          name="doctorId"
+                          label="Change Doctor">
+                          <Select
+                                defaultValue={state.doctors[0]}
+                                style={{ width: 120 }}
+                                options={state.doctors.map((dr : IDoctor) => ({ label: dr.name, value: dr.id  }))}
+                          />
+                      </Form.Item>
+                      </div> 
+                  : <div></div>}
+          
 
              <Form.Item
                  name="startDate"
                  label="Appointment Day">
-                     <DatePicker onChange={dayChange} />
+                     <DatePicker onChange={dayChange}/>
              </Form.Item>  
 
              <Form.Item
                  name="time"
                  label="Appointment Time">
-                     <TimePicker onChange={timeChange} defaultOpenValue={dayjs('00:00:00', 'HH:mm:ss')} />
+                     <TimePicker onChange={timeChange} />
              </Form.Item>   
 
              <Form.Item>
