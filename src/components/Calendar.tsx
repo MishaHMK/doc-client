@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import { useUserStore } from '../stores/user.store';
 import { Select} from 'antd';
-import { CalendarModal } from '../components/CalendarModal';
+import { AppointmentModal } from './AppointmentModal';
 import { IDoctor } from '../interfaces/IDoctor';
 import FullCalendar from '@fullcalendar/react' 
 import dayGridPlugin from '@fullcalendar/daygrid' 
@@ -13,7 +13,7 @@ import {
     EventContentArg,
   } from '@fullcalendar/core'
 
-export const Home: React.FC = () => {
+export const Calendar: React.FC = () => {
     const [state, actions] = useUserStore();
 
     useEffect(() => {
@@ -133,7 +133,7 @@ export const Home: React.FC = () => {
             </div>
              : <h1>Choose your Doctor</h1>}
             
-            <CalendarModal/> 
+            <AppointmentModal/> 
         </div>
     );
  };

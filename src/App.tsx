@@ -1,11 +1,14 @@
-import React from 'react';
-import logo from './logo.svg';
+
 import './App.css';
 import { Login } from './components/Login';
 import { Register } from './components/Register';
-import { Home } from './components/Home';
+import { Calendar } from './components/Calendar';
 import { NavBar } from './components/NavBar';
+import { DoctorsPage } from './components/DoctorsPage';
 import { BrowserRouter, Route, Routes, Link} from "react-router-dom";
+import { Layout, Menu, Dropdown, Avatar, Badge, Button, Drawer } from "antd"
+
+const { Header, Content, Footer } = Layout;
 
 function App() {
   return (
@@ -14,8 +17,9 @@ function App() {
           <BrowserRouter>
                   <NavBar/>
                   <Routes>
-                      <Route path="home" element={<Home/>} />
+                      <Route path="calendar" element={<Calendar/>} />
                       <Route path="register" element={<Register/>} />
+                      <Route path="catalogue" element={<DoctorsPage/>} />
                       <Route path="" element={<Login/>} />
                   </Routes>
           </BrowserRouter>

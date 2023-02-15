@@ -24,7 +24,7 @@ export const Login: React.FC = () => {
         const token = AuthLocalStorage.getToken() as string;
         user = jwt(token);
         if(user){
-            navigate("../home", { replace: true });
+            navigate("../calendar", { replace: true });
             window.location.reload();
         } 
     }

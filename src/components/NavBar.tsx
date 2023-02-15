@@ -14,6 +14,7 @@ export const NavBar: React.FC = () => {
     const [state, actions] = useUserStore();
     const [name, setName] = useState<string>();
     const [id, setId] = useState<string>("");
+    const [docPageOn, setdocPageOn] = useState<boolean>(false);
     const token = AuthLocalStorage.getToken() as string;
     const signedIn = AuthorizeApi.isSignedIn();
     const userState = useRef(signedIn);
@@ -46,33 +47,62 @@ export const NavBar: React.FC = () => {
           window.location.reload();
       } 
 
+      const logIn = () => {
+        authService.logout();
+        navigate("../", { replace: true });
+        window.location.reload();
+    } 
+
+      const toDrCatalogue = () => {
+        setdocPageOn(true);
+        navigate("../catalogue", { replace: true });
+    } 
+
+      const toCalendar = () => {
+        setdocPageOn(false);
+        navigate("../calendar", { replace: true });
+    } 
+
+
     return (
         <div> 
             <Layout>
-                <Header style={{ position: 'sticky', top: 0, zIndex: 1, width: '100%', height: "65px" }}>
+                <Header style={{ position: 'sticky', width: '100%', height: "65px" }}>
                 {signedIn && userState.current ? (
-                <div>
-                        <h3 style={{ marginLeft: "1000px", marginTop: "2px", color: "white"}}>
+                  
+                   <div style={{ display: 'flex'}}>
+                        <h3 style={{marginLeft: "100px", marginTop: "2px"}}>
+                        {docPageOn ? (
+                              <Link onClick={toCalendar} style={{ padding: "15px", color: "white" }}>Calendar</Link>
+                        ) 
+                        : <Link onClick={toDrCatalogue} style={{ padding: "15px", color: "white" }}>Our Doctors</Link>}
+                        </h3>
+
+                        <h3 style={{ marginLeft: "10  00px", marginTop: "2px", color: "white" }}>
                             Welcome, { " "   }   
                             {name !== undefined
                             ? name?.length > 12
                             ? name.slice(0, 10) + "..."
                             : name
                             : ""}
-                                    
+
+               
                              <Link onClick={logOut} style={{ padding: "15px"}}>Log Out</Link>
                          </h3>
 
-                </div>
-                ) : (
-                <div>
-                     <h3 style={{ marginRight: "140px", marginTop: "-5px", color: "white"}}>
-                        Unloged
-                    </h3>
-                </div>
-              )}
+                    </div>
+                    ) : (
+                    <div style={{ display: 'flex'}}>
+                        <h3 style={{ marginLeft: "770px", marginTop: "2px", color: "white"}}>
+                            Unloged
+                        </h3>
 
-              </Header> 
+                        <h3 style={{ marginLeft: "500px", marginTop: "2px", color: "white" }}>
+                             <Link onClick={logIn} style={{ padding: "15px"}}>Log In</Link>
+                         </h3>
+                    </div>
+                )}
+                </Header> 
              </Layout>
         </div>
     );

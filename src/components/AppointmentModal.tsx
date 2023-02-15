@@ -15,7 +15,7 @@ import { DatePicker } from 'antd';
 import jwt from "jwt-decode";
 import AuthLocalStorage from "../AuthLocalStorage";
 
-export const CalendarModal: React.FC = () =>{ 
+export const AppointmentModal: React.FC = () =>{ 
 
     const [createForm] = useForm();
     const [editForm] = useForm();
