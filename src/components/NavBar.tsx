@@ -31,7 +31,6 @@ export const NavBar: React.FC = () => {
           const user: any = jwt(token);
           await userService.getById(user.NameIdentifier).then(async (response) => {
             state.currentUserId = user.NameIdentifier;
-            console.log(state.currentUserId);
             setName(response.data.user.name);
             if (name !== undefined) {
               userState.current = true;
@@ -71,14 +70,14 @@ export const NavBar: React.FC = () => {
                 {signedIn && userState.current ? (
                   
                    <div style={{ display: 'flex'}}>
-                        <h3 style={{marginLeft: "100px", marginTop: "2px"}}>
+                        <h3 style={{marginTop: "2px"}}>
                         {docPageOn ? (
                               <Link onClick={toCalendar} style={{ padding: "15px", color: "white" }}>Calendar</Link>
                         ) 
                         : <Link onClick={toDrCatalogue} style={{ padding: "15px", color: "white" }}>Our Doctors</Link>}
                         </h3>
 
-                        <h3 style={{ marginLeft: "10  00px", marginTop: "2px", color: "white" }}>
+                        <h3 style={{ marginLeft: "1000px", marginTop: "2px", color: "white" }}>
                             Welcome, { " "   }   
                             {name !== undefined
                             ? name?.length > 12
@@ -93,7 +92,7 @@ export const NavBar: React.FC = () => {
                     </div>
                     ) : (
                     <div style={{ display: 'flex'}}>
-                        <h3 style={{ marginLeft: "770px", marginTop: "2px", color: "white"}}>
+                        <h3 style={{ marginLeft: "680px", marginTop: "2px", color: "white"}}>
                             Unloged
                         </h3>
 

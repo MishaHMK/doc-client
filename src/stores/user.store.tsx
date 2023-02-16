@@ -1,19 +1,21 @@
 import { createStore, createHook, Action } from 'react-sweet-state';
 import { IPatient } from '../interfaces/IPatient';
 import { IDoctor } from '../interfaces/IDoctor';
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { IAppointment } from '../interfaces/IAppointment';
+import PaginatedResult from '../models/pagination';
 
-type State = { roles: any, users: any, doctors: IDoctor[], patients: IPatient[], appointments: any, 
+
+type State = { roles: any, doctors: IDoctor[], patients: IPatient[], appointments: any, 
                times: any, IsShown: any, doctorIdSelected: any, doctorId: any, patientId: any, currentUserId: any,
                currentRole: any, eventEditingOn: any, currentEventId: number, currentEventTitle: any, 
               currentEventDescription: any, currentEventPatientId: any, currentEventDoctorId: any,
-              currentEventStartDate: any, currentEventTime: any, currentEventStatus: any, docSelected : any};
+              currentEventStartDate: any, currentEventTime: any, currentEventStatus: any, docSelected : any,
+              paginatedUsers: PaginatedResult};
 type Actions = typeof actions;
 
 
 const initialState: State = {
-    users: [],
     roles: [],
     doctors: [],
     patients: [],
@@ -34,7 +36,13 @@ const initialState: State = {
     currentEventDoctorId: '',
     currentEventStartDate: '',
     currentEventTime: '',
-    currentEventStatus: false
+    currentEventStatus: false,
+    paginatedUsers: {
+      pagedUsers: [],
+      currentPage: 1,
+      totalItems: 0,
+      pageSize: 4,
+    }
 };
 
 const actions = {
@@ -168,7 +176,22 @@ const actions = {
         appointments: [...getState().appointments, newApp]
       });
 
-  }
+    }, 
+
+    getUsers: (pageNumber?: number, pageSize?:number) : Action<State> =>
+    async ({ setState, getState }) => {
+      const response = await axios.get("https://localhost:44375/api/Account/users", { params: { 
+        PageNumber: pageNumber,
+        PageSize: pageSize,
+      }})
+      .catch((error: AxiosError) => {
+        throw new Error(error.message);
+      });
+      
+      setState({
+        paginatedUsers: response.data
+      });
+    }
 };
 
 const Store = createStore<State, Actions>({

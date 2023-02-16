@@ -74,6 +74,10 @@ export const Calendar: React.FC = () => {
         )
       }
 
+    function rgba(arg0: number, arg1: number, arg2: number, arg3: number): string | undefined {
+        throw new Error('Function not implemented.');
+    }
+
     return (
         <div>
             <br></br>
@@ -88,14 +92,12 @@ export const Calendar: React.FC = () => {
             </div>
              : <br></br>}
            
-            <br></br>
-            <br></br>
 
             {(state.docSelected == true) ?  
             <div>
                 <FullCalendar
                     timeZone = 'local'
-                    height = '800px'
+                    height = '1000px'
                     plugins = {[ dayGridPlugin, interactionPlugin ]}   
                     headerToolbar = {{ 
                         left: 'prev, next, today', 
