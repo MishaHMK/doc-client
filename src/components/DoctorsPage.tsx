@@ -1,30 +1,64 @@
 import React, {ChangeEvent, FC, useState, useEffect} from 'react';
 import { useUserStore } from '../stores/user.store';
-import { Card, List, Pagination } from 'antd';
-import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
+import { Card, List, Pagination, Input, Space, Select } from 'antd';
+import { EditOutlined, CommentOutlined } from '@ant-design/icons';
 
 const pageSize = 4;
+const { Search } = Input;
 
 export const DoctorsPage: React.FC = () => {
 
     const [state, actions] = useUserStore();
     const [totalItems, settotalItems] = useState(0);
-    const [current, setCurrent] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [selectedSpec, setSelectedSpec] = useState("");
+    const [searchName, setSearchName] = useState("");
 
     useEffect(() => {  
-        actions.getUsers(current, pageSize);
+        actions.getUsers(currentPage, pageSize, searchName, selectedSpec);
         settotalItems(state.paginatedUsers.totalItems);
     });
 
     const handleChange = (page : any) => {
-        setCurrent(page);
-        actions.getUsers(page, pageSize);
+        setCurrentPage(page);
+        actions.getUsers(currentPage, pageSize, searchName, selectedSpec);
+    };
+
+    const onSearch = (value: string) => {
+        setSearchName(value);
+        actions.getUsers(currentPage, pageSize, searchName, selectedSpec);
+    };
+
+    const handleSelect = (value : any) => {
+        setSelectedSpec(value);
+        actions.getUsers(currentPage, pageSize, searchName, selectedSpec);
     };
 
 
     return (
         <div className = "docpage"> 
-            <h2>D O C T O R S</h2>
+            <h2>OUR DOCTORS</h2>
+
+            <Space direction="horizontal">
+               <Search
+                    placeholder="Put doctors name"
+                    allowClear
+                    enterButton
+                    size="large"
+                    onSearch={onSearch}
+                />
+
+                <Select
+                    style={{ width: 120 }}
+                    onChange={handleSelect}
+                    options={state.specs.map((sp : any) => ({ label: sp, value: sp }))}
+                />
+
+            </Space>
+
+            <br></br>
+            <br></br>
+            <br></br>
 
             <List
                 grid={{ column: 2 }}
@@ -33,7 +67,7 @@ export const DoctorsPage: React.FC = () => {
                 <List.Item>
                     <Card title={"Doctor " + item.name + " (" + item.speciality + ") " }
                         actions={[
-                            <SettingOutlined key="setting" />,
+                            <CommentOutlined  key="chat" />,
                             <EditOutlined key="edit" />
                         ]}
                         bordered = {true}
@@ -47,7 +81,7 @@ export const DoctorsPage: React.FC = () => {
 
             <Pagination
                 pageSize={pageSize}
-                current={current}
+                current={currentPage}
                 total={totalItems}
                 onChange={handleChange}
                 style={{ bottom: "0px" }}

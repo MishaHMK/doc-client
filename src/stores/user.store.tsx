@@ -6,7 +6,7 @@ import { IAppointment } from '../interfaces/IAppointment';
 import PaginatedResult from '../models/pagination';
 
 
-type State = { roles: any, doctors: IDoctor[], patients: IPatient[], appointments: any, 
+type State = { roles: any, specs: any, doctors: IDoctor[], patients: IPatient[], appointments: any, 
                times: any, IsShown: any, doctorIdSelected: any, doctorId: any, patientId: any, currentUserId: any,
                currentRole: any, eventEditingOn: any, currentEventId: number, currentEventTitle: any, 
               currentEventDescription: any, currentEventPatientId: any, currentEventDoctorId: any,
@@ -17,6 +17,11 @@ type Actions = typeof actions;
 
 const initialState: State = {
     roles: [],
+    specs: ["Any",
+            "Pediatrics",
+            "Neurology",
+            "Cardiology",
+            "Radiology"],
     doctors: [],
     patients: [],
     appointments:[],
@@ -68,6 +73,14 @@ const actions = {
         const doctors = await axios.get("https://localhost:44375/api/Appointment/doctors");
         setState({
           doctors: doctors.data
+        });
+    }, 
+
+    getSpecialities: () : Action<State> => 
+    async ({ setState, getState }) => {
+        const specs = await axios.get("https://localhost:44375/api/Account/specialities");
+        setState({
+          specs: specs.data
         });
     }, 
 
@@ -178,11 +191,13 @@ const actions = {
 
     }, 
 
-    getUsers: (pageNumber?: number, pageSize?:number) : Action<State> =>
+    getUsers: (pageNumber?: number, pageSize?:number, searchName?:string, speciality?:string) : Action<State> =>
     async ({ setState, getState }) => {
       const response = await axios.get("https://localhost:44375/api/Account/users", { params: { 
         PageNumber: pageNumber,
         PageSize: pageSize,
+        SearchName: searchName,
+        Speciality: speciality
       }})
       .catch((error: AxiosError) => {
         throw new Error(error.message);

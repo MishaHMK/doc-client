@@ -73,11 +73,7 @@ export const Calendar: React.FC = () => {
          </div>
         )
       }
-
-    function rgba(arg0: number, arg1: number, arg2: number, arg3: number): string | undefined {
-        throw new Error('Function not implemented.');
-    }
-
+      
     return (
         <div>
             <br></br>
@@ -89,6 +85,8 @@ export const Calendar: React.FC = () => {
                     options={state.doctors.map((doc : IDoctor) => 
                          ({ label: "Doctor " + doc.name, value: doc.id  }))}
                     onChange={handleChange}/>
+                   <br></br> 
+                   <br></br> 
             </div>
              : <br></br>}
            

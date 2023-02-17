@@ -248,7 +248,7 @@ export const AppointmentModal: React.FC = () => {
              <Form.Item
                  name="time"
                  label="Appointment Time">
-                     <TimePicker onChange={timeChange} />
+                     <TimePicker format="HH:mm" onChange={timeChange} />
              </Form.Item>   
 
              <Form.Item>

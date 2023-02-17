@@ -10,7 +10,6 @@ export const Register: React.FC = () => {
 
     const [state, actions] = useUserStore();
     const navigate = useNavigate();
-    const [value, setValue] = useState();
     let authService = new AuthorizeApi();
 
     useEffect(() => {
