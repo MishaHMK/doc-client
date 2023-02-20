@@ -56,6 +56,8 @@ export const Calendar: React.FC = () => {
     const setUp = () => {
         const token = AuthLocalStorage.getToken() as string;
         const decoded: any = jwt_decode(token);
+        console.log(token);
+        console.log(decoded);
         state.currentRole = decoded.Role;
         if(decoded.Role == "Patient"){
             state.patientId = decoded.NameIdentifier;

@@ -1,7 +1,7 @@
 import React, {ChangeEvent, FC, useState, useEffect} from 'react';
 import { useUserStore } from '../stores/user.store';
-import { Card, List, Pagination, Input, Space, Select } from 'antd';
-import { EditOutlined, CommentOutlined } from '@ant-design/icons';
+import { Card, List, Pagination, Input, Space, Select, Button } from 'antd';
+import { EditOutlined, CommentOutlined, UpOutlined, DownOutlined } from '@ant-design/icons';
 
 const pageSize = 4;
 const { Search } = Input;
@@ -13,26 +13,41 @@ export const DoctorsPage: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedSpec, setSelectedSpec] = useState("");
     const [searchName, setSearchName] = useState("");
+    const [orderBy, setOrderBy] = useState("");
+    const [sortItem, setSortItem] = useState("");
 
     useEffect(() => {  
-        actions.getUsers(currentPage, pageSize, searchName, selectedSpec);
+        actions.getUsers(currentPage, pageSize, searchName, selectedSpec, sortItem, orderBy);
         settotalItems(state.paginatedUsers.totalItems);
     });
 
     const handleChange = (page : any) => {
         setCurrentPage(page);
-        actions.getUsers(currentPage, pageSize, searchName, selectedSpec);
+        actions.getUsers(currentPage, pageSize, searchName, selectedSpec, sortItem, orderBy);
     };
 
     const onSearch = (value: string) => {
         setSearchName(value);
-        actions.getUsers(currentPage, pageSize, searchName, selectedSpec);
+        actions.getUsers(currentPage, pageSize, searchName, selectedSpec, sortItem, orderBy);
     };
 
     const handleSelect = (value : any) => {
         setSelectedSpec(value);
-        actions.getUsers(currentPage, pageSize, searchName, selectedSpec);
+        actions.getUsers(currentPage, pageSize, searchName, selectedSpec, sortItem, orderBy);
     };
+
+    const sortNameByAsc = () => {
+        setSortItem("name");
+        setOrderBy("ascend");
+        actions.getUsers(currentPage, pageSize, searchName, selectedSpec, sortItem, orderBy);
+    };
+
+    const sortNameByDesc = () => {
+        setSortItem("name");
+        setOrderBy("descend");
+        actions.getUsers(currentPage, pageSize, searchName, selectedSpec, sortItem, orderBy);
+    };
+
 
 
     return (
@@ -40,6 +55,10 @@ export const DoctorsPage: React.FC = () => {
             <h2>OUR DOCTORS</h2>
 
             <Space direction="horizontal">
+
+            <Button onClick={sortNameByAsc}><UpOutlined /></Button>
+            <Button onClick={sortNameByDesc}><DownOutlined /></Button>
+
                <Search
                     placeholder="Put doctors name"
                     allowClear
@@ -52,6 +71,7 @@ export const DoctorsPage: React.FC = () => {
                     style={{ width: 120 }}
                     onChange={handleSelect}
                     options={state.specs.map((sp : any) => ({ label: sp, value: sp }))}
+                    defaultValue = "Speciality"
                 />
 
             </Space>

@@ -58,6 +58,7 @@ const actions = {
         setState({
           roles: roles.data
         });
+        console.log(roles.data);
     }, 
 
     getAllTimes: () : Action<State> => 
@@ -191,13 +192,16 @@ const actions = {
 
     }, 
 
-    getUsers: (pageNumber?: number, pageSize?:number, searchName?:string, speciality?:string) : Action<State> =>
+    getUsers: (pageNumber?: number, pageSize?:number, searchName?:string, speciality?:string,
+               sort?: string, orderby?: string) : Action<State> =>
     async ({ setState, getState }) => {
       const response = await axios.get("https://localhost:44375/api/Account/users", { params: { 
-        PageNumber: pageNumber,
-        PageSize: pageSize,
-        SearchName: searchName,
-        Speciality: speciality
+          PageNumber: pageNumber,
+          PageSize: pageSize,
+          SearchName: searchName,
+          Speciality: speciality,
+          Sort: sort,
+          OrderBy: orderby
       }})
       .catch((error: AxiosError) => {
         throw new Error(error.message);

@@ -4,4 +4,5 @@ export interface IRegister{
     password: string;
     confirmPassword: string;
     roleName: string;
+    speciality: string;
 }

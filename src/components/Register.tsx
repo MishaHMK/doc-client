@@ -10,6 +10,8 @@ export const Register: React.FC = () => {
 
     const [state, actions] = useUserStore();
     const navigate = useNavigate();
+    const [chosenRole, setChosenRole] = useState("");
+    const [chosenSpec, setChosenSpec] = useState("");
     let authService = new AuthorizeApi();
 
     useEffect(() => {
@@ -18,13 +20,23 @@ export const Register: React.FC = () => {
 
     const register = async (values: IRegister) => {
         const regForm : IRegister = {name: values.name, email: values.email, password: values.password,
-                                     confirmPassword: values.confirmPassword, roleName: values.roleName};
+                                     confirmPassword: values.confirmPassword, roleName: values.roleName,
+                                     speciality: chosenSpec};
+        console.log(regForm);
         authService.register(regForm);
         navigate("../", { replace: true });
     }
 
     const login = () => {
         navigate("../", { replace: true });
+    } 
+    
+    const handleSelectRole = (value : any) => {
+        setChosenRole(value);
+    } 
+
+    const handleSelectSpec = (value : any) => {
+        setChosenSpec(value);
     } 
 
     return (
@@ -93,10 +105,27 @@ export const Register: React.FC = () => {
                 <Select
                     defaultValue={state.roles[0]}
                     style={{ width: 120 }}
+                    onChange={handleSelectRole}
                     options={state.roles.map((role : string) => ({ label: role, value: role }))}
                 />
             </Form.Item>
 
+
+            {(chosenRole == "Doctor") ?  
+             <Form.Item
+                name="speciality">
+                <div>
+                    <Select
+                        style={{ width: 120 }}
+                        options={state.specs.map((sp : string) => ({ label: sp, value: sp }))}
+                        defaultValue = "Speciality"
+                        onChange={handleSelectSpec}
+                    />
+                    <br></br>
+                </div>
+            </Form.Item>
+             : <br></br>}
+           
             <Form.Item shouldUpdate>
                 {() => (
                 <Button
@@ -106,6 +135,8 @@ export const Register: React.FC = () => {
                 </Button>
                 )}
             </Form.Item>
+
+
 
             <Form.Item>
                 <Link onClick={login}>Log In</Link>
