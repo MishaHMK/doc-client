@@ -6,17 +6,20 @@ import { IAppointment } from '../interfaces/IAppointment';
 import PaginatedResult from '../models/pagination';
 
 
-type State = { roles: any, specs: any, doctors: IDoctor[], patients: IPatient[], appointments: any, 
-               times: any, IsShown: any, doctorIdSelected: any, doctorId: any, patientId: any, currentUserId: any,
-               currentRole: any, eventEditingOn: any, currentEventId: number, currentEventTitle: any, 
-              currentEventDescription: any, currentEventPatientId: any, currentEventDoctorId: any,
-              currentEventStartDate: any, currentEventTime: any, currentEventStatus: any, docSelected : any,
-              paginatedUsers: PaginatedResult};
+type State = { roles: any, users: any, specs: any, doctors: IDoctor[], patients: IPatient[], appointments: any, 
+               times: any, IsShown: any, doctorIdSelected: any, doctorId: any, doctorName: any,  
+               patientId: any, currentUserId: any, currentUserName: any,  currentUserIntroduction: any,
+               currentRole: any, eventEditingOn: any, currentUserSpeciality: any,
+               currentEventId: number, currentEventTitle: any, currentEventDescription: any,  
+               currentEventPatientId: any, currentEventDoctorId: any, 
+               currentEventStartDate: any, currentEventTime: any, currentEventStatus: any, 
+               docSelected : any, paginatedUsers: PaginatedResult, docPageOn: any};
 type Actions = typeof actions;
 
 
 const initialState: State = {
     roles: [],
+    users: [],
     specs: ["Any",
             "Pediatrics",
             "Neurology",
@@ -30,9 +33,13 @@ const initialState: State = {
     docSelected:false,
     doctorIdSelected: '',
     doctorId: '',
+    doctorName: '',
     patientId: '',
     currentRole: '',
     currentUserId: '',
+    currentUserName: '',
+    currentUserIntroduction: '',
+    currentUserSpeciality: '',
     eventEditingOn: false,
     currentEventId: 0,
     currentEventTitle: '',
@@ -42,6 +49,7 @@ const initialState: State = {
     currentEventStartDate: '',
     currentEventTime: '',
     currentEventStatus: false,
+    docPageOn: false,
     paginatedUsers: {
       pagedUsers: [],
       currentPage: 1,
@@ -128,9 +136,18 @@ const actions = {
         });
     },
 
+    getAllUsers: () : Action<State> => 
+    async ({ setState, getState }) => {
+        const response = await axios.get("https://localhost:44375/api/Account/users");
+        setState({
+          users: response.data
+        });
+    },
+
     getAppointment: (id: any) : Action<State> => 
     async ({ setState, getState }) => {
         const response = await axios.get("https://localhost:44375/api/Appointment/GetCalendarDataById/" + id);
+        console.log(response.data);
         setState({
           currentEventId: response.data.id,
           currentEventTitle: response.data.title,
@@ -142,6 +159,19 @@ const actions = {
           currentEventStatus: response.data.isApproved
         });
     },
+
+    getUserById: (id: any) : Action<State> => 
+    async ({ setState, getState }) => {
+        const response = await axios.get("https://localhost:44375/api/Account/users/" + id);
+        console.log(response.data);
+        setState({
+          currentUserId: response.data.id,
+          currentUserName: response.data.name,
+          currentUserIntroduction: response.data.introduction,
+          currentUserSpeciality: response.data.speciality
+        });
+    },
+
 
     deleteAppointment: (id: any) : Action<State> => 
     ({ setState, getState }) => {
@@ -166,6 +196,21 @@ const actions = {
       })
 
       setState({appointments: updList });
+      return response.data;
+    }, 
+
+    updateUser: (id: any, UserForm: any) : Action<State> =>
+    async ({ setState, getState }) => {
+      var form: any = { ...UserForm };
+      const response = await axios.put("https://localhost:44375/api/Account/Edit/" + id, form);
+
+      const updList = getState().users.map((app : any)=> {
+        if(id === app.id){
+           return form; }
+        return app;
+      })
+
+      setState({users: updList });
       return response.data;
     }, 
 
@@ -195,7 +240,7 @@ const actions = {
     getUsers: (pageNumber?: number, pageSize?:number, searchName?:string, speciality?:string,
                sort?: string, orderby?: string) : Action<State> =>
     async ({ setState, getState }) => {
-      const response = await axios.get("https://localhost:44375/api/Account/users", { params: { 
+      const response = await axios.get("https://localhost:44375/api/Account/pagedDocs", { params: { 
           PageNumber: pageNumber,
           PageSize: pageSize,
           SearchName: searchName,

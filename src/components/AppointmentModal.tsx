@@ -8,7 +8,6 @@ import { IDoctor } from '../interfaces/IDoctor';
 import { IAppointment } from '../interfaces/IAppointment';
 import { TimePicker } from 'antd';
 import type { Dayjs } from 'dayjs';
-import dayjs from 'dayjs';
 import { Select } from 'antd';
 import type { DatePickerProps } from 'antd';
 import { DatePicker } from 'antd';
@@ -50,11 +49,8 @@ export const AppointmentModal: React.FC = () => {
             title: state.currentEventTitle,
             description: state.currentEventDescription,
             patientId: state.currentEventPatientId,
-            doctorId: state.currentEventDoctorId,
-            //startDate: '2023-02-17',
-            //time: ' '
+            doctorId: state.currentEventDoctorId
         });
-        console.log(state.currentEventTime);
     }
 
       const handleSubmit = (values: any) => {

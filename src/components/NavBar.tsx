@@ -1,6 +1,7 @@
 import AuthorizeApi from "../api/authorizeApi";
 import UserApi from "../api/userApi";
-import { Layout, Menu, Dropdown, Avatar, Badge, Button, Drawer } from "antd";
+import { Layout, Menu, MenuProps, Space, Dropdown, Avatar, Badge, Button, Drawer } from "antd";
+import { DownOutlined, UserOutlined} from '@ant-design/icons';
 import { useUserStore } from '../stores/user.store';
 import Link from 'antd/es/typography/Link';
 import React, { useState, useEffect, useRef } from "react";
@@ -14,7 +15,6 @@ export const NavBar: React.FC = () => {
     const [state, actions] = useUserStore();
     const [name, setName] = useState<string>();
     const [id, setId] = useState<string>("");
-    const [docPageOn, setdocPageOn] = useState<boolean>(false);
     const token = AuthLocalStorage.getToken() as string;
     const signedIn = AuthorizeApi.isSignedIn();
     const userState = useRef(signedIn);
@@ -24,6 +24,7 @@ export const NavBar: React.FC = () => {
     let authService = new AuthorizeApi();
     useEffect(() => {
         fetchData();
+        actions.getAllUsers();
       }, []);
 
     const fetchData = async () => {
@@ -40,6 +41,7 @@ export const NavBar: React.FC = () => {
         }
       };
 
+      
       const logOut = () => {
           authService.logout();
           navigate("../", { replace: true });
@@ -50,15 +52,42 @@ export const NavBar: React.FC = () => {
         authService.logout();
         navigate("../", { replace: true });
         window.location.reload();
-    } 
+      } 
+
+      const editProfile = () => {
+        const user: any = jwt(token);
+        actions.getUserById(user.NameIdentifier);
+        navigate("../editprofile/" + id, { replace: true });
+      } 
+
+
+      const items: MenuProps['items'] = [
+        {
+          label: 'Edit Profile',
+          key: '1',
+          icon: <UserOutlined />,
+          onClick: editProfile
+        },
+        {
+          label: 'Log Out',
+          key: '2',
+          icon: <UserOutlined />,
+          onClick: logOut
+        }
+      ];
+
+      const menuProps = {
+        items
+      };
+
 
       const toDrCatalogue = () => {
-        setdocPageOn(true);
+        state.docPageOn = true;
         navigate("../catalogue", { replace: true });
     } 
 
       const toCalendar = () => {
-        setdocPageOn(false);
+        state.docPageOn = false;
         navigate("../calendar", { replace: true });
     } 
 
@@ -71,24 +100,26 @@ export const NavBar: React.FC = () => {
                   
                    <div style={{ display: 'flex'}}>
                         <h3 style={{marginTop: "2px"}}>
-                        {docPageOn ? (
+                        {state.docPageOn ? (
                               <Link onClick={toCalendar} style={{ padding: "15px", color: "white" }}>Calendar</Link>
                         ) 
                         : <Link onClick={toDrCatalogue} style={{ padding: "15px", color: "white" }}>Our Doctors</Link>}
                         </h3>
 
-                        <h3 style={{ marginLeft: "1000px", marginTop: "2px", color: "white" }}>
-                            Welcome, { " "   }   
+                        <h3 style={{ marginLeft: "1100px", marginTop: "2px", color: "white" }}>
+                            Welcome, {" "}   
                             {name !== undefined
                             ? name?.length > 12
                             ? name.slice(0, 10) + "..."
                             : name
                             : ""}
-
-               
-                             <Link onClick={logOut} style={{ padding: "15px"}}>Log Out</Link>
+                           
+                              <Dropdown menu={menuProps} overlayStyle={{color: "white"}}>
+                                <a onClick={(e) => e.preventDefault()}>
+                                    <DownOutlined />
+                                </a>
+                              </Dropdown>
                          </h3>
-
                     </div>
                     ) : (
                     <div style={{ display: 'flex'}}>

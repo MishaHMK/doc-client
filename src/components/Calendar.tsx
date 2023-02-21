@@ -56,8 +56,6 @@ export const Calendar: React.FC = () => {
     const setUp = () => {
         const token = AuthLocalStorage.getToken() as string;
         const decoded: any = jwt_decode(token);
-        console.log(token);
-        console.log(decoded);
         state.currentRole = decoded.Role;
         if(decoded.Role == "Patient"){
             state.patientId = decoded.NameIdentifier;
@@ -86,6 +84,7 @@ export const Calendar: React.FC = () => {
                     style={{ width: 120 }}
                     options={state.doctors.map((doc : IDoctor) => 
                          ({ label: "Doctor " + doc.name, value: doc.id  }))}
+                    defaultValue = {state.doctorName}
                     onChange={handleChange}/>
                    <br></br> 
                    <br></br> 

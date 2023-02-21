@@ -1,7 +1,8 @@
 import React, {ChangeEvent, FC, useState, useEffect} from 'react';
 import { useUserStore } from '../stores/user.store';
 import { Card, List, Pagination, Input, Space, Select, Button } from 'antd';
-import { EditOutlined, CommentOutlined, UpOutlined, DownOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined, CommentOutlined, UpOutlined, DownOutlined } from '@ant-design/icons';
+import { useNavigate } from "react-router-dom";
 
 const pageSize = 4;
 const { Search } = Input;
@@ -15,11 +16,12 @@ export const DoctorsPage: React.FC = () => {
     const [searchName, setSearchName] = useState("");
     const [orderBy, setOrderBy] = useState("");
     const [sortItem, setSortItem] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {  
         actions.getUsers(currentPage, pageSize, searchName, selectedSpec, sortItem, orderBy);
         settotalItems(state.paginatedUsers.totalItems);
-    });
+    }, []);
 
     const handleChange = (page : any) => {
         setCurrentPage(page);
@@ -33,7 +35,7 @@ export const DoctorsPage: React.FC = () => {
 
     const handleSelect = (value : any) => {
         setSelectedSpec(value);
-        actions.getUsers(currentPage, pageSize, searchName, selectedSpec, sortItem, orderBy);
+        actions.getUsers(currentPage, pageSize, searchName, value, sortItem, orderBy);
     };
 
     const sortNameByAsc = () => {
@@ -48,7 +50,17 @@ export const DoctorsPage: React.FC = () => {
         actions.getUsers(currentPage, pageSize, searchName, selectedSpec, sortItem, orderBy);
     };
 
+    const goToAppoint = (id : string, name: string) => {
 
+        state.docSelected = true;
+        state.doctorIdSelected = id;
+        state.doctorId = id;
+        state.doctorName = name;
+        state.docPageOn = false;
+        actions.getAppointments(state.doctorId, state.patientId,
+            state.currentRole);
+        navigate("../calendar", { replace: true });    
+    };
 
     return (
         <div className = "docpage"> 
@@ -85,16 +97,23 @@ export const DoctorsPage: React.FC = () => {
                 dataSource={state.paginatedUsers.pagedUsers}
                 renderItem={(item : any) => (
                 <List.Item>
-                    <Card title={"Doctor " + item.name + " (" + item.speciality + ") " }
-                        actions={[
-                            <CommentOutlined  key="chat" />,
-                            <EditOutlined key="edit" />
-                        ]}
-                        bordered = {true}
-                        style={{ }}
-                        >
-                        <i>{item.introduction}</i>
-                    </Card>
+                    {(state.currentRole == "Doctor") ?
+                        <Card title={"Doctor " + item.name + " (" + item.speciality + ") " }
+                            bordered = {true}
+                            >
+                            <i>{item.introduction}</i>
+                        </Card>
+                        :
+                        <Card title={"Doctor " + item.name + " (" + item.speciality + ") " }
+                            actions={[
+                                <CommentOutlined  key="chat" />,
+                                <PlusCircleOutlined key="app" onClick={() => goToAppoint(item.id, item.name)}/>
+                            ]}
+                            bordered = {true}   
+                            >
+                            <i>{item.introduction}</i>
+                        </Card>
+                    }
                 </List.Item>
             )}
             />
