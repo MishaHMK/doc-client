@@ -25,7 +25,7 @@ export const DoctorsPage: React.FC = () => {
 
     const handleChange = (page : any) => {
         setCurrentPage(page);
-        actions.getUsers(currentPage, pageSize, searchName, selectedSpec, sortItem, orderBy);
+        actions.getUsers(page, pageSize, searchName, selectedSpec, sortItem, orderBy);
     };
 
     const onSearch = (value: string) => {
@@ -94,7 +94,7 @@ export const DoctorsPage: React.FC = () => {
 
             <List
                 grid={{ column: 2 }}
-                dataSource={state.paginatedUsers.pagedUsers}
+                dataSource={state.paginatedUsers.pagedList}
                 renderItem={(item : any) => (
                 <List.Item>
                     {(state.currentRole == "Doctor") ?

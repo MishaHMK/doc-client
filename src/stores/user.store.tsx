@@ -4,22 +4,24 @@ import { IDoctor } from '../interfaces/IDoctor';
 import axios, { AxiosError } from "axios";
 import { IAppointment } from '../interfaces/IAppointment';
 import PaginatedResult from '../models/pagination';
+import { IMessage } from '../interfaces/IMessage';
 
 
 type State = { roles: any, users: any, specs: any, doctors: IDoctor[], patients: IPatient[], appointments: any, 
                times: any, IsShown: any, doctorIdSelected: any, doctorId: any, doctorName: any,  
                patientId: any, currentUserId: any, currentUserName: any,  currentUserIntroduction: any,
-               currentRole: any, eventEditingOn: any, currentUserSpeciality: any,
+               currentRole: any, eventEditingOn: any, currentUserSpeciality: any, paginatedUsers: PaginatedResult,
                currentEventId: number, currentEventTitle: any, currentEventDescription: any,  
-               currentEventPatientId: any, currentEventDoctorId: any, 
-               currentEventStartDate: any, currentEventTime: any, currentEventStatus: any, 
-               docSelected : any, paginatedUsers: PaginatedResult, docPageOn: any};
+               currentEventPatientId: any, currentEventDoctorId: any, currentEventStartDate: any,
+               currentEventTime: any, currentEventStatus: any, docSelected : any, docPageOn: any
+               messages: IMessage[], paginatedMessages: PaginatedResult};
 type Actions = typeof actions;
 
 
 const initialState: State = {
     roles: [],
     users: [],
+    messages: [],
     specs: ["Any",
             "Pediatrics",
             "Neurology",
@@ -51,7 +53,13 @@ const initialState: State = {
     currentEventStatus: false,
     docPageOn: false,
     paginatedUsers: {
-      pagedUsers: [],
+      pagedList: [],
+      currentPage: 1,
+      totalItems: 0,
+      pageSize: 4,
+    },
+    paginatedMessages: {
+      pagedList: [],
       currentPage: 1,
       totalItems: 0,
       pageSize: 4,
@@ -170,6 +178,8 @@ const actions = {
           currentUserIntroduction: response.data.introduction,
           currentUserSpeciality: response.data.speciality
         });
+
+        return response.data;
     },
 
 
@@ -254,6 +264,23 @@ const actions = {
       
       setState({
         paginatedUsers: response.data
+      });
+    },
+
+    getMessages: (pageNumber?: number, pageSize?: number, container?: string, userId?: string) : Action<State> =>
+      async ({ setState, getState }) => {
+        const response = await axios.get("https://localhost:44375/api/Messages", { params: { 
+          PageNumber: pageNumber,
+          PageSize: pageSize,
+          Container: container,
+          userId: userId
+      }})
+      .catch((error: AxiosError) => {
+        throw new Error(error.message);
+      });
+
+      setState({
+        paginatedMessages: response.data
       });
     }
 };

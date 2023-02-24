@@ -7,6 +7,7 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' 
 import interactionPlugin from "@fullcalendar/interaction"
 import jwt_decode from "jwt-decode";
+import jwt from "jwt-decode";
 import AuthLocalStorage from "../AuthLocalStorage";
 import {
     EventApi,
@@ -15,9 +16,12 @@ import {
 
 export const Calendar: React.FC = () => {
     const [state, actions] = useUserStore();
+    const token = AuthLocalStorage.getToken() as string;
+    const user: any = jwt(token);
 
     useEffect(() => {
         setUp();
+        actions.getUserById(user.NameIdentifier);
         actions.getDoctors();
         actions.getPatients();
         actions.getAllTimes();

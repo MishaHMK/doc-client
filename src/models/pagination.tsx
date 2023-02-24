@@ -1,13 +1,13 @@
 export default class PaginatedResult {
     currentPage: number;
     pageSize: number;
-    pagedUsers: any[];
+    pagedList: any[];
     totalItems: number;
 
     constructor() {
         this.currentPage = 0;
         this.pageSize = 0;
-        this.pagedUsers = [];
+        this.pagedList = [];
         this.totalItems = 0;
       }
 }

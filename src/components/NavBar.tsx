@@ -11,25 +11,28 @@ import { useNavigate } from "react-router-dom";
 const { Header, Content, Footer } = Layout;
 
 export const NavBar: React.FC = () => {
-    const user = AuthorizeApi.isSignedIn();
+    const isLogedIn = AuthorizeApi.isSignedIn();
     const [state, actions] = useUserStore();
     const [name, setName] = useState<string>();
     const [id, setId] = useState<string>("");
+    const [totalItems, settotalItems] = useState(0);
     const token = AuthLocalStorage.getToken() as string;
     const signedIn = AuthorizeApi.isSignedIn();
     const userState = useRef(signedIn);
     const navigate = useNavigate();
-
+    const user: any = jwt(token);
     let userService = new UserApi();
     let authService = new AuthorizeApi();
+
     useEffect(() => {
         fetchData();
         actions.getAllUsers();
+        actions.getMessages(1, 4, "Unread", user.NameIdentifier);
+        settotalItems(state.paginatedMessages.totalItems);
       }, []);
 
     const fetchData = async () => {
-        if (user) {
-          const user: any = jwt(token);
+        if (isLogedIn) {
           await userService.getById(user.NameIdentifier).then(async (response) => {
             state.currentUserId = user.NameIdentifier;
             setName(response.data.user.name);
@@ -56,7 +59,6 @@ export const NavBar: React.FC = () => {
 
       const editProfile = () => {
         const user: any = jwt(token);
-        actions.getUserById(user.NameIdentifier);
         navigate("../editprofile/" + id, { replace: true });
       } 
 
@@ -91,6 +93,12 @@ export const NavBar: React.FC = () => {
         navigate("../calendar", { replace: true });
     } 
 
+      const toMessages = () => {
+        state.docPageOn = false;
+        navigate("../messages/" + id, { replace: true });
+    } 
+
+
 
     return (
         <div> 
@@ -101,12 +109,16 @@ export const NavBar: React.FC = () => {
                    <div style={{ display: 'flex'}}>
                         <h3 style={{marginTop: "2px"}}>
                         {state.docPageOn ? (
-                              <Link onClick={toCalendar} style={{ padding: "15px", color: "white" }}>Calendar</Link>
+                              <Link onClick={toCalendar} style={{ color: "white" }}>Calendar</Link>
                         ) 
-                        : <Link onClick={toDrCatalogue} style={{ padding: "15px", color: "white" }}>Our Doctors</Link>}
+                        : <Link onClick={toDrCatalogue} style={{ color: "white" }}>Our Doctors</Link>}
                         </h3>
 
-                        <h3 style={{ marginLeft: "1100px", marginTop: "2px", color: "white" }}>
+                        <h3 style={{marginLeft: "50px", marginTop: "2px"}}>
+                          <Link onClick={toMessages} style={{ color: "white" }}>Messages {totalItems}</Link>
+                        </h3>
+
+                        <h3 style={{ marginLeft: "1000px", marginTop: "2px", color: "white" }}>
                             Welcome, {" "}   
                             {name !== undefined
                             ? name?.length > 12

@@ -4,6 +4,7 @@ import { Form, Input, Select, Button } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import { IEditUserForm } from '../interfaces/IEditUserForm';
 import AuthLocalStorage from "../AuthLocalStorage";
+import jwt from "jwt-decode";
 
 export const EditProfile: React.FC = () => {
 
@@ -11,7 +12,9 @@ export const EditProfile: React.FC = () => {
     const [editForm] = useForm();
     const [chosenSpec, setChosenSpec] = useState("");
     const { TextArea } = Input;
-    
+    const token = AuthLocalStorage.getToken() as string;
+    const user: any = jwt(token);
+
     useEffect(() => {
         setUserForm();
     }, []);

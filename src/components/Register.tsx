@@ -8,8 +8,8 @@ import AuthorizeApi from "../api/authorizeApi";
 
 export const Register: React.FC = () => {
 
-    const [state, actions] = useUserStore();
     const navigate = useNavigate();
+    const [state, actions] = useUserStore();
     const [chosenRole, setChosenRole] = useState("");
     const [chosenSpec, setChosenSpec] = useState("");
     let authService = new AuthorizeApi();
