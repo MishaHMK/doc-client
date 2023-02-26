@@ -8,7 +8,7 @@ import { IMessage } from '../interfaces/IMessage';
 
 
 type State = { roles: any, users: any, specs: any, doctors: IDoctor[], patients: IPatient[], appointments: any, 
-               times: any, IsShown: any, doctorIdSelected: any, doctorId: any, doctorName: any,  
+               times: any, IsAppShown: any, IsThreadShown: any, doctorIdSelected: any, doctorId: any, doctorName: any,  
                patientId: any, currentUserId: any, currentUserName: any,  currentUserIntroduction: any,
                currentRole: any, eventEditingOn: any, currentUserSpeciality: any, paginatedUsers: PaginatedResult,
                currentEventId: number, currentEventTitle: any, currentEventDescription: any,  
@@ -31,7 +31,8 @@ const initialState: State = {
     patients: [],
     appointments:[],
     times: [],
-    IsShown: false,
+    IsAppShown: false,
+    IsThreadShown: false,
     docSelected:false,
     doctorIdSelected: '',
     doctorId: '',
@@ -117,18 +118,37 @@ const actions = {
         });
     }, 
 
-    makeModalVisible: (): Action<State> => 
+    makeAppModalVisible: (): Action<State> => 
     async ({ setState }) => 
     {
       setState({
-        IsShown: true
+        IsAppShown: true
       });
     },
   
-    makeModalInvisible: (): Action<State> => async ({ setState }) => {
+    makeAppModalInvisible: (): Action<State> => 
+    async ({ setState }) => 
+    {
       setState({
-        IsShown: false, 
+        IsAppShown: false, 
         currentEventId: 0
+      });
+    },
+
+
+    makeThreadModalVisible: (): Action<State> => 
+    async ({ setState }) => 
+    {
+      setState({
+        IsThreadShown: true
+      });
+    },
+  
+    makeThreadModalInvisible: (): Action<State> => 
+    async ({ setState }) => 
+    {
+      setState({
+        IsThreadShown: false
       });
     },
 

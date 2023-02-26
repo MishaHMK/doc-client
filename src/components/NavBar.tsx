@@ -1,6 +1,7 @@
 import AuthorizeApi from "../api/authorizeApi";
 import UserApi from "../api/userApi";
-import { Layout, Menu, MenuProps, Space, Dropdown, Avatar, Badge, Button, Drawer } from "antd";
+import MessageApi from "../api/messageApi";
+import { Layout, MenuProps, Dropdown } from "antd";
 import { DownOutlined, UserOutlined} from '@ant-design/icons';
 import { useUserStore } from '../stores/user.store';
 import Link from 'antd/es/typography/Link';
@@ -11,28 +12,34 @@ import { useNavigate } from "react-router-dom";
 const { Header, Content, Footer } = Layout;
 
 export const NavBar: React.FC = () => {
-    const isLogedIn = AuthorizeApi.isSignedIn();
     const [state, actions] = useUserStore();
     const [name, setName] = useState<string>();
     const [id, setId] = useState<string>("");
     const [totalItems, settotalItems] = useState(0);
-    const token = AuthLocalStorage.getToken() as string;
+    const isLogedIn = AuthorizeApi.isSignedIn();
     const signedIn = AuthorizeApi.isSignedIn();
     const userState = useRef(signedIn);
     const navigate = useNavigate();
-    const user: any = jwt(token);
     let userService = new UserApi();
     let authService = new AuthorizeApi();
+    let msgService = new MessageApi();
 
     useEffect(() => {
         fetchData();
-        actions.getAllUsers();
-        actions.getMessages(1, 4, "Unread", user.NameIdentifier);
-        settotalItems(state.paginatedMessages.totalItems);
       }, []);
 
     const fetchData = async () => {
         if (isLogedIn) {
+          const token = AuthLocalStorage.getToken() as string;
+          const user: any = jwt(token);
+          actions.getAllUsers();
+
+
+          await msgService.getMessages(1, 4, "Unread", user.NameIdentifier)
+          .then(async (response) => {
+            settotalItems(response.data.totalItems);
+          });
+
           await userService.getById(user.NameIdentifier).then(async (response) => {
             state.currentUserId = user.NameIdentifier;
             setName(response.data.user.name);
@@ -58,6 +65,7 @@ export const NavBar: React.FC = () => {
       } 
 
       const editProfile = () => {
+        const token = AuthLocalStorage.getToken() as string;
         const user: any = jwt(token);
         navigate("../editprofile/" + id, { replace: true });
       } 
@@ -98,8 +106,6 @@ export const NavBar: React.FC = () => {
         navigate("../messages/" + id, { replace: true });
     } 
 
-
-
     return (
         <div> 
             <Layout>
@@ -115,7 +121,10 @@ export const NavBar: React.FC = () => {
                         </h3>
 
                         <h3 style={{marginLeft: "50px", marginTop: "2px"}}>
-                          <Link onClick={toMessages} style={{ color: "white" }}>Messages {totalItems}</Link>
+                          <Link onClick={toMessages} style={{ color: "white" }} className="messages">
+                              <div>Messages </div>
+                              { totalItems > 0 ? <div><span className="badge">{totalItems}</span></div> : <div></div> }
+                          </Link>
                         </h3>
 
                         <h3 style={{ marginLeft: "1000px", marginTop: "2px", color: "white" }}>

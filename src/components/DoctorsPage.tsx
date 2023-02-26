@@ -3,11 +3,20 @@ import { useUserStore } from '../stores/user.store';
 import { Card, List, Pagination, Input, Space, Select, Button } from 'antd';
 import { PlusCircleOutlined, CommentOutlined, UpOutlined, DownOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
+import UserApi from "../api/userApi";
+import AuthLocalStorage from '../AuthLocalStorage';
+import jwt_decode from "jwt-decode";
+import jwt from "jwt-decode";
 
 const pageSize = 4;
 const { Search } = Input;
 
 export const DoctorsPage: React.FC = () => {
+    const token = AuthLocalStorage.getToken() as string;
+    const user: any = jwt(token);
+    const decoded: any = jwt_decode(token);
+    const navigate = useNavigate();
+    let userService = new UserApi();
 
     const [state, actions] = useUserStore();
     const [totalItems, settotalItems] = useState(0);
@@ -16,38 +25,45 @@ export const DoctorsPage: React.FC = () => {
     const [searchName, setSearchName] = useState("");
     const [orderBy, setOrderBy] = useState("");
     const [sortItem, setSortItem] = useState("");
-    const navigate = useNavigate();
+    const [currentRole, setCurrentRole] = useState<any>();
+    const [users, setUsers] = useState([]);
 
     useEffect(() => {  
-        actions.getUsers(currentPage, pageSize, searchName, selectedSpec, sortItem, orderBy);
-        settotalItems(state.paginatedUsers.totalItems);
-    }, []);
+        fetchData();
+    }, [currentPage, searchName, sortItem, orderBy, selectedSpec]);
+
+    const fetchData = async () => {
+        const decoded: any = jwt_decode(token);
+        setCurrentRole(decoded.Role);
+
+        await userService.getPagedUsers(currentPage, pageSize, searchName, selectedSpec, sortItem, orderBy)
+            .then(async (response) => {
+               settotalItems(response.data.totalItems);
+               setUsers(response.data.pagedList);
+        });
+    };
+        
 
     const handleChange = (page : any) => {
         setCurrentPage(page);
-        actions.getUsers(page, pageSize, searchName, selectedSpec, sortItem, orderBy);
     };
 
     const onSearch = (value: string) => {
         setSearchName(value);
-        actions.getUsers(currentPage, pageSize, searchName, selectedSpec, sortItem, orderBy);
     };
 
     const handleSelect = (value : any) => {
         setSelectedSpec(value);
-        actions.getUsers(currentPage, pageSize, searchName, value, sortItem, orderBy);
     };
 
     const sortNameByAsc = () => {
         setSortItem("name");
         setOrderBy("ascend");
-        actions.getUsers(currentPage, pageSize, searchName, selectedSpec, sortItem, orderBy);
     };
 
     const sortNameByDesc = () => {
         setSortItem("name");
         setOrderBy("descend");
-        actions.getUsers(currentPage, pageSize, searchName, selectedSpec, sortItem, orderBy);
     };
 
     const goToAppoint = (id : string, name: string) => {
@@ -94,10 +110,10 @@ export const DoctorsPage: React.FC = () => {
 
             <List
                 grid={{ column: 2 }}
-                dataSource={state.paginatedUsers.pagedList}
+                dataSource={users}
                 renderItem={(item : any) => (
                 <List.Item>
-                    {(state.currentRole == "Doctor") ?
+                    {(currentRole == "Doctor") ?
                         <Card title={"Doctor " + item.name + " (" + item.speciality + ") " }
                             bordered = {true}
                             >
@@ -128,3 +144,4 @@ export const DoctorsPage: React.FC = () => {
        </div>
     );
  };
+

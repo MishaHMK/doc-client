@@ -28,11 +28,11 @@ export const AppointmentModal: React.FC = () => {
     });
     
       const handleCreateCancel = () => {
-        actions.makeModalInvisible();
+        actions.makeAppModalInvisible();
       }
     
       const handleEditCancel = () => {
-        actions.makeModalInvisible();
+        actions.makeAppModalInvisible();
       }
 
       const dayChange: DatePickerProps['onChange'] = (date, dateString) => {
@@ -54,7 +54,7 @@ export const AppointmentModal: React.FC = () => {
     }
 
       const handleSubmit = (values: any) => {
-        actions.makeModalInvisible();
+        actions.makeAppModalInvisible();
         const user: any = jwt(token);
 
         const appoint : IAppointment = 
@@ -74,16 +74,16 @@ export const AppointmentModal: React.FC = () => {
 
     const deleteAppointment = (id : any) : any => {
       actions.deleteAppointment(id);
-      actions.makeModalInvisible();
+      actions.makeAppModalInvisible();
     }
 
     const approveAppointment = () : any => {
       actions.approveAppointment(state.currentEventId, state.currentEventStatus);
-      actions.makeModalInvisible();
+      actions.makeAppModalInvisible();
     }
 
     const handleUpdate = (values: any) => {
-      actions.makeModalInvisible();
+      actions.makeAppModalInvisible();
       const user: any = jwt(token);
       const appointToUpdate : IAppointment = 
       {
@@ -105,7 +105,7 @@ export const AppointmentModal: React.FC = () => {
       if(state.currentEventId == 0){
         return(  
         <Modal title="Create Appointment"
-           open={state.IsShown} 
+           open={state.IsAppShown} 
            onCancel={handleCreateCancel}
            footer={null}>
               <Form form = {createForm} onFinish={handleSubmit}>
@@ -175,7 +175,7 @@ export const AppointmentModal: React.FC = () => {
       } 
       else return (
       <Modal title="Edit Appointment" 
-            open={state.IsShown} 
+            open={state.IsAppShown} 
             onCancel={handleEditCancel}
             footer={null}>
          <Form form = {editForm} onFinish={handleUpdate} name="control-hooks">

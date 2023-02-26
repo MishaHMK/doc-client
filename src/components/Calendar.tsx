@@ -40,7 +40,7 @@ export const Calendar: React.FC = () => {
     }, []);
 
     const showModal = () => {
-        actions.makeModalVisible();
+        actions.makeAppModalVisible();
     };
 
     const handleChange = (value : any) => {
@@ -53,7 +53,7 @@ export const Calendar: React.FC = () => {
 
     const handleEvents  = (value : any) => {
         state.currentEventId = value.event.extendedProps.id;
-        actions.makeModalVisible();
+        actions.makeAppModalVisible();
         actions.getAppointment(value.event.extendedProps.id);
     };    
 

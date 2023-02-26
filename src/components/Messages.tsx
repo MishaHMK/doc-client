@@ -1,11 +1,14 @@
 import React, {ChangeEvent, FC, useState, useEffect} from 'react';
 import { useUserStore } from '../stores/user.store';
 import { Button, Table} from 'antd';
+import Link from 'antd/es/typography/Link';
 import TimeAgo from 'timeago-react'; 
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import jwt from "jwt-decode";
 import { FolderOutlined, MailOutlined, SendOutlined } from '@ant-design/icons';
 import AuthLocalStorage from "../AuthLocalStorage";
+import MessageApi from "../api/messageApi";
+import { MessageThreadModal } from './MessageThreadModal';
 
 const pageSize = 4;
 
@@ -14,17 +17,20 @@ export const Messages: React.FC = () => {
     const [totalItems, settotalItems] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [container, setContainer] = useState("Unread");
+    const [messages, setMessages] = useState([]);
     const token = AuthLocalStorage.getToken() as string;
     const user: any = jwt(token);
-
+    let msgService = new MessageApi();
+    
     useEffect(() => {  
-        getMessages(container);
-    });
+        fetchData();
+    }, [currentPage, pageSize, container]);
 
 
     interface DataType {
         message: string;
         senderUserName: string;
+        receiverUserName: string;
         sentRec: string;
       }
 
@@ -35,12 +41,15 @@ export const Messages: React.FC = () => {
             width: '50%'
         },
         {
-            title: 'From / To',
+            title: 'From',
             dataIndex: 'senderUserName',
-            width: '20%'
+            width: '20%',
+            render: (senderUserName: any) => (
+                <Link>{senderUserName}</Link>
+            )
         },
         {
-            title: 'Sent / Received',
+            title: 'Sent',
             dataIndex: 'messageSent',
             width: '20%',
             render: (messageSent: any) => (
@@ -59,33 +68,31 @@ export const Messages: React.FC = () => {
       ];
 
     const onUnread = () => {
+        setCurrentPage(1);
         setContainer("Unread");
-        getMessages("Unread");
-        settotalItems(state.paginatedMessages.totalItems);
     } 
 
     const onInbox = () => {
+        setCurrentPage(1);
         setContainer("Inbox");
-        getMessages("Inbox");
-        settotalItems(state.paginatedMessages.totalItems);
     } 
 
     const onOutbox = () => {
+        setCurrentPage(1);
         setContainer("Outbox");
-        getMessages("Outbox");
-        settotalItems(state.paginatedMessages.totalItems);
     } 
 
     const handleChange = (page : any) => {
         setCurrentPage(page);
-        actions.getMessages(page, pageSize, container, user.NameIdentifier);
     };
 
-
-    const getMessages = (container?: string) => {
-        actions.getMessages(currentPage, pageSize, container, user.NameIdentifier);
-        settotalItems(state.paginatedMessages.totalItems);
-    }
+    const fetchData = async () => {
+        await msgService.getMessages(currentPage, pageSize, container, user.NameIdentifier)
+            .then(async (response) => {
+               settotalItems(response.data.totalItems);
+               setMessages(response.data.pagedList);
+        });
+    };
 
     return (
         <div>
@@ -111,7 +118,7 @@ export const Messages: React.FC = () => {
                         <div style={{ marginTop: '70px'}}>
                             <Table
                                 columns={columns}
-                                dataSource={state.paginatedMessages.pagedList}
+                                dataSource={messages}
                                 pagination={{
                                     current: currentPage,
                                     pageSize: pageSize,
@@ -126,6 +133,8 @@ export const Messages: React.FC = () => {
                         </div>    
                     }
                 </div>
+
+                <MessageThreadModal/>
         </div>
     );
 }
