@@ -1,75 +1,89 @@
 import {useEffect, useRef} from "react"
 import React, { useState } from 'react';
-import { Modal, Form, List, Avatar, Input, Button } from "antd";
+import { Modal, Form, List, Input, Button} from "antd";
 import { useForm } from "antd/lib/form/Form";
 import { useUserStore } from '../stores/user.store';
-import AuthLocalStorage from "../AuthLocalStorage";
-import VirtualList from 'rc-virtual-list';
 import MessageApi from "../api/messageApi";
 import TimeAgo from 'timeago-react';
 import { SendOutlined } from '@ant-design/icons';
-
-const ContainerHeight = 500;
+import { ICreateMessage } from "../interfaces/ICreateMessage";
+import { IMessage } from "../interfaces/IMessage";
 
 export const MessageThreadModal: React.FC = () => { 
 
-    const [createForm] = useForm();
+    const [sendForm] = useForm();
     const [state, actions] = useUserStore();
-    const token = AuthLocalStorage.getToken() as string;
-    const [data, setData] = useState<any[]>([]);
-    const ref = React.useRef<null | HTMLDivElement>(null);
+    const [messagesData, setData] = useState<IMessage[]>();
     let msgService = new MessageApi();
-    
+
+    const messageEl = useRef<null | HTMLDivElement>(null);
+
     useEffect(() => {  
         fetchData();
-        scrollToBottom();
-    }, [data]);
+        scrollToDown();
+    }, [state.senderName, state.receiverName]);
+
     
-
-
     const fetchData = async () => {
-        await msgService.getMessageThread("", "")
+      if(state.senderName != "" && state.receiverName != "") {
+        await msgService.getMessageThread(state.senderName, state.receiverName)
             .then(async (response) => {
                 setData(response.data);
         });
+      }
+          
     };
 
-    const scrollToBottom = () => {
-        ref.current?.scrollIntoView({ behavior: 'smooth'})
+    const scrollToDown = async () => {
+      if (messageEl) {
+        messageEl.current?.addEventListener('DOMNodeInserted', (event: { currentTarget: any; }) => {
+          const { currentTarget: target } = event;
+          target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
+        });
       }
+  };
+
 
     const handleCancel = () => {
-        //actions.makeModalInvisible();
-    }
+        actions.makeThreadModalInvisible();
+  };
 
-    const handleSubmit = (values: any) => {
+    const handleSubmit = async (values: any) => {
+        const messageToCreate : ICreateMessage = {
+          content: values.content,
+          senderName: state.senderName,
+          recipientName: state.receiverName
+        }
+
+        await msgService.sendMessage(messageToCreate);
+
+        await msgService.getMessageThread(state.senderName, state.receiverName)
+            .then(async (response) => {
+                setData(response.data);
+        });
+
+        sendForm.setFieldsValue({
+          content: "",
+      });
         
-     }
+        scrollToDown();
+  };
 
-    const deleteAppointment = (id : any) : any => {
-      actions.deleteAppointment(id);
-      //actions.makeModalInvisible();
-    }
-
-    const approveAppointment = () : any => {
-      actions.approveAppointment(state.currentEventId, state.currentEventStatus);
-      //actions.makeModalInvisible();
-    }
 
     return(  
         <Modal title="Chat" 
-           //open={state.IsThreadShown} 
-           open={true} 
+           open={state.IsThreadShown} 
            onCancel={handleCancel}
            footer={null}>
-            <div ref={ref}> 
-            <VirtualList
-                    data={data}
-                    height={ContainerHeight}
-                    itemHeight={47}
-                    itemKey="email">
-                        {(item: any) => (
-                        <List.Item key={item.senderId}>
+            <div ref={messageEl} style={{
+                height: 400,
+                overflow: 'auto',
+                padding: '0 16px'
+              }}> 
+                  <List
+                    dataSource={messagesData}
+                    renderItem={(item: any) => (
+                      <List.Item key={item.senderId}>
                             <List.Item.Meta
                             style={{ width: 'calc(100% - 60px)' }}
                             title={<div><a>{item.senderUserName + " "}</a> 
@@ -78,14 +92,18 @@ export const MessageThreadModal: React.FC = () => {
                             description={item.content}/>
                         </List.Item>
                     )}
-              </VirtualList>
-              <Form form = {createForm} onFinish={handleSubmit}>
-              <Input.Group compact>
-                <br></br>
-                <Input style={{ width: 'calc(100% - 60px)' }} defaultValue="https://ant.design" />
-                <Button type="primary"><SendOutlined /></Button>
-              </Input.Group>
-              </Form>
+                  />
+                  <Form form = {sendForm} onFinish={handleSubmit}>
+                      <Input.Group compact>
+                        <br></br>
+                        <Form.Item name="content">
+                          <Input placeholder = 'Write a message...' style={{ width: 350 }}/>
+                        </Form.Item>
+                        <Button type="primary" htmlType="submit"><SendOutlined /></Button>
+                      </Input.Group>
+                  </Form>
+
+             
             </div>     
         </Modal>)
 }

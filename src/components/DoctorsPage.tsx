@@ -7,6 +7,7 @@ import UserApi from "../api/userApi";
 import AuthLocalStorage from '../AuthLocalStorage';
 import jwt_decode from "jwt-decode";
 import jwt from "jwt-decode";
+import { MessageThreadModal } from './MessageThreadModal';
 
 const pageSize = 4;
 const { Search } = Input;
@@ -67,7 +68,6 @@ export const DoctorsPage: React.FC = () => {
     };
 
     const goToAppoint = (id : string, name: string) => {
-
         state.docSelected = true;
         state.doctorIdSelected = id;
         state.doctorId = id;
@@ -76,6 +76,11 @@ export const DoctorsPage: React.FC = () => {
         actions.getAppointments(state.doctorId, state.patientId,
             state.currentRole);
         navigate("../calendar", { replace: true });    
+    };
+
+    const openMessageModal = (receiverName : any) => {
+        actions.setReceiverName(receiverName);
+        actions.makeThreadModalVisible();
     };
 
     return (
@@ -122,7 +127,7 @@ export const DoctorsPage: React.FC = () => {
                         :
                         <Card title={"Doctor " + item.name + " (" + item.speciality + ") " }
                             actions={[
-                                <CommentOutlined  key="chat" />,
+                                <CommentOutlined  key="chat"  onClick={() => openMessageModal(item.name)}/>,
                                 <PlusCircleOutlined key="app" onClick={() => goToAppoint(item.id, item.name)}/>
                             ]}
                             bordered = {true}   
@@ -141,6 +146,8 @@ export const DoctorsPage: React.FC = () => {
                 onChange={handleChange}
                 style={{ bottom: "0px" }}
             />
+
+           <MessageThreadModal/>
        </div>
     );
  };

@@ -14,7 +14,7 @@ type State = { roles: any, users: any, specs: any, doctors: IDoctor[], patients:
                currentEventId: number, currentEventTitle: any, currentEventDescription: any,  
                currentEventPatientId: any, currentEventDoctorId: any, currentEventStartDate: any,
                currentEventTime: any, currentEventStatus: any, docSelected : any, docPageOn: any
-               messages: IMessage[], paginatedMessages: PaginatedResult};
+               messages: IMessage[], paginatedMessages: PaginatedResult, senderName: string, receiverName: string};
 type Actions = typeof actions;
 
 
@@ -52,6 +52,8 @@ const initialState: State = {
     currentEventStartDate: '',
     currentEventTime: '',
     currentEventStatus: false,
+    senderName: '',
+    receiverName: '',
     docPageOn: false,
     paginatedUsers: {
       pagedList: [],
@@ -149,6 +151,22 @@ const actions = {
     {
       setState({
         IsThreadShown: false
+      });
+    },
+
+    setSenderName: (send_un: string): Action<State> => 
+    async ({ setState }) => 
+    {
+      setState({
+        senderName: send_un
+      });
+    },
+
+    setReceiverName: (rec_un: string): Action<State> => 
+    async ({ setState }) => 
+    {
+      setState({
+        receiverName: rec_un
       });
     },
 

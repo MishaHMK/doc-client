@@ -1,9 +1,9 @@
-import React, {ChangeEvent, FC, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useUserStore } from '../stores/user.store';
 import { Button, Table} from 'antd';
 import Link from 'antd/es/typography/Link';
 import TimeAgo from 'timeago-react'; 
-import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
+import type { ColumnsType } from 'antd/es/table';
 import jwt from "jwt-decode";
 import { FolderOutlined, MailOutlined, SendOutlined } from '@ant-design/icons';
 import AuthLocalStorage from "../AuthLocalStorage";
@@ -45,7 +45,7 @@ export const Messages: React.FC = () => {
             dataIndex: 'senderUserName',
             width: '20%',
             render: (senderUserName: any) => (
-                <Link>{senderUserName}</Link>
+                <Link onClick={() => openMessageModal(senderUserName)}>{senderUserName}</Link>
             )
         },
         {
@@ -84,6 +84,11 @@ export const Messages: React.FC = () => {
 
     const handleChange = (page : any) => {
         setCurrentPage(page);
+    };
+
+    const openMessageModal = (receiverName : any) => {
+        actions.setReceiverName(receiverName);
+        actions.makeThreadModalVisible();
     };
 
     const fetchData = async () => {

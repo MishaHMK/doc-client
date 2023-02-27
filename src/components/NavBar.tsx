@@ -9,7 +9,7 @@ import React, { useState, useEffect, useRef } from "react";
 import jwt from "jwt-decode";
 import AuthLocalStorage from "../AuthLocalStorage";
 import { useNavigate } from "react-router-dom";
-const { Header, Content, Footer } = Layout;
+const { Header } = Layout;
 
 export const NavBar: React.FC = () => {
     const [state, actions] = useUserStore();
@@ -26,7 +26,7 @@ export const NavBar: React.FC = () => {
 
     useEffect(() => {
         fetchData();
-      }, []);
+      }, [totalItems, state.senderName, state.receiverName]);
 
     const fetchData = async () => {
         if (isLogedIn) {
@@ -42,6 +42,7 @@ export const NavBar: React.FC = () => {
 
           await userService.getById(user.NameIdentifier).then(async (response) => {
             state.currentUserId = user.NameIdentifier;
+            actions.setSenderName(response.data.user.name);
             setName(response.data.user.name);
             if (name !== undefined) {
               userState.current = true;
@@ -127,7 +128,7 @@ export const NavBar: React.FC = () => {
                           </Link>
                         </h3>
 
-                        <h3 style={{ marginLeft: "1000px", marginTop: "2px", color: "white" }}>
+                        <h3 style={{ marginLeft: "950px", marginTop: "2px", color: "white" }}>
                             Welcome, {" "}   
                             {name !== undefined
                             ? name?.length > 12
