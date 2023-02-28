@@ -34,5 +34,14 @@ export default class MessageApi {
        return response;
    };
 
+   deleteMessage = async (id: number, send: string)  => {
+      await axios.delete("https://localhost:44375/api/Messages/" + id, { params: { 
+        un_send: send
+       }})
+      .catch((error: AxiosError) => {
+          throw new Error(error.message);
+        }); 
+ };
+
 
 }

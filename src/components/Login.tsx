@@ -45,7 +45,7 @@ export const Login: React.FC = () => {
                         required: true
                     },
                     ]}>
-                    <Input placeholder="Email" />
+                    <Input placeholder="Email" style={{ width: 400 }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -56,7 +56,7 @@ export const Login: React.FC = () => {
                         required: true
                     },
                     ]}>
-                    <Input.Password placeholder="Password" />
+                    <Input.Password placeholder="Password" style={{ width: 400 }}/>
                 </Form.Item>
 
                 <Form.Item name="remember" valuePropName="checked">

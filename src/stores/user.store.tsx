@@ -11,7 +11,7 @@ type State = { roles: any, users: any, specs: any, doctors: IDoctor[], patients:
                times: any, IsAppShown: any, IsThreadShown: any, doctorIdSelected: any, doctorId: any, doctorName: any,  
                patientId: any, currentUserId: any, currentUserName: any,  currentUserIntroduction: any,
                currentRole: any, eventEditingOn: any, currentUserSpeciality: any, paginatedUsers: PaginatedResult,
-               currentEventId: number, currentEventTitle: any, currentEventDescription: any,  
+               currentEventId: number, currentEventTitle: any, currentEventDescription: any, currentName: any,
                currentEventPatientId: any, currentEventDoctorId: any, currentEventStartDate: any,
                currentEventTime: any, currentEventStatus: any, docSelected : any, docPageOn: any
                messages: IMessage[], paginatedMessages: PaginatedResult, senderName: string, receiverName: string};
@@ -39,6 +39,7 @@ const initialState: State = {
     doctorName: '',
     patientId: '',
     currentRole: '',
+    currentName: '',
     currentUserId: '',
     currentUserName: '',
     currentUserIntroduction: '',
@@ -151,6 +152,14 @@ const actions = {
     {
       setState({
         IsThreadShown: false
+      });
+    },
+
+    setCurrentName: (curr: string): Action<State> => 
+    async ({ setState }) => 
+    {
+      setState({
+        currentName: curr
       });
     },
 

@@ -56,7 +56,7 @@ export const Register: React.FC = () => {
                     required: true
                 },
                 ]}>
-                <Input placeholder="Name" />
+                <Input placeholder="Name" style={{ width: 400 }}/>
             </Form.Item>
 
             <Form.Item
@@ -67,7 +67,7 @@ export const Register: React.FC = () => {
                     required: true
                 },
                 ]}>
-                <Input placeholder="Email" />
+                <Input placeholder="Email" style={{ width: 400 }}/>
             </Form.Item>
 
             <Form.Item
@@ -78,7 +78,7 @@ export const Register: React.FC = () => {
                     required: true
                 },
                 ]}>
-                <Input.Password placeholder="Password" />
+                <Input.Password placeholder="Password" style={{ width: 400 }}/>
             </Form.Item>
 
 
@@ -90,7 +90,7 @@ export const Register: React.FC = () => {
                     required: true
                 },
                 ]}>
-                <Input.Password placeholder="Confirm Password" />
+                <Input.Password placeholder="Confirm Password" style={{ width: 400 }}/>
             </Form.Item>
 
             

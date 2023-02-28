@@ -10,7 +10,7 @@ import AuthLocalStorage from "../AuthLocalStorage";
 import MessageApi from "../api/messageApi";
 import { MessageThreadModal } from './MessageThreadModal';
 
-const pageSize = 4;
+const pageSize = 6;
 
 export const Messages: React.FC = () => { 
     const [state, actions] = useUserStore();
@@ -24,7 +24,7 @@ export const Messages: React.FC = () => {
     
     useEffect(() => {  
         fetchData();
-    }, [currentPage, pageSize, container]);
+    }, [totalItems, currentPage, pageSize, container]);
 
 
     interface DataType {
@@ -36,17 +36,17 @@ export const Messages: React.FC = () => {
 
     const columns: ColumnsType<DataType> = [
         {
-            title: 'Message',
-            dataIndex: 'content',
-            width: '50%'
-        },
-        {
             title: 'From',
             dataIndex: 'senderUserName',
             width: '20%',
             render: (senderUserName: any) => (
                 <Link onClick={() => openMessageModal(senderUserName)}>{senderUserName}</Link>
             )
+        },
+        {
+            title: 'Message',
+            dataIndex: 'content',
+            width: '50%'
         },
         {
             title: 'Sent',
@@ -61,11 +61,12 @@ export const Messages: React.FC = () => {
         {
             width: '10%',
             key: "delete",
-            render: () => (
-                <Button danger>Delete</Button>
+            dataIndex: 'id',
+            render: (id: any) => (
+                <Button danger onClick={() => deleteMessage(id, state.senderName)}>Delete</Button>
             )
         }
-      ];
+      ]
 
     const onUnread = () => {
         setCurrentPage(1);
@@ -89,6 +90,15 @@ export const Messages: React.FC = () => {
     const openMessageModal = (receiverName : any) => {
         actions.setReceiverName(receiverName);
         actions.makeThreadModalVisible();
+    };
+
+    const deleteMessage = async (id : any, userName : any) => {
+        await msgService.deleteMessage(id, userName);
+        await msgService.getMessages(currentPage, pageSize, container, user.NameIdentifier)
+        .then(async (response) => {
+           settotalItems(response.data.totalItems);
+           setMessages(response.data.pagedList);
+    });
     };
 
     const fetchData = async () => {
