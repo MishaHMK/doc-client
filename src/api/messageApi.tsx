@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { ICreateMessage } from "../interfaces/ICreateMessage";
+import Api from "./api";
 
 export default class MessageApi { 
     getMessages = async (pageNumber?: number, pageSize?: number, container?: string, userId?: string)  => {

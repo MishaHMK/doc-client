@@ -80,7 +80,7 @@ export const MessageThreadModal: React.FC = () => {
                 overflow: 'auto',
                 padding: '0 16px'
               }}> 
-                  <List
+                  <List 
                     dataSource={messagesData}
                     renderItem={(item: any) => (
                       <List.Item key={item.senderId}>

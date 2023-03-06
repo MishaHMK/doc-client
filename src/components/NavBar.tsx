@@ -34,13 +34,8 @@ export const NavBar: React.FC = () => {
           const user: any = jwt(token);
           actions.getAllUsers();
 
-
-          await msgService.getMessages(1, 4, "Unread", user.NameIdentifier)
+          await userService.getById(user.NameIdentifier)
           .then(async (response) => {
-            settotalItems(response.data.totalItems);
-          });
-
-          await userService.getById(user.NameIdentifier).then(async (response) => {
             state.currentUserId = user.NameIdentifier;
             actions.setSenderName(response.data.user.name);
             setName(response.data.user.name);
@@ -56,13 +51,13 @@ export const NavBar: React.FC = () => {
       const logOut = () => {
           authService.logout();
           navigate("../", { replace: true });
-          window.location.reload();
+          //window.location.reload();
       } 
 
       const logIn = () => {
         authService.logout();
         navigate("../", { replace: true });
-        window.location.reload();
+        //window.location.reload();
       } 
 
       const editProfile = () => {
