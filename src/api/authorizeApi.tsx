@@ -5,6 +5,10 @@ import Api from "./api";
 
 export default class AuthorizeApi { 
 
+   /* constructor(private presenceService: PresenceService){
+
+    } */
+
     static isSignedIn(): boolean {
         return !!AuthLocalStorage.getToken();
     }

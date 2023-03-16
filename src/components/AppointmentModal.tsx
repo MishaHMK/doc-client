@@ -70,6 +70,8 @@ export const AppointmentModal: React.FC = () => {
           adminId: ""
         };
         actions.createAppointment(appoint);
+        actions.getAppointments(state.doctorId, state.patientId,
+          state.currentRole);
      }
 
     const deleteAppointment = (id : any) : any => {

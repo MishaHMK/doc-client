@@ -1,2 +1,3 @@
 const BASE_URL = "https://localhost:44375/api/";
-export default BASE_URL;
+//const HUB_URL = "https://localhost:44375/hubs/";
+export default BASE_URL; 

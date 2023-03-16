@@ -7,13 +7,14 @@ import { useNavigate } from "react-router-dom";
 import jwt from "jwt-decode";
 import jwt_decode from "jwt-decode";
 import { useUserStore } from '../stores/user.store';
+import { useSignalrStore } from '../stores/signalr.store';
 
 export const Login: React.FC = () => {
     const [form] = Form.useForm();
     let authService = new AuthorizeApi();
     let user: any;
     const navigate = useNavigate();
-    const [state, actions] = useUserStore();
+    const [signalState, signalActions] = useSignalrStore();
 
     const register = () => {
         navigate("../register", { replace: true });
@@ -24,8 +25,8 @@ export const Login: React.FC = () => {
         const token = AuthLocalStorage.getToken() as string;
         user = jwt(token);
         if(user){
+            signalActions.createHubConnection(token);
             navigate("../calendar", { replace: true });
-            window.location.reload();
         } 
     }
 

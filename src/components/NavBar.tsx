@@ -9,6 +9,8 @@ import React, { useState, useEffect, useRef } from "react";
 import jwt from "jwt-decode";
 import AuthLocalStorage from "../AuthLocalStorage";
 import { useNavigate } from "react-router-dom";
+import { useSignalrStore } from '../stores/signalr.store';
+
 const { Header } = Layout;
 
 export const NavBar: React.FC = () => {
@@ -16,9 +18,10 @@ export const NavBar: React.FC = () => {
     const [name, setName] = useState<string>();
     const [id, setId] = useState<string>("");
     const [totalItems, settotalItems] = useState(0);
-    const isLogedIn = AuthorizeApi.isSignedIn();
+    const [signalState, signalActions] = useSignalrStore();
     const signedIn = AuthorizeApi.isSignedIn();
     const userState = useRef(signedIn);
+    const token = AuthLocalStorage.getToken() as string;
     const navigate = useNavigate();
     let userService = new UserApi();
     let authService = new AuthorizeApi();
@@ -26,11 +29,20 @@ export const NavBar: React.FC = () => {
 
     useEffect(() => {
         fetchData();
-      }, [totalItems, state.senderName, state.receiverName]);
+      }, [totalItems, state.senderName, state.receiverName, userState.current, signedIn]);
+
+    useEffect(() => {
+        if(token != null){ 
+          signalActions.createHubConnection(token);
+        }
+        else  {
+          signalActions.stopHubConncetion();
+        }
+      }, []);
 
     const fetchData = async () => {
-        if (isLogedIn) {
-          const token = AuthLocalStorage.getToken() as string;
+       console.log(token);
+       if(signedIn){
           const user: any = jwt(token);
           actions.getAllUsers();
 
@@ -39,19 +51,26 @@ export const NavBar: React.FC = () => {
             state.currentUserId = user.NameIdentifier;
             actions.setSenderName(response.data.user.name);
             setName(response.data.user.name);
-            if (name !== undefined) {
+            if (user.NameIdentifier !== undefined) {
               userState.current = true;
             }
             setId(response.data.user.id);
           });
+
+          await msgService.getMessages(1, 4, "Unread", user.NameIdentifier)
+              .then(async (response) => {
+                settotalItems(response.data.totalItems);
+           });
+
+          //signalActions.createHubConnection(token);
         }
       };
 
       
       const logOut = () => {
           authService.logout();
+          signalActions.stopHubConncetion();
           navigate("../", { replace: true });
-          //window.location.reload();
       } 
 
       const logIn = () => {

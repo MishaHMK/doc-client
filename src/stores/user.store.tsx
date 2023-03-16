@@ -14,7 +14,8 @@ type State = { roles: any, users: any, specs: any, doctors: IDoctor[], patients:
                currentEventId: number, currentEventTitle: any, currentEventDescription: any, currentName: any,
                currentEventPatientId: any, currentEventDoctorId: any, currentEventStartDate: any,
                currentEventTime: any, currentEventStatus: any, docSelected : any, docPageOn: any
-               messages: IMessage[], paginatedMessages: PaginatedResult, senderName: string, receiverName: string};
+               messages: IMessage[], paginatedMessages: PaginatedResult, senderName: string, receiverName: string,
+               onlineUsers: any[], connection: any};
 type Actions = typeof actions;
 
 
@@ -22,6 +23,7 @@ const initialState: State = {
     roles: [],
     users: [],
     messages: [],
+    onlineUsers: [],
     specs: ["Any",
             "Pediatrics",
             "Neurology",
@@ -55,6 +57,7 @@ const initialState: State = {
     currentEventStatus: false,
     senderName: '',
     receiverName: '',
+    connection: '',
     docPageOn: false,
     paginatedUsers: {
       pagedList: [],
@@ -71,7 +74,6 @@ const initialState: State = {
 };
 
 const actions = {
-
     getAllRoles: () : Action<State> => 
     async ({ setState, getState }) => {
         const roles = await axios.get("https://localhost:44375/api/Account/roles");
@@ -113,14 +115,6 @@ const actions = {
         });
     }, 
 
-    onLogIn: () : Action<State> => 
-    async ({ setState, getState }) => {
-        const patients = await axios.get("https://localhost:44375/api/Appointment/patients");
-        setState({
-          patients: patients.data
-        });
-    }, 
-
     makeAppModalVisible: (): Action<State> => 
     async ({ setState }) => 
     {
@@ -152,14 +146,6 @@ const actions = {
     {
       setState({
         IsThreadShown: false
-      });
-    },
-
-    setCurrentName: (curr: string): Action<State> => 
-    async ({ setState }) => 
-    {
-      setState({
-        currentName: curr
       });
     },
 
@@ -218,7 +204,6 @@ const actions = {
     getUserById: (id: any) : Action<State> => 
     async ({ setState, getState }) => {
         const response = await axios.get("https://localhost:44375/api/Account/users/" + id);
-        console.log(response.data);
         setState({
           currentUserId: response.data.id,
           currentUserName: response.data.name,
