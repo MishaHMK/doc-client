@@ -14,8 +14,8 @@ type State = { roles: any, users: any, specs: any, doctors: IDoctor[], patients:
                currentEventId: number, currentEventTitle: any, currentEventDescription: any, currentName: any,
                currentEventPatientId: any, currentEventDoctorId: any, currentEventStartDate: any,
                currentEventTime: any, currentEventStatus: any, docSelected : any, docPageOn: any
-               messages: IMessage[], paginatedMessages: PaginatedResult, senderName: string, receiverName: string,
-               onlineUsers: any[], connection: any};
+               messages: IMessage[], paginatedMessages: PaginatedResult, senderName: string, receiverName: string, 
+               datePicker: any};
 type Actions = typeof actions;
 
 
@@ -23,7 +23,6 @@ const initialState: State = {
     roles: [],
     users: [],
     messages: [],
-    onlineUsers: [],
     specs: ["Any",
             "Pediatrics",
             "Neurology",
@@ -38,6 +37,7 @@ const initialState: State = {
     docSelected:false,
     doctorIdSelected: '',
     doctorId: '',
+    datePicker: '',
     doctorName: '',
     patientId: '',
     currentRole: '',
@@ -57,7 +57,6 @@ const initialState: State = {
     currentEventStatus: false,
     senderName: '',
     receiverName: '',
-    connection: '',
     docPageOn: false,
     paginatedUsers: {
       pagedList: [],
@@ -96,14 +95,6 @@ const actions = {
         const doctors = await axios.get("https://localhost:44375/api/Appointment/doctors");
         setState({
           doctors: doctors.data
-        });
-    }, 
-
-    getSpecialities: () : Action<State> => 
-    async ({ setState, getState }) => {
-        const specs = await axios.get("https://localhost:44375/api/Account/specialities");
-        setState({
-          specs: specs.data
         });
     }, 
 
@@ -277,43 +268,6 @@ const actions = {
         appointments: [...getState().appointments, newApp]
       });
 
-    }, 
-
-    getUsers: (pageNumber?: number, pageSize?:number, searchName?:string, speciality?:string,
-               sort?: string, orderby?: string) : Action<State> =>
-    async ({ setState, getState }) => {
-      const response = await axios.get("https://localhost:44375/api/Account/pagedDocs", { params: { 
-          PageNumber: pageNumber,
-          PageSize: pageSize,
-          SearchName: searchName,
-          Speciality: speciality,
-          Sort: sort,
-          OrderBy: orderby
-      }})
-      .catch((error: AxiosError) => {
-        throw new Error(error.message);
-      });
-      
-      setState({
-        paginatedUsers: response.data
-      });
-    },
-
-    getMessages: (pageNumber?: number, pageSize?: number, container?: string, userId?: string) : Action<State> =>
-      async ({ setState, getState }) => {
-        const response = await axios.get("https://localhost:44375/api/Messages", { params: { 
-          PageNumber: pageNumber,
-          PageSize: pageSize,
-          Container: container,
-          userId: userId
-      }})
-      .catch((error: AxiosError) => {
-        throw new Error(error.message);
-      });
-
-      setState({
-        paginatedMessages: response.data
-      });
     }
 };
 

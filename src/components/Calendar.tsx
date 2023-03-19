@@ -100,6 +100,7 @@ export const Calendar: React.FC = () => {
             <div>
                 <FullCalendar
                     timeZone = 'local'
+                    hiddenDays = {[0, 6]} 
                     height = '1000px'
                     plugins = {[ dayGridPlugin, interactionPlugin ]}   
                     headerToolbar = {{ 

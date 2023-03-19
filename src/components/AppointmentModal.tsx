@@ -8,6 +8,7 @@ import { IDoctor } from '../interfaces/IDoctor';
 import { IAppointment } from '../interfaces/IAppointment';
 import { TimePicker } from 'antd';
 import type { Dayjs } from 'dayjs';
+import dayjs from "dayjs";
 import { Select } from 'antd';
 import type { DatePickerProps } from 'antd';
 import { DatePicker } from 'antd';
@@ -44,14 +45,31 @@ export const AppointmentModal: React.FC = () => {
       }
       
       const updateModal = () => {
+        let dateFormat = dayjs(state.currentEventStartDate)
+
         editForm.setFieldsValue({
-            id: state.currentEventId,
-            title: state.currentEventTitle,
-            description: state.currentEventDescription,
-            patientId: state.currentEventPatientId,
-            doctorId: state.currentEventDoctorId
+            editId: state.currentEventId,
+            editTitle: state.currentEventTitle,
+            editDescription: state.currentEventDescription,
+            editPatientId: state.currentEventPatientId,
+            editDoctorId: state.currentEventDoctorId,
+            editStartDate: dateFormat,
+            editTime: dateFormat
         });
     }
+
+      const disabledTime = () => ({
+            disabledHours: () => [19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 8]
+          });
+
+      const disabledDate = (current : any) => {
+            return (
+                current < Date.now() ||
+                (new Date(current).getDay() === 0 ||
+                new Date(current).getDay() === 6)
+            );
+        };
+    
 
       const handleSubmit = (values: any) => {
         actions.makeAppModalInvisible();
@@ -184,12 +202,12 @@ export const AppointmentModal: React.FC = () => {
            <br></br>
 
             <Form.Item
-                 name="id">
+                 name="editId">
                    <Input type="hidden"/>
              </Form.Item> 
 
              <Form.Item
-                 name="title"
+                 name="editTitle"
                  label="Title"
                  rules={[
                    {
@@ -201,7 +219,7 @@ export const AppointmentModal: React.FC = () => {
 
              </Form.Item>
              <Form.Item
-                 name="description"
+                 name="editDescription"
                  label="Description"
                  rules={[
                    {
@@ -213,7 +231,7 @@ export const AppointmentModal: React.FC = () => {
              </Form.Item>
 
              <Form.Item
-                 name="patientId"
+                 name="editPatientId"
                  label="Change Patient">
                  <Select
                        defaultValue={state.patients[0]}
@@ -225,7 +243,7 @@ export const AppointmentModal: React.FC = () => {
              {(state.currentRole == "Patient") ? 
                       <div>
                        <Form.Item
-                          name="doctorId"
+                          name="editDoctorId"
                           label="Change Doctor">
                           <Select
                                 defaultValue={state.doctors[0]}
@@ -238,15 +256,15 @@ export const AppointmentModal: React.FC = () => {
           
 
              <Form.Item
-                 name="startDate"
+                 name="editStartDate"
                  label="Appointment Day">
-                     <DatePicker onChange={dayChange}/>
+                     <DatePicker onChange={dayChange} disabledDate = {disabledDate} hideDisabledOptions={true}/>
              </Form.Item>  
 
              <Form.Item
-                 name="time"
+                 name="editTime"
                  label="Appointment Time">
-                     <TimePicker format="HH:mm" onChange={timeChange} />
+                     <TimePicker format="HH:mm" onChange={timeChange} disabledTime={disabledTime} hideDisabledOptions={true} />
              </Form.Item>   
 
              <Form.Item>
