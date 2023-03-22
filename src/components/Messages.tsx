@@ -112,7 +112,7 @@ export const Messages: React.FC = () => {
     return (
         <div>
             <h2>MESSAGES</h2>
-                <div >
+                <div>
                     <Button type="primary" icon={<MailOutlined />} size={'large'} onClick = {onUnread}>
                         Unread
                     </Button>

@@ -22,12 +22,14 @@ export const AppointmentModal: React.FC = () => {
     const [state, actions] = useUserStore();
     const [dateChoice, setDate] = useState(" ");
     const [timeChoice, setTime] = useState(" ");
+    const [disabledDates, setDisabledDates] = useState<string[]>([""]);
     const token = AuthLocalStorage.getToken() as string;
 
-     useEffect(() => {  
-        updateModal();
+     useEffect(() => {    
+        updateModal(); 
+        console.log(state.dates);
     });
-    
+
       const handleCreateCancel = () => {
         actions.makeAppModalInvisible();
       }
@@ -46,30 +48,61 @@ export const AppointmentModal: React.FC = () => {
       
       const updateModal = () => {
         let dateFormat = dayjs(state.currentEventStartDate)
-
+       
         editForm.setFieldsValue({
             editId: state.currentEventId,
             editTitle: state.currentEventTitle,
             editDescription: state.currentEventDescription,
-            editPatientId: state.currentEventPatientId,
+            editPatientId: state.currentEventPatientId,               
             editDoctorId: state.currentEventDoctorId,
             editStartDate: dateFormat,
             editTime: dateFormat
         });
     }
 
-      const disabledTime = () => ({
-            disabledHours: () => [19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 8]
-          });
+      const range = (start: number, end: number) => {
+        const result = [];
+        for (let i = start; i < end; i++) {
+          result.push(i);
+        }
+        return result;
+      };
 
-      const disabledDate = (current : any) => {
+      const disabledTime = (current : any) => ({
+          disabledHours: () => [19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 8],
+          disabledMinutes: () => 
+          range(1, 60).filter(item => item != 0 && item != 20 && item != 40)
+     });
+
+
+     function padTo2Digits(num: number) {
+      return num.toString().padStart(2, '0');
+    }
+      function formatDate(date: Date) {
+        return (
+          [
+            date.getFullYear(),
+            padTo2Digits(date.getMonth() + 1),
+            padTo2Digits(date.getDate()),
+          ].join('-') +
+          ' ' +
+          [
+            padTo2Digits(date.getHours()),
+            padTo2Digits(date.getMinutes()),
+          ].join(':')
+        );
+      }
+
+
+    const disabledDate = (current : any) => {
             return (
-                current < Date.now() ||
-                (new Date(current).getDay() === 0 ||
-                new Date(current).getDay() === 6)
+                (
+                new Date(current).getDay() === 0 ||
+                new Date(current).getDay() === 6
+                || !!state.dates.includes(formatDate(new Date(current)))
+                )   
             );
-        };
-    
+        }; 
 
       const handleSubmit = (values: any) => {
         actions.makeAppModalInvisible();
@@ -79,7 +112,7 @@ export const AppointmentModal: React.FC = () => {
         {
           title: values.title,
           description: values.description,
-          startDate: dateChoice + "T" + timeChoice,
+          startDate: dateChoice + " "  + timeChoice,
           endDate: "",
           duration: 60,
           doctorId: (state.currentRole == "Doctor") ? user.NameIdentifier: state.doctorIdSelected,
@@ -88,8 +121,6 @@ export const AppointmentModal: React.FC = () => {
           adminId: ""
         };
         actions.createAppointment(appoint);
-        actions.getAppointments(state.doctorId, state.patientId,
-          state.currentRole);
      }
 
     const deleteAppointment = (id : any) : any => {
@@ -110,7 +141,7 @@ export const AppointmentModal: React.FC = () => {
         id: state.currentEventId,
         title: values.title,
         description: values.description,
-        startDate: dateChoice + "T" + timeChoice,
+        startDate: dateChoice + " " + timeChoice,
         endDate: "",
         duration: 60,
         doctorId: (state.currentRole == "Doctor") ? user.NameIdentifier: state.doctorIdSelected,
@@ -121,6 +152,7 @@ export const AppointmentModal: React.FC = () => {
 
       actions.updateAppointment(state.currentEventId, appointToUpdate);
    };
+
 
       if(state.currentEventId == 0){
         return(  
@@ -157,14 +189,28 @@ export const AppointmentModal: React.FC = () => {
                   <Form.Item
                       name="startDate"
                       label="Appointment Day">
-                          <DatePicker onChange={dayChange} />
+                          <DatePicker onChange={dayChange} disabledDate = {disabledDate} hideDisabledOptions={true}/>
                   </Form.Item>  
 
                   <Form.Item
                       name="time"
                       label="Appointment Time">
-                          <TimePicker onChange={timeChange} />
+                          <TimePicker format="HH:mm" onChange={timeChange} 
+                                      disabledTime = {disabledTime} hideDisabledOptions={true}/>
                   </Form.Item>  
+
+                  <Form.Item
+                      label="Appointment Time nEW">
+                          <DatePicker format="YYYY-MM-DD HH:mm" 
+                            disabledDate = {disabledDate} 
+                            disabledTime = {disabledTime}
+                            hideDisabledOptions={true}
+                            showTime={{
+                              format: 'HH:mm', 
+                            }}
+                            />
+                  </Form.Item> 
+                  
                   
                   {(state.currentRole == "Doctor") ? 
                       <div>

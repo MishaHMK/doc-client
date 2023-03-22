@@ -124,18 +124,18 @@ export const NavBar: React.FC = () => {
     return (
         <div> 
             <Layout>
-                <Header style={{ position: 'sticky', width: '100%', height: "65px" }}>
+                <Header /* style={{ position: 'sticky', width: '100%', height: "70px" }} */className = "header">
                 {signedIn && userState.current ? (
                   
                    <div style={{ display: 'flex'}}>
-                        <h3 style={{marginTop: "2px"}}>
+                        <h3 className = "docCal" style={{marginTop: "2px"}}>
                         {state.docPageOn ? (
                               <Link onClick={toCalendar} style={{ color: "white" }}>Calendar</Link>
                         ) 
                         : <Link onClick={toDrCatalogue} style={{ color: "white" }}>Our Doctors</Link>}
                         </h3>
 
-                        <h3 style={{marginLeft: "50px", marginTop: "2px"}}>
+                        <h3 style={{paddingLeft: "50px", marginTop: "2px"}}>
                           <Link onClick={toMessages} style={{ color: "white" }} className="messages">
                               <div>Messages </div>
                               { totalItems > 0 ? <div><span className="badge">{totalItems}</span></div> : <div></div> }
@@ -143,11 +143,11 @@ export const NavBar: React.FC = () => {
                         </h3>
 
                         <h3 style={{ marginLeft: "950px", marginTop: "2px", color: "white" }}>
-                            Welcome, {" "}   
+                            Welcome, {""}   
                             {name !== undefined
                             ? name?.length > 12
-                            ? name.slice(0, 10) + "..."
-                            : name
+                            ? name.slice(0, 15) + "..."
+                            : name + " "
                             : ""}
                            
                               <Dropdown menu={menuProps} overlayStyle={{color: "white"}}>

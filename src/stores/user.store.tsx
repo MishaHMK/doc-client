@@ -5,17 +5,16 @@ import axios, { AxiosError } from "axios";
 import { IAppointment } from '../interfaces/IAppointment';
 import PaginatedResult from '../models/pagination';
 import { IMessage } from '../interfaces/IMessage';
+import { IAppDate } from '../interfaces/IAppDate';
 
-
-type State = { roles: any, users: any, specs: any, doctors: IDoctor[], patients: IPatient[], appointments: any, 
-               times: any, IsAppShown: any, IsThreadShown: any, doctorIdSelected: any, doctorId: any, doctorName: any,  
+type State = { roles: any, users: any, specs: any, doctors: IDoctor[], patients: IPatient[], dates: string[],
+               appointments: any, times: any, IsAppShown: any, IsThreadShown: any, doctorIdSelected: any, doctorId: any, doctorName: any,  
                patientId: any, currentUserId: any, currentUserName: any,  currentUserIntroduction: any,
                currentRole: any, eventEditingOn: any, currentUserSpeciality: any, paginatedUsers: PaginatedResult,
                currentEventId: number, currentEventTitle: any, currentEventDescription: any, currentName: any,
                currentEventPatientId: any, currentEventDoctorId: any, currentEventStartDate: any,
-               currentEventTime: any, currentEventStatus: any, docSelected : any, docPageOn: any
-               messages: IMessage[], paginatedMessages: PaginatedResult, senderName: string, receiverName: string, 
-               datePicker: any};
+               currentEventTime: any, currentEventStatus: any, docSelected : any, docPageOn: any , datePicker: any, 
+               messages: IMessage[], paginatedMessages: PaginatedResult, senderName: string, receiverName: string };
 type Actions = typeof actions;
 
 
@@ -30,6 +29,7 @@ const initialState: State = {
             "Radiology"],
     doctors: [],
     patients: [],
+    dates: [],
     appointments:[],
     times: [],
     IsAppShown: false,
@@ -103,6 +103,23 @@ const actions = {
         const patients = await axios.get("https://localhost:44375/api/Appointment/patients");
         setState({
           patients: patients.data
+        });
+    }, 
+
+
+    getAllAppointmentsDates: () : Action<State> => 
+    async ({ setState, getState }) => {
+        const dates = await axios.get("https://localhost:44375/api/Appointment/dates");
+
+        var dateArray = [];
+
+        for(var i = 0; i < dates.data.length; i++)
+        { 
+            dateArray.push(dates.data[i].startDate);
+        }
+
+        setState({
+          dates: dateArray
         });
     }, 
 
