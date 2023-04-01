@@ -9,6 +9,7 @@ import { FolderOutlined, MailOutlined, SendOutlined } from '@ant-design/icons';
 import AuthLocalStorage from "../AuthLocalStorage";
 import MessageApi from "../api/messageApi";
 import { MessageThreadModal } from './MessageThreadModal';
+import { useMessageStore } from "../stores/message.store";
 
 const pageSize = 6;
 
@@ -18,12 +19,14 @@ export const Messages: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [container, setContainer] = useState("Unread");
     const [messages, setMessages] = useState([]);
+    const [messageState, messageActions] = useMessageStore();
     const token = AuthLocalStorage.getToken() as string;
     const user: any = jwt(token);
     let msgService = new MessageApi();
     
     useEffect(() => {  
         fetchData();
+        messageActions.createHubConnection(token, state.receiverName);
     }, [totalItems, currentPage, pageSize, container]);
 
 
@@ -89,6 +92,7 @@ export const Messages: React.FC = () => {
 
     const openMessageModal = (receiverName : any) => {
         actions.setReceiverName(receiverName);
+        messageActions.createHubConnection(token, receiverName);
         actions.makeThreadModalVisible();
     };
 

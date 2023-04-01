@@ -44,11 +44,13 @@ export const EditProfile: React.FC = () => {
 
     return (
         <div> 
-            <h2>EDIT PROFILE</h2>
             <Form 
                  form = {editForm} onFinish={handleUpdate} 
                  name="control-hooks"
-                 className="edit-form">
+                 className="edit-form"
+                 layout="vertical">
+
+            <h2>EDIT PROFILE</h2>
 
             <Form.Item
                  name="id">
@@ -61,17 +63,19 @@ export const EditProfile: React.FC = () => {
                  <Input/>
 
              </Form.Item>
+
              <Form.Item
                  name="introduction"
                  label="Introduciton">
-                 <TextArea rows={4} />
+                 <TextArea rows={5} />
              </Form.Item>
 
              <Form.Item
-                name="speciality">
+                name="speciality"
+                label="Speciality">
                 <div>
                     <Select
-                        style={{ width: 120 }}
+                        style={{ width: '100%' }}
                         options={state.specs.map((sp : string) => ({ label: sp, value: sp }))}
                         defaultValue = {state.currentUserSpeciality}
                         onChange={handleSelectSpec}

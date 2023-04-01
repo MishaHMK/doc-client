@@ -9,8 +9,6 @@ import {
 type State = {  onlineUsers: any[], connection: any};
 type Actions = typeof actions;
 
-
-const token = AuthLocalStorage.getToken() as string;
 const HUB_URL = "https://localhost:44375/hubs/presence"; 
 
 var hubConnection: HubConnection;

@@ -22,12 +22,13 @@ export const AppointmentModal: React.FC = () => {
     const [state, actions] = useUserStore();
     const [dateChoice, setDate] = useState(" ");
     const [timeChoice, setTime] = useState(" ");
+    const [dateTimeChoice, setDateTime] = useState(" ");
     const [disabledDates, setDisabledDates] = useState<string[]>([""]);
     const token = AuthLocalStorage.getToken() as string;
 
      useEffect(() => {    
         updateModal(); 
-        console.log(state.dates);
+        //console.log(state.dates);
     });
 
       const handleCreateCancel = () => {
@@ -45,6 +46,10 @@ export const AppointmentModal: React.FC = () => {
       const timeChange: any = (time: Dayjs, timeString: string) => {
         setTime(timeString);
       }
+
+      const dateTimeChange: DatePickerProps['onChange']  = (date, dateTimeString) => {
+        setDateTime(dateTimeString);
+      }
       
       const updateModal = () => {
         let dateFormat = dayjs(state.currentEventStartDate)
@@ -56,7 +61,8 @@ export const AppointmentModal: React.FC = () => {
             editPatientId: state.currentEventPatientId,               
             editDoctorId: state.currentEventDoctorId,
             editStartDate: dateFormat,
-            editTime: dateFormat
+            editTime: dateFormat,
+            editDateTime: dateFormat
         });
     }
 
@@ -112,7 +118,8 @@ export const AppointmentModal: React.FC = () => {
         {
           title: values.title,
           description: values.description,
-          startDate: dateChoice + " "  + timeChoice,
+          //startDate: dateChoice + " "  + timeChoice,
+          startDate: dateTimeChoice,
           endDate: "",
           duration: 60,
           doctorId: (state.currentRole == "Doctor") ? user.NameIdentifier: state.doctorIdSelected,
@@ -141,7 +148,7 @@ export const AppointmentModal: React.FC = () => {
         id: state.currentEventId,
         title: values.title,
         description: values.description,
-        startDate: dateChoice + " " + timeChoice,
+        startDate: dateTimeChoice,
         endDate: "",
         duration: 60,
         doctorId: (state.currentRole == "Doctor") ? user.NameIdentifier: state.doctorIdSelected,
@@ -187,21 +194,10 @@ export const AppointmentModal: React.FC = () => {
                   </Form.Item>              
                 
                   <Form.Item
-                      name="startDate"
-                      label="Appointment Day">
-                          <DatePicker onChange={dayChange} disabledDate = {disabledDate} hideDisabledOptions={true}/>
-                  </Form.Item>  
-
-                  <Form.Item
-                      name="time"
-                      label="Appointment Time">
-                          <TimePicker format="HH:mm" onChange={timeChange} 
-                                      disabledTime = {disabledTime} hideDisabledOptions={true}/>
-                  </Form.Item>  
-
-                  <Form.Item
-                      label="Appointment Time nEW">
+                      label="Appointment DateTime"
+                      name="dateTime">
                           <DatePicker format="YYYY-MM-DD HH:mm" 
+                          onChange={dateTimeChange} 
                             disabledDate = {disabledDate} 
                             disabledTime = {disabledTime}
                             hideDisabledOptions={true}
@@ -299,19 +295,21 @@ export const AppointmentModal: React.FC = () => {
                       </Form.Item>
                       </div> 
                   : <div></div>}
-          
 
              <Form.Item
-                 name="editStartDate"
-                 label="Appointment Day">
-                     <DatePicker onChange={dayChange} disabledDate = {disabledDate} hideDisabledOptions={true}/>
-             </Form.Item>  
-
-             <Form.Item
-                 name="editTime"
-                 label="Appointment Time">
-                     <TimePicker format="HH:mm" onChange={timeChange} disabledTime={disabledTime} hideDisabledOptions={true} />
-             </Form.Item>   
+                      label="Appointment DateTime"
+                      name="editDateTime">
+                          <DatePicker format="YYYY-MM-DD HH:mm" 
+                          onChange={dateTimeChange} 
+                            disabledDate = {disabledDate} 
+                            disabledTime = {disabledTime}
+                            hideDisabledOptions={true}
+                            showTime={{
+                              format: 'HH:mm', 
+                            }}
+                            />
+                  </Form.Item> 
+                  
 
              <Form.Item>
                <Button type="primary" htmlType="submit">

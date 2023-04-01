@@ -10,6 +10,7 @@ import jwt from "jwt-decode";
 import AuthLocalStorage from "../AuthLocalStorage";
 import { useNavigate } from "react-router-dom";
 import { useSignalrStore } from '../stores/signalr.store';
+import { useMessageStore } from "../stores/message.store";
 
 const { Header } = Layout;
 
@@ -19,6 +20,7 @@ export const NavBar: React.FC = () => {
     const [id, setId] = useState<string>("");
     const [totalItems, settotalItems] = useState(0);
     const [signalState, signalActions] = useSignalrStore();
+    const [messageState, messageActions] = useMessageStore();
     const signedIn = AuthorizeApi.isSignedIn();
     const userState = useRef(signedIn);
     const token = AuthLocalStorage.getToken() as string;
@@ -29,19 +31,13 @@ export const NavBar: React.FC = () => {
 
     useEffect(() => {
         fetchData();
-      }, [totalItems, state.senderName, state.receiverName, userState.current, signedIn]);
+      }, [totalItems, state.senderName, state.receiverName, messageState.messageThreadSource, userState.current, signedIn]);
 
     useEffect(() => {
-        if(token != null){ 
-          signalActions.createHubConnection(token);
-        }
-        else  {
-          signalActions.stopHubConncetion();
-        }
+           signalActions.createHubConnection(token);
       }, []);
 
     const fetchData = async () => {
-       console.log(token);
        if(signedIn){
           const user: any = jwt(token);
           actions.getAllUsers();
@@ -61,8 +57,6 @@ export const NavBar: React.FC = () => {
               .then(async (response) => {
                 settotalItems(response.data.totalItems);
            });
-
-          //signalActions.createHubConnection(token);
         }
       };
 
@@ -70,13 +64,13 @@ export const NavBar: React.FC = () => {
       const logOut = () => {
           authService.logout();
           signalActions.stopHubConncetion();
+          messageActions.stopHubConncetion();
           navigate("../", { replace: true });
       } 
 
       const logIn = () => {
         authService.logout();
         navigate("../", { replace: true });
-        //window.location.reload();
       } 
 
       const editProfile = () => {
@@ -123,12 +117,12 @@ export const NavBar: React.FC = () => {
 
     return (
         <div> 
-            <Layout>
-                <Header /* style={{ position: 'sticky', width: '100%', height: "70px" }} */className = "header">
+            <Layout className="headerContainer">
+                <Header className = "headerContainer">
                 {signedIn && userState.current ? (
                   
                    <div style={{ display: 'flex'}}>
-                        <h3 className = "docCal" style={{marginTop: "2px"}}>
+                        <h3 className = "docCal" style={{paddingLeft: "50px", marginTop: "2px"}}>
                         {state.docPageOn ? (
                               <Link onClick={toCalendar} style={{ color: "white" }}>Calendar</Link>
                         ) 
@@ -142,7 +136,7 @@ export const NavBar: React.FC = () => {
                           </Link>
                         </h3>
 
-                        <h3 style={{ marginLeft: "950px", marginTop: "2px", color: "white" }}>
+                        <h3 style={{ marginLeft: "850px", marginTop: "2px", color: "white" }}>
                             Welcome, {""}   
                             {name !== undefined
                             ? name?.length > 12

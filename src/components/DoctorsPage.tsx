@@ -127,8 +127,8 @@ export const DoctorsPage: React.FC = () => {
                 <List.Item>
                     {(currentRole == "Doctor") ?
                         <Card title={ "Doctor " + item.name + " (" + item.speciality + ") " }
-                              extra={  (usersOnline.includes(item.id)) ? 
-                                        <h4>Online</h4> : 
+                              extra={(usersOnline.includes(item.id)) ? 
+                                        <h4 style={{color: '#21bb4b'}}>Online</h4> : 
                                         <h4>Offline</h4> } 
                               bordered = {true}
                             >

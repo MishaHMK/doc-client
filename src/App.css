@@ -59,6 +59,10 @@
   position: fixed;
 }
 
+.calendar {
+  background-color: White;
+}
+
 .edit-form {
   max-width: 300px;
   margin-left: 620px;
@@ -85,4 +89,12 @@
   margin: 0;
   padding: 0;
   width: 100%;
+}
+
+@media screen and (max-width: 400px)  {
+  .headerContainer {
+      background: rgb(27, 207, 235) !important;
+      padding: 0 15px;
+      min-width: 375px;
+  }
 }
