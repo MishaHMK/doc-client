@@ -43,7 +43,6 @@ const actions = {
             setState({
                 onlineUsers: users
             });
-            console.log(users);
         })
     },
 

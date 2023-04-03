@@ -10,6 +10,7 @@ import AuthLocalStorage from "../AuthLocalStorage";
 import MessageApi from "../api/messageApi";
 import { MessageThreadModal } from './MessageThreadModal';
 import { useMessageStore } from "../stores/message.store";
+import { C } from '@fullcalendar/core/internal-common';
 
 const pageSize = 6;
 
@@ -26,11 +27,11 @@ export const Messages: React.FC = () => {
     
     useEffect(() => {  
         fetchData();
-        messageActions.createHubConnection(token, state.receiverName);
     }, [totalItems, currentPage, pageSize, container]);
 
 
     interface DataType {
+        senderId: string;
         message: string;
         senderUserName: string;
         receiverUserName: string;
@@ -38,6 +39,7 @@ export const Messages: React.FC = () => {
       }
 
     const columns: ColumnsType<DataType> = [
+
         {
             title: 'From',
             dataIndex: 'senderUserName',
@@ -46,6 +48,7 @@ export const Messages: React.FC = () => {
                 <Link onClick={() => openMessageModal(senderUserName)}>{senderUserName}</Link>
             )
         },
+
         {
             title: 'Message',
             dataIndex: 'content',
@@ -90,10 +93,12 @@ export const Messages: React.FC = () => {
         setCurrentPage(page);
     };
 
-    const openMessageModal = (receiverName : any) => {
+    const openMessageModal = (receiverName : any, recieverId?: any, ) => {
         actions.setReceiverName(receiverName);
-        messageActions.createHubConnection(token, receiverName);
+        //console.log(user.UserName + " --- " + receiverName);
+        messageActions.recieveThread(user.UserName, receiverName);
         actions.makeThreadModalVisible();
+        console.log(recieverId);
     };
 
     const deleteMessage = async (id : any, userName : any) => {
@@ -110,7 +115,10 @@ export const Messages: React.FC = () => {
             .then(async (response) => {
                settotalItems(response.data.totalItems);
                setMessages(response.data.pagedList);
+               console.log(messages);
         });
+
+        //console.log(user);
     };
 
     return (

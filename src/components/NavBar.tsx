@@ -31,17 +31,32 @@ export const NavBar: React.FC = () => {
 
     useEffect(() => {
         fetchData();
-      }, [totalItems, state.senderName, state.receiverName, messageState.messageThreadSource, userState.current, signedIn]);
+      }, [state.senderName, state.receiverName, userState.current, signedIn, messageState.messageThreadSource]);
 
     useEffect(() => {
-           signalActions.createHubConnection(token);
-      }, []);
+         //const user: any = jwt(token);
+         fetchData();
+         if(signedIn){
+              const user: any = jwt(token);
+              signalActions.createHubConnection(token);
+              messageActions.createHubConnection(token);
+              //messageActions.receiveUnread(user.NameIdentifier);
+              setTimeout(() => messageActions.receiveUnread(user.NameIdentifier), 300);
+              console.log(messageState.unreadCount);
+         }
+    }, []);
+
+    useEffect(() => {
+      if(signedIn){
+           const user: any = jwt(token);
+           setTimeout(() => messageActions.receiveUnread(user.NameIdentifier), 100);
+      }
+    });
 
     const fetchData = async () => {
        if(signedIn){
-          const user: any = jwt(token);
           actions.getAllUsers();
-
+          const user: any = jwt(token);
           await userService.getById(user.NameIdentifier)
           .then(async (response) => {
             state.currentUserId = user.NameIdentifier;
@@ -64,7 +79,6 @@ export const NavBar: React.FC = () => {
       const logOut = () => {
           authService.logout();
           signalActions.stopHubConncetion();
-          messageActions.stopHubConncetion();
           navigate("../", { replace: true });
       } 
 
@@ -132,7 +146,7 @@ export const NavBar: React.FC = () => {
                         <h3 style={{paddingLeft: "50px", marginTop: "2px"}}>
                           <Link onClick={toMessages} style={{ color: "white" }} className="messages">
                               <div>Messages </div>
-                              { totalItems > 0 ? <div><span className="badge">{totalItems}</span></div> : <div></div> }
+                              { messageState.unreadCount > 0 ? <div><span className="badge">{messageState.unreadCount}</span></div> : <div></div> }
                           </Link>
                         </h3>
 

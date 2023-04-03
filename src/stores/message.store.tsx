@@ -1,14 +1,12 @@
 import { createStore, createHook, Action } from 'react-sweet-state';
-import AuthLocalStorage from "../AuthLocalStorage";
 import {
     HubConnection,
     HubConnectionBuilder
   } from '@microsoft/signalr';
 import { ICreateMessage } from "../interfaces/ICreateMessage";  
-import { message } from 'antd';
 
 
-type State = { connection: any, messageThreadSource: any[]};
+type State = { connection: any, messageThreadSource: any[], unreadCount: number};
 type Actions = typeof actions;
 
 
@@ -18,14 +16,16 @@ var hubConnection: HubConnection;
 
 const initialState: State = {
     connection: '',
-    messageThreadSource: []
+    messageThreadSource: [], 
+    unreadCount: 0
 };
 
 const actions = {
-    createHubConnection: (token: string, otherUserName: string) : Action<State> => 
+    createHubConnection: (token: string, otherUserName?: string) : Action<State> => 
     async ({ setState, getState }) => {
         hubConnection = new HubConnectionBuilder()
-            .withUrl(HUB_URL + 'message?user=' + otherUserName, 
+            .withUrl(HUB_URL + 'message', 
+            //.withUrl(HUB_URL + 'message?user=' + otherUserName, 
             {
                 accessTokenFactory: () => token
             })
@@ -34,18 +34,23 @@ const actions = {
 
         hubConnection.start().catch(error => console.log(error));    
 
-        hubConnection.on('ReceiveMessageThread', messages => {
-            setState({
-                messageThreadSource: messages
-            });
-            //console.log(messages);
-          })
-
         hubConnection.on('NewMessage', message => {
             setState({
                 messageThreadSource: [...getState().messageThreadSource, message]
               });
           })  
+
+        hubConnection.on('ReceiveUnreadCount', number => {
+            setState({
+                unreadCount: number
+              });
+          })   
+
+        hubConnection.on('RecieveMessageThread', messages => {
+            setState({
+                messageThreadSource: messages
+              });
+          })    
     },
 
     stopHubConncetion: () : Action<State> => 
@@ -55,21 +60,21 @@ const actions = {
 
     sendMessage: (createMessage: ICreateMessage) : Action<State> => 
     async ({ setState, getState }) => {    
-       /* hubConnection.invoke("SendMessage", {createMessage})
-              .catch(error => console.log(error)); */
-
         hubConnection.invoke("SendMessage", createMessage)
-              .catch(error => console.log(error));      
-
-        console.log(createMessage);        
+              .catch(error => console.log(error));             
     },
 
-   /* sendMessage: (username: string, content: string) : Action<State> => 
+    recieveThread: (sender: string, other: string) : Action<State> => 
     async ({ setState, getState }) => {    
-        hubConnection.invoke("SendMessage", {recipientUserName: username, content})
-              .catch(error => console.log(error)); 
-    }, */
+        hubConnection.invoke("RecieveThread", sender, other)
+              .catch(error => console.log(error));        
+    },
 
+    receiveUnread: (reciever: string) : Action<State> => 
+    async ({ setState, getState }) => {    
+        hubConnection.invoke("RecieveUnread", reciever)
+              .catch(error => console.log(error));          
+    }
 };
 
 const Store = createStore<State, Actions>({

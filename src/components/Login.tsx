@@ -5,9 +5,8 @@ import { Button, Checkbox, Form, Input } from 'antd';
 import Link from 'antd/es/typography/Link';
 import { useNavigate } from "react-router-dom";
 import jwt from "jwt-decode";
-import jwt_decode from "jwt-decode";
-import { useUserStore } from '../stores/user.store';
 import { useSignalrStore } from '../stores/signalr.store';
+import { useMessageStore } from "../stores/message.store";
 
 export const Login: React.FC = () => {
     const [form] = Form.useForm();
@@ -15,6 +14,7 @@ export const Login: React.FC = () => {
     let user: any;
     const navigate = useNavigate();
     const [signalState, signalActions] = useSignalrStore();
+    const [messageState, messageActions] = useMessageStore();
 
     const register = () => {
         navigate("../register", { replace: true });
@@ -24,8 +24,10 @@ export const Login: React.FC = () => {
         await authService.login(values);
         const token = AuthLocalStorage.getToken() as string;
         user = jwt(token);
+
         if(user){
             signalActions.createHubConnection(token);
+            messageActions.createHubConnection(token);
             navigate("../calendar", { replace: true });
         } 
     }

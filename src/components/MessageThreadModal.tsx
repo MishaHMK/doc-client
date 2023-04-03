@@ -4,12 +4,9 @@ import { Modal, Form, List, Input, Button} from "antd";
 import { useForm } from "antd/lib/form/Form";
 import { useUserStore } from '../stores/user.store';
 import { useMessageStore } from "../stores/message.store";
-import MessageApi from "../api/messageApi";
 import TimeAgo from 'timeago-react';
-import { SendOutlined } from '@ant-design/icons';
+import { SendOutlined , DownOutlined} from '@ant-design/icons';
 import { ICreateMessage } from "../interfaces/ICreateMessage";
-import { IMessage } from "../interfaces/IMessage";
-import { useScrollTo } from 'react-use-window-scroll';
 import AuthLocalStorage from "../AuthLocalStorage";
 
 export const MessageThreadModal: React.FC = () => { 
@@ -17,33 +14,43 @@ export const MessageThreadModal: React.FC = () => {
     const token = AuthLocalStorage.getToken() as string;
     const [sendForm] = useForm();
     const [state, actions] = useUserStore();
-    //const [messagesData, setData] = useState<IMessage[]>();
     const [messageState, messageActions] = useMessageStore();
 
     const [scrollNumber, setScrollNumber] = useState(0);
-    let msgService = new MessageApi();
 
     const messagesEndRef = React.createRef<HTMLDivElement>();
 
     useEffect(() => {  
-        scrollToDown();
-        messageActions.createHubConnection(token, state.receiverName);
+        setScrollNumber(messageState.messageThreadSource.length * 100);
+        scrollToDown2();
     }, [state.senderName, state.receiverName]);
 
+   useEffect(() => {  
+      if(state.IsThreadShown == true){
+        setScrollNumber(messageState.messageThreadSource.length * 100);
+      }
+    }, [state.IsThreadShown]); 
+
     useEffect(() => {  
-       setScrollNumber(messageState.messageThreadSource.length * 100);
-       messageActions.createHubConnection(token, state.receiverName);
-    }, []);
+      setScrollNumber(messageState.messageThreadSource.length * 100);
+      scrollToDown2();
+   }, []);
 
-
-    const scrollToDown = () => {
+    const scrollToDown = async () => {
         messagesEndRef.current?.scrollTo(0, 1000000000);
   };
 
-
+  const scrollToDown2 = async () => {
+    if (messagesEndRef) {
+      messagesEndRef.current?.addEventListener('DOMNodeInserted', (event: { currentTarget: any; }) => {
+        const { currentTarget: target } = event;
+        target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
+      });
+    }
+};
     const handleCancel = () => {
+         // messageActions.stopHubConncetion();
           actions.makeThreadModalInvisible();
-          messageActions.stopHubConncetion();
     };
 
     const handleSubmit = async (values: any) => {
@@ -53,13 +60,15 @@ export const MessageThreadModal: React.FC = () => {
           recipientName: state.receiverName
         }
 
-        ///messageActions.createHubConnection(token, state.receiverName);
         messageActions.sendMessage(messageToCreate);
-        //messageActions.createHubConnection(token, state.receiverName);
-
+        setTimeout(() => messageActions.receiveUnread(state.receiverName), 300);
         sendForm.setFieldsValue({
           content: "",
-      });
+        });
+
+        messageActions.recieveThread(state.senderName, state.receiverName);
+
+        scrollToDown2();
   };
 
 
@@ -71,7 +80,7 @@ export const MessageThreadModal: React.FC = () => {
                       <Input.Group compact>
                         <br></br>
                         <Button onClick={scrollToDown} shape="circle"
-                                style={{ marginRight: 20 }} ><SendOutlined /></Button>
+                                style={{ marginRight: 20 }} ><DownOutlined /></Button>
                         <Form.Item name="content">
                           <Input placeholder = 'Write a message...' style={{ width: 300, textAlign: "left" }}/>
                         </Form.Item>

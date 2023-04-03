@@ -118,12 +118,11 @@ export const AppointmentModal: React.FC = () => {
         {
           title: values.title,
           description: values.description,
-          //startDate: dateChoice + " "  + timeChoice,
           startDate: dateTimeChoice,
           endDate: "",
           duration: 60,
-          doctorId: (state.currentRole == "Doctor") ? user.NameIdentifier: state.doctorIdSelected,
-          patientId: (state.currentRole == "Doctor") ? values.patientId: user.NameIdentifier,
+          doctorId: (state.currentRole == "Doctor") ? user.NameIdentifier : state.doctorIdSelected,
+          patientId: (state.currentRole == "Doctor") ? values.patientId : user.NameIdentifier,
           isApproved: false,
           adminId: ""
         };

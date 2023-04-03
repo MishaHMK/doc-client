@@ -6,20 +6,17 @@ import { useNavigate } from "react-router-dom";
 import UserApi from "../api/userApi";
 import AuthLocalStorage from '../AuthLocalStorage';
 import jwt_decode from "jwt-decode";
-import jwt from "jwt-decode";
 import { MessageThreadModal } from './MessageThreadModal';
 import { useSignalrStore } from '../stores/signalr.store';
+import { useMessageStore } from "../stores/message.store";
 
 const pageSize = 4;
 const { Search } = Input;
 
 export const DoctorsPage: React.FC = () => {
     const token = AuthLocalStorage.getToken() as string;
-    const user: any = jwt(token);
-    const decoded: any = jwt_decode(token);
     const navigate = useNavigate();
     let userService = new UserApi();
-    //let presenceService = new PresenceService();
     const [state, actions] = useUserStore();
     const [signalState, signalActions] = useSignalrStore();
     const [totalItems, settotalItems] = useState(0);
@@ -31,6 +28,8 @@ export const DoctorsPage: React.FC = () => {
     const [currentRole, setCurrentRole] = useState<any>();
     const [users, setUsers] = useState([]);
     const [usersOnline, setUsersOnline] = useState<any>();
+    const [messageState, messageActions] = useMessageStore();
+
 
     useEffect(() => {  
         fetchData();
@@ -47,8 +46,6 @@ export const DoctorsPage: React.FC = () => {
         });
 
         setUsersOnline(signalState.onlineUsers);
-
-        console.log(signalState.onlineUsers);
     };
         
 
@@ -85,8 +82,9 @@ export const DoctorsPage: React.FC = () => {
         navigate("../calendar", { replace: true });    
     };
 
-    const openMessageModal = (receiverName : any) => {
-        actions.setReceiverName(receiverName);
+    const openMessageModal = (receiverId: any, receiverName : any) => {
+        messageActions.recieveThread(state.senderName, state.receiverName);
+        actions.setReceiverName(receiverId);
         actions.makeThreadModalVisible();
     };
 
@@ -138,10 +136,10 @@ export const DoctorsPage: React.FC = () => {
                         :
                         <Card title={"Doctor " + item.name + " (" + item.speciality + ") " }
                             extra={  (usersOnline.includes(item.id)) ? 
-                                <h4>Online</h4> : 
+                                <h4 style={{color: '#21bb4b'}}>Online</h4> : 
                                 <h4>Offline</h4> } 
                             actions={[
-                                <CommentOutlined  key="chat"  onClick={() => openMessageModal(item.name)}/>,
+                                <CommentOutlined  key="chat"  onClick={() => openMessageModal(item.id, item.name)}/>,
                                 <PlusCircleOutlined key="app" onClick={() => goToAppoint(item.id, item.name)}/>
                             ]}
                             bordered = {true}   
