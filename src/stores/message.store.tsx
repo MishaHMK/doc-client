@@ -50,7 +50,15 @@ const actions = {
             setState({
                 messageThreadSource: messages
               });
+            console.log(getState().messageThreadSource);
           })    
+
+        hubConnection.on('DeleteMessage', id => {
+            const newList = getState().messageThreadSource.filter(msg => msg.id != id);
+            setState({
+                messageThreadSource: newList
+              });
+          })      
     },
 
     stopHubConncetion: () : Action<State> => 
@@ -74,7 +82,14 @@ const actions = {
     async ({ setState, getState }) => {    
         hubConnection.invoke("RecieveUnread", reciever)
               .catch(error => console.log(error));          
+    },
+
+    removeMessage: (id: any, userName: any) : Action<State> => 
+    async ({ setState, getState }) => {    
+        hubConnection.invoke("RemoveMessage", id, userName)
+              .catch(error => console.log(error));          
     }
+
 };
 
 const Store = createStore<State, Actions>({

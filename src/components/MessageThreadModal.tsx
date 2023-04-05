@@ -5,25 +5,21 @@ import { useForm } from "antd/lib/form/Form";
 import { useUserStore } from '../stores/user.store';
 import { useMessageStore } from "../stores/message.store";
 import TimeAgo from 'timeago-react';
-import { SendOutlined , DownOutlined} from '@ant-design/icons';
+import { SendOutlined , DownOutlined, RestOutlined} from '@ant-design/icons';
 import { ICreateMessage } from "../interfaces/ICreateMessage";
-import AuthLocalStorage from "../AuthLocalStorage";
 
 export const MessageThreadModal: React.FC = () => { 
 
-    const token = AuthLocalStorage.getToken() as string;
     const [sendForm] = useForm();
     const [state, actions] = useUserStore();
     const [messageState, messageActions] = useMessageStore();
-
     const [scrollNumber, setScrollNumber] = useState(0);
-
     const messagesEndRef = React.createRef<HTMLDivElement>();
 
-    useEffect(() => {  
+    /* useEffect(() => {  
         setScrollNumber(messageState.messageThreadSource.length * 100);
         scrollToDown2();
-    }, [state.senderName, state.receiverName]);
+    }, [state.senderName, state.receiverName]);*/
 
    useEffect(() => {  
       if(state.IsThreadShown == true){
@@ -49,7 +45,6 @@ export const MessageThreadModal: React.FC = () => {
     }
 };
     const handleCancel = () => {
-         // messageActions.stopHubConncetion();
           actions.makeThreadModalInvisible();
     };
 
@@ -71,6 +66,12 @@ export const MessageThreadModal: React.FC = () => {
         scrollToDown2();
   };
 
+    const deleteMessage = async (id : any, userName : any) => {
+      if(window.confirm('Are you sure?')){
+          messageActions.removeMessage(id, userName);
+          messageActions.recieveThread(state.senderName, state.receiverName);
+      }
+  };
 
     return(  
         <Modal title= {state.receiverName}
@@ -102,7 +103,11 @@ export const MessageThreadModal: React.FC = () => {
                               <List.Item.Meta
                               style={{ width: 'calc(100% - 60px)' }}
                               title={<div><a>{item.senderUserName + " "}</a> 
-                                          <TimeAgo datetime={item.messageSent}/>
+                                          <TimeAgo datetime={item.messageSent} style = {{paddingRight: "3%"}}/>
+
+                                          <Button danger shape="circle"
+                                            onClick={() => deleteMessage(item.id, state.senderName)}>
+                                               <RestOutlined /></Button>
                                   </div>}
                               description={item.content}/>
                           </List.Item>

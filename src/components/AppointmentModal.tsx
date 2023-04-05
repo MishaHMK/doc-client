@@ -104,8 +104,9 @@ export const AppointmentModal: React.FC = () => {
             return (
                 (
                 new Date(current).getDay() === 0 ||
-                new Date(current).getDay() === 6
-                || !!state.dates.includes(formatDate(new Date(current)))
+                new Date(current).getDay() === 6 ||
+                current.valueOf() < Date.now()   ||
+                !!state.dates.includes(formatDate(new Date(current)))
                 )   
             );
         }; 

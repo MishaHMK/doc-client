@@ -9,7 +9,7 @@ import { IAppDate } from '../interfaces/IAppDate';
 
 type State = { roles: any, users: any, specs: any, doctors: IDoctor[], patients: IPatient[], dates: string[],
                appointments: any, times: any, IsAppShown: any, IsThreadShown: any, doctorIdSelected: any, doctorId: any, doctorName: any,  
-               patientId: any, currentUserId: any, currentUserName: any,  currentUserIntroduction: any,
+               patientId: any, currentUserId: any, currentUserIntroduction: any,
                currentRole: any, eventEditingOn: any, currentUserSpeciality: any, paginatedUsers: PaginatedResult,
                currentEventId: number, currentEventTitle: any, currentEventDescription: any, currentName: any,
                currentEventPatientId: any, currentEventDoctorId: any, currentEventStartDate: any,
@@ -43,7 +43,6 @@ const initialState: State = {
     currentRole: '',
     currentName: '',
     currentUserId: '',
-    currentUserName: '',
     currentUserIntroduction: '',
     currentUserSpeciality: '',
     eventEditingOn: false,
@@ -193,6 +192,14 @@ const actions = {
         });
     },
 
+    
+    setUserRole: (role: any) : Action<State> => 
+    async ({ setState, getState }) => {
+        setState({
+          currentRole: role
+        });
+    },
+
     getAppointment: (id: any) : Action<State> => 
     async ({ setState, getState }) => {
         const response = await axios.get("https://localhost:44375/api/Appointment/GetCalendarDataById/" + id);
@@ -214,7 +221,7 @@ const actions = {
         const response = await axios.get("https://localhost:44375/api/Account/users/" + id);
         setState({
           currentUserId: response.data.id,
-          currentUserName: response.data.name,
+          currentName: response.data.name,
           currentUserIntroduction: response.data.introduction,
           currentUserSpeciality: response.data.speciality
         });

@@ -4,6 +4,7 @@ import { Login } from './components/Login';
 import { Register } from './components/Register';
 import { Calendar } from './components/Calendar';
 import { NavBar } from './components/NavBar';
+import { Intro } from './components/Intro';
 import { DoctorsPage } from './components/DoctorsPage';
 import { EditProfile } from './components/EditProfile';
 import { Messages } from './components/Messages';
@@ -20,6 +21,7 @@ function App() {
           <BrowserRouter>
                   <NavBar/>
                   <Routes>
+                      <Route path="main" element={<Intro/>} />
                       <Route path="calendar" element={<Calendar/>} />
                       <Route path="register" element={<Register/>} />
                       <Route path="catalogue" element={<DoctorsPage/>} />

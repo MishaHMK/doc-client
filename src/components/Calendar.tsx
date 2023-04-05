@@ -21,7 +21,6 @@ export const Calendar: React.FC = () => {
 
     useEffect(() => {
         setUp();
-        actions.getUserById(user.NameIdentifier);
         actions.getDoctors();
         actions.getPatients();
         actions.getAllAppointmentsDates();

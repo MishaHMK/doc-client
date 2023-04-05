@@ -28,7 +28,7 @@ export const Login: React.FC = () => {
         if(user){
             signalActions.createHubConnection(token);
             messageActions.createHubConnection(token);
-            navigate("../calendar", { replace: true });
+            navigate("../main", { replace: true });
         } 
     }
 

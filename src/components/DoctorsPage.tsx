@@ -82,9 +82,9 @@ export const DoctorsPage: React.FC = () => {
         navigate("../calendar", { replace: true });    
     };
 
-    const openMessageModal = (receiverId: any, receiverName : any) => {
+    const openMessageModal = (receiverName: any) => {
         messageActions.recieveThread(state.senderName, state.receiverName);
-        actions.setReceiverName(receiverId);
+        actions.setReceiverName(receiverName);
         actions.makeThreadModalVisible();
     };
 
@@ -139,7 +139,7 @@ export const DoctorsPage: React.FC = () => {
                                 <h4 style={{color: '#21bb4b'}}>Online</h4> : 
                                 <h4>Offline</h4> } 
                             actions={[
-                                <CommentOutlined  key="chat"  onClick={() => openMessageModal(item.id, item.name)}/>,
+                                <CommentOutlined  key="chat"  onClick={() => openMessageModal(item.name)}/>,
                                 <PlusCircleOutlined key="app" onClick={() => goToAppoint(item.id, item.name)}/>
                             ]}
                             bordered = {true}   
