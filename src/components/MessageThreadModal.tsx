@@ -22,28 +22,31 @@ export const MessageThreadModal: React.FC = () => {
     }, [state.senderName, state.receiverName]);*/
 
    useEffect(() => {  
+    messageActions.recieveThread(state.senderName, state.receiverName);
       if(state.IsThreadShown == true){
-        setScrollNumber(messageState.messageThreadSource.length * 100);
+        scrollToDown();
       }
     }, [state.IsThreadShown]); 
 
-    useEffect(() => {  
-      setScrollNumber(messageState.messageThreadSource.length * 100);
-      scrollToDown2();
+   useEffect(() => {  
+    messageActions.recieveThread(state.senderName, state.receiverName);
+    scrollToDown();
    }, []);
 
-    const scrollToDown = async () => {
+
+  const scrollToDown = async () => {
         messagesEndRef.current?.scrollTo(0, 1000000000);
   };
 
-  const scrollToDown2 = async () => {
+  const scrollOnSend = async () => {
     if (messagesEndRef) {
       messagesEndRef.current?.addEventListener('DOMNodeInserted', (event: { currentTarget: any; }) => {
         const { currentTarget: target } = event;
         target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
       });
     }
-};
+  };
+
     const handleCancel = () => {
           actions.makeThreadModalInvisible();
     };
@@ -63,7 +66,7 @@ export const MessageThreadModal: React.FC = () => {
 
         messageActions.recieveThread(state.senderName, state.receiverName);
 
-        scrollToDown2();
+        scrollOnSend();
   };
 
     const deleteMessage = async (id : any, userName : any) => {

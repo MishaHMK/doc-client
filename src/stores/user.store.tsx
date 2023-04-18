@@ -8,13 +8,14 @@ import { IMessage } from '../interfaces/IMessage';
 import { IAppDate } from '../interfaces/IAppDate';
 
 type State = { roles: any, users: any, specs: any, doctors: IDoctor[], patients: IPatient[], dates: string[],
-               appointments: any, times: any, IsAppShown: any, IsThreadShown: any, doctorIdSelected: any, doctorId: any, doctorName: any,  
-               patientId: any, currentUserId: any, currentUserIntroduction: any,
-               currentRole: any, eventEditingOn: any, currentUserSpeciality: any, paginatedUsers: PaginatedResult,
-               currentEventId: number, currentEventTitle: any, currentEventDescription: any, currentName: any,
-               currentEventPatientId: any, currentEventDoctorId: any, currentEventStartDate: any,
-               currentEventTime: any, currentEventStatus: any, docSelected : any, docPageOn: any , datePicker: any, 
-               messages: IMessage[], paginatedMessages: PaginatedResult, senderName: string, receiverName: string };
+               appointments: any, times: any, IsAppShown: any, docNameToReview: any, IsThreadShown: any, 
+               doctorIdSelected: any, doctorId: any, doctorName: any, patientId: any, currentUserId: any, 
+               currentUserIntroduction: any, IsReviewShown: any, currentRole: any, eventEditingOn: any, 
+               currentUserSpeciality: any, paginatedUsers: PaginatedResult, currentEventId: number, currentEventTitle: any, 
+               currentEventDescription: any, currentName: any, currentEventPatientId: any, currentEventDoctorId: any, 
+               currentEventStartDate: any, docIdToReview: any, currentEventTime: any, currentEventStatus: any, 
+               docSelected : any, docPageOn: any , datePicker: any, messages: IMessage[], 
+               paginatedMessages: PaginatedResult, senderName: string, receiverName: string };
 type Actions = typeof actions;
 
 
@@ -34,6 +35,9 @@ const initialState: State = {
     times: [],
     IsAppShown: false,
     IsThreadShown: false,
+    IsReviewShown: false,
+    docIdToReview: '',
+    docNameToReview: '',
     docSelected:false,
     doctorIdSelected: '',
     doctorId: '',
@@ -139,6 +143,22 @@ const actions = {
       });
     },
 
+    makeReviewModalVisible: (): Action<State> => 
+    async ({ setState }) => 
+    {
+      setState({
+        IsReviewShown: true
+      });
+    },
+  
+    makeReviewModalInvisible: (): Action<State> => 
+    async ({ setState }) => 
+    {
+      setState({
+        IsReviewShown: false
+      });
+    },
+
 
     makeThreadModalVisible: (): Action<State> => 
     async ({ setState }) => 
@@ -203,13 +223,12 @@ const actions = {
     getAppointment: (id: any) : Action<State> => 
     async ({ setState, getState }) => {
         const response = await axios.get("https://localhost:44375/api/Appointment/GetCalendarDataById/" + id);
-        console.log(response.data);
+        console.log(response.data.startDate);
         setState({
           currentEventId: response.data.id,
           currentEventTitle: response.data.title,
           currentEventDescription: response.data.description,
           currentEventStartDate: response.data.startDate,
-          currentEventTime: response.data.startDate,
           currentEventDoctorId: response.data.doctorId,
           currentEventPatientId: response.data.patientId,
           currentEventStatus: response.data.isApproved
@@ -244,6 +263,7 @@ const actions = {
     updateAppointment: (id: any, Appointment: any) : Action<State> =>
     async ({ setState, getState }) => {
       var appointment: any = { ...Appointment };
+      console.log(appointment);
       const response = await axios.put("https://localhost:44375/api/Appointment/Edit/" + id, appointment);
 
       const updList = getState().appointments.map((app : any)=> {

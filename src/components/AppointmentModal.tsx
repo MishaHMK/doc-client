@@ -14,20 +14,19 @@ import type { DatePickerProps } from 'antd';
 import { DatePicker } from 'antd';
 import jwt from "jwt-decode";
 import AuthLocalStorage from "../AuthLocalStorage";
+import { type } from "os";
 
 export const AppointmentModal: React.FC = () => { 
 
     const [createForm] = useForm();
     const [editForm] = useForm();
     const [state, actions] = useUserStore();
-    const [dateChoice, setDate] = useState(" ");
-    const [timeChoice, setTime] = useState(" ");
     const [dateTimeChoice, setDateTime] = useState(" ");
-    const [disabledDates, setDisabledDates] = useState<string[]>([""]);
     const token = AuthLocalStorage.getToken() as string;
 
      useEffect(() => {    
         updateModal(); 
+        console.log(state.currentEventStartDate);
         //console.log(state.dates);
     });
 
@@ -37,14 +36,6 @@ export const AppointmentModal: React.FC = () => {
     
       const handleEditCancel = () => {
         actions.makeAppModalInvisible();
-      }
-
-      const dayChange: DatePickerProps['onChange'] = (date, dateString) => {
-        setDate(dateString);
-      }
-
-      const timeChange: any = (time: Dayjs, timeString: string) => {
-        setTime(timeString);
       }
 
       const dateTimeChange: DatePickerProps['onChange']  = (date, dateTimeString) => {
@@ -60,9 +51,7 @@ export const AppointmentModal: React.FC = () => {
             editDescription: state.currentEventDescription,
             editPatientId: state.currentEventPatientId,               
             editDoctorId: state.currentEventDoctorId,
-            editStartDate: dateFormat,
-            editTime: dateFormat,
-            editDateTime: dateFormat
+            //editDateTime: state.currentEventStartDate
         });
     }
 
@@ -117,8 +106,8 @@ export const AppointmentModal: React.FC = () => {
 
         const appoint : IAppointment = 
         {
-          title: values.title,
-          description: values.description,
+          title: values.editTitle,
+          description: values.editDescription,
           startDate: dateTimeChoice,
           endDate: "",
           duration: 60,
@@ -146,13 +135,13 @@ export const AppointmentModal: React.FC = () => {
       const appointToUpdate : IAppointment = 
       {
         id: state.currentEventId,
-        title: values.title,
-        description: values.description,
+        title: values.editTitle,
+        description: values.editDescription,
         startDate: dateTimeChoice,
         endDate: "",
         duration: 60,
         doctorId: (state.currentRole == "Doctor") ? user.NameIdentifier: state.doctorIdSelected,
-        patientId: values.patientId,
+        patientId: state.currentEventPatientId,
         isApproved: false,
         adminId: ""
       };
@@ -179,7 +168,7 @@ export const AppointmentModal: React.FC = () => {
                           required: true,
                         },
                       ]}>
-                      <Input/>
+                      <Input placeholder="Title" />
                   </Form.Item>
                   <Form.Item
                       name="description"
@@ -190,7 +179,7 @@ export const AppointmentModal: React.FC = () => {
                           required: true,
                         },
                       ]}>
-                      <Input/>
+                      <Input placeholder="Description"/>
                   </Form.Item>              
                 
                   <Form.Item
@@ -214,7 +203,7 @@ export const AppointmentModal: React.FC = () => {
                             name="patientId"
                             label="Select Patient">
                             <Select
-                                  defaultValue={state.patients[0]}
+                                  defaultValue={"Select Patient"}
                                   style={{ width: 120 }}
                                   options={state.patients.map((pt : IPatient) => ({ label: pt.name, value: pt.id  }))}
                             />
@@ -250,25 +239,13 @@ export const AppointmentModal: React.FC = () => {
 
              <Form.Item
                  name="editTitle"
-                 label="Title"
-                 rules={[
-                   {
-                     max: 60,
-                     required: true,
-                   },
-                 ]}>
+                 label="Title">
                  <Input/>
-
              </Form.Item>
+
              <Form.Item
                  name="editDescription"
-                 label="Description"
-                 rules={[
-                   {
-                     max: 200,
-                     required: true,
-                   },
-                 ]}>
+                 label="Description">
                  <Input/>
              </Form.Item>
 
@@ -276,7 +253,7 @@ export const AppointmentModal: React.FC = () => {
                  name="editPatientId"
                  label="Change Patient">
                  <Select
-                       defaultValue={state.patients[0]}
+                       defaultValue={"Select Patient"}
                        style={{ width: 120 }}
                        options={state.patients.map((pt : IPatient) => ({ label: pt.name, value: pt.id  }))}
                  />
@@ -296,10 +273,11 @@ export const AppointmentModal: React.FC = () => {
                       </div> 
                   : <div></div>}
 
-             <Form.Item
+              <Form.Item
                       label="Appointment DateTime"
                       name="editDateTime">
-                          <DatePicker format="YYYY-MM-DD HH:mm" 
+                          <DatePicker //format="YYYY-MM-DD HH:mm" 
+                          defaultValue={dayjs("2023-04-20 12:20:00", "YYYY-MM-DD HH:mm")}
                           onChange={dateTimeChange} 
                             disabledDate = {disabledDate} 
                             disabledTime = {disabledTime}

@@ -50,7 +50,6 @@ const actions = {
             setState({
                 messageThreadSource: messages
               });
-            console.log(getState().messageThreadSource);
           })    
 
         hubConnection.on('DeleteMessage', id => {

@@ -10,13 +10,12 @@ import jwt_decode from "jwt-decode";
 import jwt from "jwt-decode";
 import AuthLocalStorage from "../AuthLocalStorage";
 import {
-    EventApi,
     EventContentArg,
   } from '@fullcalendar/core'
 
 export const Calendar: React.FC = () => {
     const [state, actions] = useUserStore();
-    const token = AuthLocalStorage.getToken() as string;
+    const token = AuthLocalStorage.getToken() as string; 
     const user: any = jwt(token);
 
     useEffect(() => {
@@ -39,6 +38,12 @@ export const Calendar: React.FC = () => {
         }
     }, []);
 
+    useEffect(() => {
+        if(state.currentRole == "Doctor"){
+            state.docSelected = true;
+        }
+    });
+
     const showModal = () => {
         actions.makeAppModalVisible();
     };
@@ -47,6 +52,10 @@ export const Calendar: React.FC = () => {
         state.docSelected = true;
         state.doctorIdSelected = value;
         state.doctorId = value;
+        state.patientId = user.NameIdentifier;
+        console.log(state.doctorId);
+        console.log(state.patientId);
+        console.log(value);
         actions.getAppointments(state.doctorId, state.patientId,
             state.currentRole);
     };
@@ -137,7 +146,7 @@ export const Calendar: React.FC = () => {
                     eventClick = {handleEvents}
             />  
             </div>
-             : <h1>Choose your Doctor</h1>}
+             : <h1>Choose Doctor</h1>}
             
             <AppointmentModal/> 
         </div>

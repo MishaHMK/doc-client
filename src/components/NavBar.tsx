@@ -2,7 +2,7 @@ import AuthorizeApi from "../api/authorizeApi";
 import UserApi from "../api/userApi";
 import MessageApi from "../api/messageApi";
 import { Layout, MenuProps, Dropdown, message } from "antd";
-import { DownOutlined, UserOutlined} from '@ant-design/icons';
+import { DownOutlined, UserOutlined, MedicineBoxOutlined, EditOutlined, SnippetsOutlined} from '@ant-design/icons';
 import { useUserStore } from '../stores/user.store';
 import Link from 'antd/es/typography/Link';
 import React, { useState, useEffect, useRef } from "react";
@@ -11,15 +11,13 @@ import AuthLocalStorage from "../AuthLocalStorage";
 import { useNavigate } from "react-router-dom";
 import { useSignalrStore } from '../stores/signalr.store';
 import { useMessageStore } from "../stores/message.store";
-import { Menu } from 'antd';
 
-const { Header } = Layout;
+const { Header, Footer } = Layout;
 
 export const NavBar: React.FC = () => {
     const [state, actions] = useUserStore();
     const [name, setName] = useState<string>();
     const [id, setId] = useState<string>("");
-    const [totalItems, settotalItems] = useState(0);
     const [signalState, signalActions] = useSignalrStore();
     const [messageState, messageActions] = useMessageStore();
     const signedIn = AuthorizeApi.isSignedIn();
@@ -43,8 +41,11 @@ export const NavBar: React.FC = () => {
          }
     }, []);
 
-    useEffect(() => {
-       //setTimeout(() => fetchData(), 1000);
+    useEffect(() => {     
+      if(signedIn){
+        const user: any = jwt(token);
+        setTimeout(() => messageActions.receiveUnread(user.NameIdentifier), 300);
+      }
     });
 
     const fetchData = async () => {
@@ -86,17 +87,30 @@ export const NavBar: React.FC = () => {
         navigate("../editprofile/" + id, { replace: true });
       } 
 
+      const myAppointments = () => {
+        const token = AuthLocalStorage.getToken() as string;
+        const user: any = jwt(token);
+        navigate("../appointments/" + id, { replace: true });
+      } 
+
+
 
       const items: MenuProps['items'] = [
         {
           label: 'Edit Profile',
           key: '1',
-          icon: <UserOutlined />,
+          icon: <EditOutlined />,
           onClick: editProfile
         },
         {
-          label: 'Log Out',
+          label: 'My Appointments',
           key: '2',
+          icon: <SnippetsOutlined />,
+          onClick: myAppointments
+        },
+        {
+          label: 'Log Out',
+          key: '3',
           icon: <UserOutlined />,
           onClick: logOut
         }
@@ -106,7 +120,9 @@ export const NavBar: React.FC = () => {
         items
       };
 
-
+      const register = () => {
+        navigate("../register", { replace: true });
+    } 
       const toDrCatalogue = () => {
         state.docPageOn = true;
         navigate("../catalogue", { replace: true });
@@ -122,10 +138,10 @@ export const NavBar: React.FC = () => {
         navigate("../messages/" + id, { replace: true });
     } 
 
-    const items1: MenuProps['items'] = ['1', '2', '3'].map((key) => ({
-      key,
-      label: `nav ${key}`,
-    }));
+    const toMain = () => {
+      state.docPageOn = false;
+      navigate("../main", { replace: true });
+  } 
 
 
     return (
@@ -134,8 +150,10 @@ export const NavBar: React.FC = () => {
           <Header className = "headerContainer">
           {signedIn && userState.current ? (
             
-             <div style={{ display: 'flex'}}>
-                     
+             <div style={{ display: 'flex'}} >
+
+                  <MedicineBoxOutlined onClick={toMain} style = {{paddingRight: "2%", color: "white", fontSize: "40px", marginBottom: "15px" }}/>
+
                   <h3 className = "docCal" style={{paddingLeft: "0%", marginTop: "2px"}}>
                     <Link onClick={toCalendar} style={{ color: "white" }}>Calendar</Link>
                   </h3>
@@ -151,7 +169,7 @@ export const NavBar: React.FC = () => {
                     </Link>
                   </h3>
 
-                  <h3 style={{ marginLeft: "60%", marginTop: "2px", color: "white" }}>
+                  <h3 style={{ marginLeft: "50%", marginTop: "2px", color: "white" }}>
                       Welcome, {""}   
                       {name !== undefined
                       ? name?.length > 12
@@ -168,12 +186,11 @@ export const NavBar: React.FC = () => {
               </div>
               ) : (
               <div style={{ display: 'flex'}}>
-                  <h3 style={{ marginLeft: "680px", marginTop: "2px", color: "white"}}>
-                      Unloged
-                  </h3>
+                  <MedicineBoxOutlined onClick={toMain} style = {{paddingRight: "2%", color: "white", fontSize: "40px", marginBottom: "15px" }}/>
 
-                  <h3 style={{ marginLeft: "500px", marginTop: "2px", color: "white" }}>
+                  <h3 style={{ marginLeft: "1100px", marginTop: "2px", color: "white" }}>
                        <Link onClick={logIn} style={{ padding: "15px"}}>Log In</Link>
+                       <Link onClick={register} style={{ padding: "15px", color: "white"}}>Register</Link>
                    </h3>
               </div>
           )}

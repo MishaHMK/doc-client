@@ -1,7 +1,7 @@
 import React, {ChangeEvent, FC, useState, useEffect} from 'react';
 import { useUserStore } from '../stores/user.store';
-import { Card, List, Pagination, Input, Space, Select, Button } from 'antd';
-import { PlusCircleOutlined, CommentOutlined, UpOutlined, DownOutlined, UserOutlined} from '@ant-design/icons';
+import { Card, List, Pagination, Input, Space, Select, Button, Rate, Tooltip  } from 'antd';
+import { PlusCircleOutlined, CommentOutlined, UpOutlined, DownOutlined, StarOutlined} from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
 import UserApi from "../api/userApi";
 import AuthLocalStorage from '../AuthLocalStorage';
@@ -9,6 +9,8 @@ import jwt_decode from "jwt-decode";
 import { MessageThreadModal } from './MessageThreadModal';
 import { useSignalrStore } from '../stores/signalr.store';
 import { useMessageStore } from "../stores/message.store";
+import { ReviewModal } from './ReviewModal';
+import Link from 'antd/es/typography/Link';
 
 const pageSize = 4;
 const { Search } = Input;
@@ -82,11 +84,24 @@ export const DoctorsPage: React.FC = () => {
         navigate("../calendar", { replace: true });    
     };
 
+    const goToReviews = (doctorId : string, doctorName: string) => {
+        state.docIdToReview = doctorId;
+        state.docNameToReview = doctorName;
+        navigate("../reviews/" + doctorId, { replace: true });    
+    };
+
+
     const openMessageModal = (receiverName: any) => {
         messageActions.recieveThread(state.senderName, state.receiverName);
         actions.setReceiverName(receiverName);
         actions.makeThreadModalVisible();
     };
+
+    const openReviewModal  = (doctorId: any, doctorName: any) => {
+        state.docIdToReview = doctorId;
+        state.docNameToReview = doctorName;
+        actions.makeReviewModalVisible();
+    };   
 
     return (
         <div className = "docpage"> 
@@ -129,9 +144,17 @@ export const DoctorsPage: React.FC = () => {
                                         <h4 style={{color: '#21bb4b'}}>Online</h4> : 
                                         <h4>Offline</h4> } 
                               bordered = {true}
+                              style = {{boxShadow: '10px 5px 5px grey'}}
                             >
                         
                             <i>{item.introduction}</i>
+                            <br></br>
+                            <br></br>
+                               <Rate disabled = {true} allowHalf defaultValue={item.averageRate}></Rate>
+                            <br></br>
+                            <Tooltip placement="right" title={"Read full reviews"}>
+                               <Link onClick={() => goToReviews(item.id, item.name)}>Reviews</Link>
+                            </Tooltip>
                         </Card>
                         :
                         <Card title={"Doctor " + item.name + " (" + item.speciality + ") " }
@@ -139,12 +162,28 @@ export const DoctorsPage: React.FC = () => {
                                 <h4 style={{color: '#21bb4b'}}>Online</h4> : 
                                 <h4>Offline</h4> } 
                             actions={[
-                                <CommentOutlined  key="chat"  onClick={() => openMessageModal(item.name)}/>,
-                                <PlusCircleOutlined key="app" onClick={() => goToAppoint(item.id, item.name)}/>
+                                <Tooltip placement="top" title={"Go to Chat"}>
+                                    <CommentOutlined  key="chat"  onClick={() => openMessageModal(item.name)}/>
+                                </Tooltip>,
+                                <Tooltip placement="top" title={"Go to Calendar"}>
+                                    <PlusCircleOutlined key="app" onClick={() => goToAppoint(item.id, item.name)}/>
+                                </Tooltip>,
+                                <Tooltip placement="top" title={"Add a Review"}>
+                                    <StarOutlined key="review" onClick={() => openReviewModal(item.id, item.name)}/>
+                                </Tooltip>
+
                             ]}
                             bordered = {true}   
+                            style = {{boxShadow: '10px 5px 5px grey', width: '700px'}}
                             >
                             <i>{item.introduction}</i>
+                            <br></br>
+                            <br></br>
+                                <Rate disabled = {true} allowHalf defaultValue={item.averageRate}></Rate>
+                            <br></br>
+                            <Tooltip placement="right" title={"Read full reviews"}>
+                               <Link onClick={() => goToReviews(item.id, item.name)}>Reviews</Link>
+                            </Tooltip>
                         </Card>
                     }
                 </List.Item>
@@ -160,6 +199,7 @@ export const DoctorsPage: React.FC = () => {
             />
 
            <MessageThreadModal/>
+           <ReviewModal/>
        </div>
     );
  };

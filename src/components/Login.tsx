@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import jwt from "jwt-decode";
 import { useSignalrStore } from '../stores/signalr.store';
 import { useMessageStore } from "../stores/message.store";
+import { LockOutlined, UserOutlined, MailOutlined} from '@ant-design/icons';
 
 export const Login: React.FC = () => {
     const [form] = Form.useForm();
@@ -48,7 +49,9 @@ export const Login: React.FC = () => {
                         required: true
                     },
                     ]}>
-                    <Input placeholder="Email" style={{ width: 400 }}/>
+                    <Input placeholder="Email" 
+                           style={{ width: 400 }}
+                           prefix={<MailOutlined className="site-form-item-icon" />}/>
                 </Form.Item>
 
                 <Form.Item
@@ -57,9 +60,11 @@ export const Login: React.FC = () => {
                     {
                         max: 30,
                         required: true
-                    },
+                    }
                     ]}>
-                    <Input.Password placeholder="Password" style={{ width: 400 }}/>
+                    <Input.Password placeholder="Password" 
+                                    style={{ width: 400 }}
+                                    prefix={<LockOutlined className="site-form-item-icon" />}/>
                 </Form.Item>
 
                 <Form.Item name="remember" valuePropName="checked">

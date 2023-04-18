@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { IRegister } from '../interfaces/IRegister';
 import { useUserStore } from '../stores/user.store';
 import AuthorizeApi from "../api/authorizeApi";
+import { LockOutlined, UserOutlined, MailOutlined} from '@ant-design/icons';
 
 export const Register: React.FC = () => {
 
@@ -13,6 +14,7 @@ export const Register: React.FC = () => {
     const [chosenRole, setChosenRole] = useState("");
     const [chosenSpec, setChosenSpec] = useState("");
     let authService = new AuthorizeApi();
+    const roles = ['Patient', 'Doctor'];
 
     useEffect(() => {
         actions.getAllRoles();
@@ -53,10 +55,13 @@ export const Register: React.FC = () => {
                 rules={[
                 {
                     max: 30,
-                    required: true
+                    required: true,
+                    message: 'Please input your name!',
                 },
-                ]}>
-                <Input placeholder="Name" style={{ width: 400 }}/>
+                ]}
+                hasFeedback>
+                <Input prefix={<UserOutlined className="site-form-item-icon" />} 
+                                placeholder="Name" style={{ width: 400 }}/>
             </Form.Item>
 
             <Form.Item
@@ -64,33 +69,72 @@ export const Register: React.FC = () => {
                 rules={[
                 {
                     max: 50,
-                    required: true
+                    message: 'Email address shoud be lesser than 50 chars'
                 },
-                ]}>
-                <Input placeholder="Email" style={{ width: 400 }}/>
+                {
+                    required: true,
+                    message: 'Please input your E-mail!'
+                },
+                {
+                    type: 'email',
+                    message: 'The input is not valid E-mail!',
+                }
+                ]}
+                hasFeedback>
+                <Input placeholder="Email" 
+                       style={{ width: 400 }}
+                       prefix={<MailOutlined className="site-form-item-icon" />} />
             </Form.Item>
 
             <Form.Item
                 name="password"
                 rules={[
-                {
-                    max: 30,
-                    required: true
-                },
-                ]}>
-                <Input.Password placeholder="Password" style={{ width: 400 }}/>
+                    {
+                        min: 8,
+                        message: 'Password must contain at least 8 chars'
+                    },
+                    {
+                        max: 18,
+                        message: 'Password max lenght is 18 chars'
+                    },
+                    {
+                        required: true,
+                        message: 'Please input your Password!'
+                    },
+                    {
+                        pattern: /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]/,
+                        message: 'Password must contain at least one uppercase letter, one lowercase letter and one number'
+                    }
+                ]}
+                hasFeedback>
+                <Input.Password placeholder="Password" 
+                                prefix={<LockOutlined className="site-form-item-icon" />} 
+                                style={{ width: 400 }}/>
             </Form.Item>
 
 
             <Form.Item
                 name="confirmPassword"
+                dependencies={['password']}
+                hasFeedback
                 rules={[
                 {
                     max: 30,
                     required: true
                 },
+                ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue('password') === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error('The two passwords do not match!'));
+                    },
+                  })
                 ]}>
-                <Input.Password placeholder="Confirm Password" style={{ width: 400 }}/>
+                <Input.Password 
+                 prefix={<LockOutlined className="site-form-item-icon" />} 
+                 placeholder="Confirm Password" 
+                 style={{ width: 400}}/>
             </Form.Item>
 
             
@@ -99,14 +143,15 @@ export const Register: React.FC = () => {
                 rules={[
                 {
                     max: 20,
-                    required: true
+                    required: true,
+                    message: 'Please select Role!'
                 },
                 ]}>
                 <Select
-                    defaultValue={state.roles[0]}
-                    style={{ width: 120 }}
+                    defaultValue={'Role'}
+                    style={{ width: 120, marginTop: '25px' }}
                     onChange={handleSelectRole}
-                    options={state.roles.map((role : string) => ({ label: role, value: role }))}
+                    options={roles.map((role : string) => ({ label: role, value: role }))}
                 />
             </Form.Item>
 
