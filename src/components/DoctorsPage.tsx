@@ -11,6 +11,7 @@ import { useSignalrStore } from '../stores/signalr.store';
 import { useMessageStore } from "../stores/message.store";
 import { ReviewModal } from './ReviewModal';
 import Link from 'antd/es/typography/Link';
+import { useTranslation, Trans } from 'react-i18next';
 
 const pageSize = 4;
 const { Search } = Input;
@@ -32,6 +33,7 @@ export const DoctorsPage: React.FC = () => {
     const [usersOnline, setUsersOnline] = useState<any>();
     const [messageState, messageActions] = useMessageStore();
 
+    const { t, i18n } = useTranslation();
 
     useEffect(() => {  
         fetchData();
@@ -105,7 +107,7 @@ export const DoctorsPage: React.FC = () => {
 
     return (
         <div className = "docpage"> 
-            <h2>OUR DOCTORS</h2>
+            <h2>{t("doctorPage.title")}</h2>
 
             <Space direction="horizontal">
 
@@ -113,7 +115,7 @@ export const DoctorsPage: React.FC = () => {
             <Button onClick={sortNameByDesc}><DownOutlined /></Button>
 
                <Search
-                    placeholder="Put doctors name"
+                    placeholder={t("doctorPage.placeholder").toString()}
                     allowClear
                     enterButton
                     size="large"
@@ -141,8 +143,8 @@ export const DoctorsPage: React.FC = () => {
                     {(currentRole == "Doctor") ?
                         <Card title={ "Doctor " + item.name + " (" + item.speciality + ") " }
                               extra={(usersOnline.includes(item.id)) ? 
-                                        <h4 style={{color: '#21bb4b'}}>Online</h4> : 
-                                        <h4>Offline</h4> } 
+                                        <h4 style={{color: '#21bb4b'}}>{t("doctorPage.online")}</h4> : 
+                                        <h4>{t("doctorPage.offline")}</h4> } 
                               bordered = {true}
                               style = {{boxShadow: '10px 5px 5px grey'}}
                             >
@@ -152,23 +154,23 @@ export const DoctorsPage: React.FC = () => {
                             <br></br>
                                <Rate disabled = {true} allowHalf defaultValue={item.averageRate}></Rate>
                             <br></br>
-                            <Tooltip placement="right" title={"Read full reviews"}>
-                               <Link onClick={() => goToReviews(item.id, item.name)}>Reviews</Link>
+                            <Tooltip placement="right" title={t("doctorPage.fullTooltip")}>
+                               <Link onClick={() => goToReviews(item.id, item.name)}>{t("doctorPage.reviews")}</Link>
                             </Tooltip>
                         </Card>
                         :
                         <Card title={"Doctor " + item.name + " (" + item.speciality + ") " }
-                            extra={  (usersOnline.includes(item.id)) ? 
-                                <h4 style={{color: '#21bb4b'}}>Online</h4> : 
-                                <h4>Offline</h4> } 
+                            extra={(usersOnline.includes(item.id)) ? 
+                                <h4 style={{color: '#21bb4b'}}>{t("doctorPage.online")}</h4> : 
+                                <h4>{t("doctorPage.offline")}</h4> } 
                             actions={[
-                                <Tooltip placement="top" title={"Go to Chat"}>
+                                <Tooltip placement="top" title={t("doctorPage.chatTooltip")}>
                                     <CommentOutlined  key="chat"  onClick={() => openMessageModal(item.name)}/>
                                 </Tooltip>,
-                                <Tooltip placement="top" title={"Go to Calendar"}>
+                                <Tooltip placement="top" title={t("doctorPage.calTooltip")}>
                                     <PlusCircleOutlined key="app" onClick={() => goToAppoint(item.id, item.name)}/>
                                 </Tooltip>,
-                                <Tooltip placement="top" title={"Add a Review"}>
+                                <Tooltip placement="top" title={t("doctorPage.revTooltip")}>
                                     <StarOutlined key="review" onClick={() => openReviewModal(item.id, item.name)}/>
                                 </Tooltip>
 
@@ -181,8 +183,8 @@ export const DoctorsPage: React.FC = () => {
                             <br></br>
                                 <Rate disabled = {true} allowHalf defaultValue={item.averageRate}></Rate>
                             <br></br>
-                            <Tooltip placement="right" title={"Read full reviews"}>
-                               <Link onClick={() => goToReviews(item.id, item.name)}>Reviews</Link>
+                            <Tooltip placement="right" title={t("doctorPage.fullTooltip")}>
+                               <Link onClick={() => goToReviews(item.id, item.name)}>{t("doctorPage.reviews")}</Link>
                             </Tooltip>
                         </Card>
                     }

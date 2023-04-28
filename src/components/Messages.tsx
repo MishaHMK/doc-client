@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import { useUserStore } from '../stores/user.store';
 import { Button, Table} from 'antd';
 import Link from 'antd/es/typography/Link';
-import TimeAgo from 'timeago-react'; 
 import type { ColumnsType } from 'antd/es/table';
 import jwt from "jwt-decode";
 import { FolderOutlined, MailOutlined, SendOutlined } from '@ant-design/icons';
@@ -10,6 +9,14 @@ import AuthLocalStorage from "../AuthLocalStorage";
 import MessageApi from "../api/messageApi";
 import { MessageThreadModal } from './MessageThreadModal';
 import { useMessageStore } from "../stores/message.store";
+
+import { useTranslation, Trans } from 'react-i18next';
+
+import TimeAgo from 'timeago-react';
+import * as timeAgo from 'timeago.js'; 
+import uk from 'timeago.js/lib/lang/uk';
+
+timeAgo.register('uk', uk);
 
 const pageSize = 6;
 
@@ -23,6 +30,8 @@ export const Messages: React.FC = () => {
     const token = AuthLocalStorage.getToken() as string;
     const user: any = jwt(token);
     let msgService = new MessageApi();
+
+    const { t, i18n } = useTranslation();
     
     useEffect(() => {  
         fetchData();
@@ -40,7 +49,7 @@ export const Messages: React.FC = () => {
     const columns: ColumnsType<DataType> = [
 
         {
-            title: 'From',
+            title: t("messages.from"),
             dataIndex: 'senderUserName',
             width: '20%',
             render: (senderUserName: any) => (
@@ -49,16 +58,18 @@ export const Messages: React.FC = () => {
         },
 
         {
-            title: 'Message',
+            title: t("messages.message"),
             dataIndex: 'content',
             width: '50%'
         },
         {
-            title: 'Sent',
+            title: t("messages.sent"),
             dataIndex: 'messageSent',
             width: '20%',
             render: (messageSent: any) => (
                 <TimeAgo
+                locale= {i18n.language == 'ua' ? 'uk' : 'en_US'}
+                //{i18n.language == 'ua' ? 'uk' : 'en_US'}
                 datetime={messageSent}
                 />
             )
@@ -68,7 +79,7 @@ export const Messages: React.FC = () => {
             key: "delete",
             dataIndex: 'id',
             render: (id: any) => (
-                <Button danger onClick={() => deleteMessage(id, state.senderName)}>Delete</Button>
+                <Button danger onClick={() => deleteMessage(id, state.senderName)}>{t("messages.delete")}</Button>
             )
         }
       ]
@@ -121,23 +132,23 @@ export const Messages: React.FC = () => {
 
     return (
         <div>
-            <h2>MESSAGES</h2>
+            <h2>{t("messages.title")}</h2>
                 <div>
                     <Button type="primary" icon={<MailOutlined />} size={'large'} onClick = {onUnread}>
-                        Unread
+                    {t("messages.unread")}
                     </Button>
                     <Button type="primary" icon={<FolderOutlined />} size={'large'} onClick = {onInbox}>
-                        Inbox
+                    {t("messages.inbox")}
                     </Button>
                     <Button type="primary" icon={<SendOutlined />} size={'large'} onClick = {onOutbox}>
-                        Outbox
+                    {t("messages.outbox")}
                     </Button>
                 </div>
                 
                 <div>
                     {(state.paginatedMessages.totalItems === 0 && !state.paginatedMessages.pagedList) ?
                         <div style={{ display: 'flex', position: 'absolute', top: '25%', left: '47%'}}>
-                            <h3>No messages</h3>
+                            <h3>{t("messages.noMessages")}</h3>
                         </div>
                             :
                         <div style={{ marginTop: '70px'}}>

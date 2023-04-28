@@ -1,0 +1,62 @@
+{
+    "welcome": "Welcome, ",
+    "appointPage":{
+        "myApp": "My appointments",
+        "approved": "Approved",
+        "unapproved": "Unapproved",
+        "doctor": "Doctor",
+        "patient": "Patient"
+    },
+    "navBar":{
+        "calendar": "Calendar", 
+        "doctors": "Doctors",
+        "messages": "Messages",
+        "logIn": "Log In",
+        "register": "Register",
+        "editProfile": "Edit Profile",
+        "myApps": "My appointments",
+        "logOut": "Log Out"
+    },
+    "messages":{
+        "title": "Messages", 
+        "unread": "Unread",
+        "inbox": "Inbox",
+        "outbox": "Outbox",
+        "from": "From",
+        "message": "Message",
+        "sent": "Sent",
+        "ago": "ago",
+        "delete": "Delete",
+        "noMessages": "No Messages",
+        "thread": {
+            "placeholder": "Write a message...."
+        }
+    },
+    "doctorPage":{
+        "title": "Our Doctors", 
+        "placeholder": "Put doctors name",
+        "offline": "Offline",
+        "online": "Online",
+        "reviews": "Reviews",
+        "chatTooltip": "Go to Chat",
+        "calTooltip": "Go to Calendar",
+        "revTooltip": "Add a Review",
+        "fullTooltip": "Read full reviews"
+    },
+    "calendar":{
+        "title": "Select a Doctor"
+    },
+    "intro":{
+        "searchTitle": "Find the specialist you need",
+        "calendarTitle": "Interactive Calendar",
+        "chatTitle": "Chat with doctor",
+        "searchTextLine1": "You can find the specialist you need. ",
+        "searchTextLine2": "You can also see the brief introduction and rating of the specialist.",
+        "calendarTextLine1": "You can set up an appointment on a particular doctor's interactive calendar. ",
+        "calendarTextLine2": "The doctor can see and verify your appointment.",
+        "chatTextLine": "You can сhat and keep in touch with your doctor. ",
+        "searchButton": "Find",
+        "calendarButton": "Calendar",
+        "chatButton": "Chat"
+    }
+}

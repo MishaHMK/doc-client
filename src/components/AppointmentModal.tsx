@@ -106,8 +106,8 @@ export const AppointmentModal: React.FC = () => {
 
         const appoint : IAppointment = 
         {
-          title: values.editTitle,
-          description: values.editDescription,
+          title: values.title,
+          description: values.description,
           startDate: dateTimeChoice,
           endDate: "",
           duration: 60,
@@ -164,8 +164,7 @@ export const AppointmentModal: React.FC = () => {
                       label="Title"
                       rules={[
                         {
-                          max: 60,
-                          required: true,
+                          max: 60
                         },
                       ]}>
                       <Input placeholder="Title" />
@@ -175,8 +174,7 @@ export const AppointmentModal: React.FC = () => {
                       label="Description"
                       rules={[
                         {
-                          max: 200,
-                          required: true,
+                          max: 200
                         },
                       ]}>
                       <Input placeholder="Description"/>

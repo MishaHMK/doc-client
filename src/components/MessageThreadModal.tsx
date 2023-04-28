@@ -7,6 +7,7 @@ import { useMessageStore } from "../stores/message.store";
 import TimeAgo from 'timeago-react';
 import { SendOutlined , DownOutlined, RestOutlined} from '@ant-design/icons';
 import { ICreateMessage } from "../interfaces/ICreateMessage";
+import { useTranslation, Trans } from 'react-i18next';
 
 export const MessageThreadModal: React.FC = () => { 
 
@@ -16,10 +17,7 @@ export const MessageThreadModal: React.FC = () => {
     const [scrollNumber, setScrollNumber] = useState(0);
     const messagesEndRef = React.createRef<HTMLDivElement>();
 
-    /* useEffect(() => {  
-        setScrollNumber(messageState.messageThreadSource.length * 100);
-        scrollToDown2();
-    }, [state.senderName, state.receiverName]);*/
+    const { t, i18n } = useTranslation();
 
    useEffect(() => {  
     messageActions.recieveThread(state.senderName, state.receiverName);
@@ -86,7 +84,7 @@ export const MessageThreadModal: React.FC = () => {
                         <Button onClick={scrollToDown} shape="circle"
                                 style={{ marginRight: 20 }} ><DownOutlined /></Button>
                         <Form.Item name="content">
-                          <Input placeholder = 'Write a message...' style={{ width: 300, textAlign: "left" }}/>
+                          <Input placeholder = {t("messages.thread.placeholder").toString()} style={{ width: 300, textAlign: "left" }}/>
                         </Form.Item>
                         <Button type="primary" htmlType="submit"
                                 style={{ marginRight: 60 }} ><SendOutlined /></Button>

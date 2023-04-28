@@ -12,11 +12,14 @@ import AuthLocalStorage from "../AuthLocalStorage";
 import {
     EventContentArg,
   } from '@fullcalendar/core'
+import { useTranslation, Trans } from 'react-i18next';
 
 export const Calendar: React.FC = () => {
     const [state, actions] = useUserStore();
     const token = AuthLocalStorage.getToken() as string; 
     const user: any = jwt(token);
+
+    const { t, i18n } = useTranslation();
 
     useEffect(() => {
         setUp();
@@ -92,7 +95,7 @@ export const Calendar: React.FC = () => {
             <br></br>
             {(state.currentRole == "Patient") ?  
             <div>
-                <label> Select Doctor </label>
+                <label> {t("calendar.title")} </label>
                  <Select
                     style={{ width: 120 }}
                     options={state.doctors.map((doc : IDoctor) => 
@@ -146,7 +149,7 @@ export const Calendar: React.FC = () => {
                     eventClick = {handleEvents}
             />  
             </div>
-             : <h1>Choose Doctor</h1>}
+             : <h1></h1>}
             
             <AppointmentModal/> 
         </div>

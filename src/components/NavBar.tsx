@@ -1,7 +1,6 @@
 import AuthorizeApi from "../api/authorizeApi";
 import UserApi from "../api/userApi";
-import MessageApi from "../api/messageApi";
-import { Layout, MenuProps, Dropdown, message } from "antd";
+import { Layout, MenuProps, Dropdown, message, Radio } from "antd";
 import { DownOutlined, UserOutlined, MedicineBoxOutlined, EditOutlined, SnippetsOutlined} from '@ant-design/icons';
 import { useUserStore } from '../stores/user.store';
 import Link from 'antd/es/typography/Link';
@@ -12,9 +11,17 @@ import { useNavigate } from "react-router-dom";
 import { useSignalrStore } from '../stores/signalr.store';
 import { useMessageStore } from "../stores/message.store";
 
+import { useTranslation, Trans } from 'react-i18next';
+
 const { Header, Footer } = Layout;
 
 export const NavBar: React.FC = () => {
+    const { t, i18n } = useTranslation();
+
+    const changeLanguage = (lng : any) => {
+      i18n.changeLanguage(lng);
+    };
+
     const [state, actions] = useUserStore();
     const [name, setName] = useState<string>();
     const [id, setId] = useState<string>("");
@@ -24,9 +31,10 @@ export const NavBar: React.FC = () => {
     const userState = useRef(signedIn);
     const token = AuthLocalStorage.getToken() as string;
     const navigate = useNavigate();
+
     let userService = new UserApi();
     let authService = new AuthorizeApi();
-    let msgService = new MessageApi();
+
 
     useEffect(() => {
         fetchData();
@@ -82,14 +90,10 @@ export const NavBar: React.FC = () => {
       } 
 
       const editProfile = () => {
-        const token = AuthLocalStorage.getToken() as string;
-        const user: any = jwt(token);
         navigate("../editprofile/" + id, { replace: true });
       } 
 
       const myAppointments = () => {
-        const token = AuthLocalStorage.getToken() as string;
-        const user: any = jwt(token);
         navigate("../appointments/" + id, { replace: true });
       } 
 
@@ -97,25 +101,25 @@ export const NavBar: React.FC = () => {
 
       const items: MenuProps['items'] = [
         {
-          label: 'Edit Profile',
+          label: t("navBar.editProfile"),
           key: '1',
           icon: <EditOutlined />,
           onClick: editProfile
         },
         {
-          label: 'My Appointments',
+          label: t("navBar.myApps"),
           key: '2',
           icon: <SnippetsOutlined />,
           onClick: myAppointments
         },
         {
-          label: 'Log Out',
+          label: t("navBar.logOut"),
           key: '3',
           icon: <UserOutlined />,
           onClick: logOut
         }
       ];
-
+  
       const menuProps = {
         items
       };
@@ -154,23 +158,28 @@ export const NavBar: React.FC = () => {
 
                   <MedicineBoxOutlined onClick={toMain} style = {{paddingRight: "2%", color: "white", fontSize: "40px", marginBottom: "15px" }}/>
 
-                  <h3 className = "docCal" style={{paddingLeft: "0%", marginTop: "2px"}}>
-                    <Link onClick={toCalendar} style={{ color: "white" }}>Calendar</Link>
+                  <h3 className = "docCal" style={{paddingLeft: "1%", marginTop: "2px"}}>
+                    <Link onClick={toCalendar} style={{ color: "white" }}>{t("navBar.calendar")}</Link>
                   </h3>
 
-                  <h3 className = "docCal" style={{paddingLeft: "3%", marginTop: "2px"}}>
-                    <Link onClick={toDrCatalogue} style={{ color: "white" }}>Our Doctors</Link>
+                  <h3 className = "docCal" style={{paddingLeft: "4%", marginTop: "2px"}}>
+                    <Link onClick={toDrCatalogue} style={{ color: "white" }}>{t("navBar.doctors")}</Link>
                   </h3>
 
-                  <h3 className = "docCal" style ={ {paddingLeft: "1.5%", marginTop: "2px"}}>
+                  <h3 className = "docCal" style ={ {paddingLeft: "2%", marginTop: "2px"}}>
                     <Link onClick={toMessages} style={{ color: "white" }} className="messages">
-                        <div>Messages </div>
+                        <div>{t("navBar.messages")}</div>
                         { messageState.unreadCount > 0 ? <div><span className="badge">{messageState.unreadCount}</span></div> : <div></div> }
                     </Link>
                   </h3>
 
-                  <h3 style={{ marginLeft: "50%", marginTop: "2px", color: "white" }}>
-                      Welcome, {""}   
+                  <div>
+                        <Radio.Button onClick={() => changeLanguage("ua")}>UA</Radio.Button>
+                        <Radio.Button onClick={() => changeLanguage("en")}>EN</Radio.Button>
+                  </div>
+
+                  <h3 style={{ marginLeft: "45%", marginTop: "2px", color: "white" }}>
+                      {t("welcome")} {""}   
                       {name !== undefined
                       ? name?.length > 12
                       ? name.slice(0, 15) + "..."
@@ -187,10 +196,13 @@ export const NavBar: React.FC = () => {
               ) : (
               <div style={{ display: 'flex'}}>
                   <MedicineBoxOutlined onClick={toMain} style = {{paddingRight: "2%", color: "white", fontSize: "40px", marginBottom: "15px" }}/>
-
+                  <div>
+                        <Radio.Button onClick={() => changeLanguage("ua")}>UA</Radio.Button>
+                        <Radio.Button onClick={() => changeLanguage("en")}>EN</Radio.Button>
+                  </div>
                   <h3 style={{ marginLeft: "1100px", marginTop: "2px", color: "white" }}>
-                       <Link onClick={logIn} style={{ padding: "15px"}}>Log In</Link>
-                       <Link onClick={register} style={{ padding: "15px", color: "white"}}>Register</Link>
+                       <Link onClick={logIn} style={{ padding: "15px"}}>{t("navBar.logIn")}</Link>
+                       <Link onClick={register} style={{ padding: "15px", color: "white"}}>{t("navBar.register")}</Link>
                    </h3>
               </div>
           )}

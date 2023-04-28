@@ -13,12 +13,13 @@ import { EditProfile } from './components/EditProfile';
 import { Messages } from './components/Messages';
 import { BrowserRouter, Route, Routes, Link} from "react-router-dom";
 import { Layout, ConfigProvider} from "antd"
-import FooterContainer from './components/Footer';
+import { useTranslation, Trans } from 'react-i18next';
+
 
 const { Header, Content, Footer } = Layout;
 
 function App() {
-  
+
   return (
     <ConfigProvider
         theme={{
