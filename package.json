@@ -80,5 +80,8 @@
   "devDependencies": {
     "@types/react-big-calendar": "^0.38.4",
     "@types/react-modal": "^3.13.1"
-  }
+  },
+  "browser": {
+    "fs": false
+}
 }

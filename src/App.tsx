@@ -11,12 +11,9 @@ import { ReviewPage } from './components/ReviewPage';
 import { AppointmentPage } from './components/AppointmentPage';
 import { EditProfile } from './components/EditProfile';
 import { Messages } from './components/Messages';
+import { AppointReport } from './components/AppointReport';
 import { BrowserRouter, Route, Routes, Link} from "react-router-dom";
-import { Layout, ConfigProvider} from "antd"
-import { useTranslation, Trans } from 'react-i18next';
-
-
-const { Header, Content, Footer } = Layout;
+import { Layout, ConfigProvider} from "antd";
 
 function App() {
 
@@ -26,8 +23,8 @@ function App() {
           token: {
             colorPrimary: '#001d66',
           },
-        }}
-  >
+        }}>
+          
       <div className="App">
       <div className="container">
           <BrowserRouter>
@@ -42,6 +39,7 @@ function App() {
                       <Route path="editprofile/:id" element={<EditProfile/>} />
                       <Route path="appointments/:id" element={<AppointmentPage/>} />
                       <Route path="reviews/:id" element={<ReviewPage/>} />
+                      <Route path="report" element={<AppointReport/>} />
                       <Route path="" element={<Login/>} />
                   </Routes>
           </BrowserRouter>

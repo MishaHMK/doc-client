@@ -19,4 +19,34 @@ export default class AppointmentApi {
 
         return response;
     };
+
+    getAppointmentsReport = async (userId?: string, startDate?: string, endDate?: string)  => {
+            const response = await axios.get("https://localhost:44375/api/Appointment/GetReport/" + userId, 
+            { params: { 
+                    startDate: startDate,
+                    endDate: endDate,
+            }})
+            .catch((error: AxiosError) => {
+            throw new Error(error.message);
+            });
+
+            return response;
+    };
+
+    loadAppointmentsReport = async (userId?: string, startDate?: string, endDate?: string)  => {
+        const response = await axios({
+                url: "https://localhost:44375/api/Appointment/LoadReport/" + userId,
+                method: 'GET',
+                responseType: 'blob',
+                params: { 
+                  startDate: startDate,
+                  endDate: endDate,
+                }
+              })
+        .catch((error: AxiosError) => {
+        throw new Error(error.message);
+        });
+
+        return response;
+};
 }

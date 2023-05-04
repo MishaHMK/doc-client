@@ -1,6 +1,6 @@
 import AuthorizeApi from "../api/authorizeApi";
 import UserApi from "../api/userApi";
-import { Layout, MenuProps, Dropdown, message, Radio } from "antd";
+import { Layout, MenuProps, Dropdown, Radio } from "antd";
 import { DownOutlined, UserOutlined, MedicineBoxOutlined, EditOutlined, SnippetsOutlined} from '@ant-design/icons';
 import { useUserStore } from '../stores/user.store';
 import Link from 'antd/es/typography/Link';
@@ -31,6 +31,7 @@ export const NavBar: React.FC = () => {
     const userState = useRef(signedIn);
     const token = AuthLocalStorage.getToken() as string;
     const navigate = useNavigate();
+
 
     let userService = new UserApi();
     let authService = new AuthorizeApi();
@@ -97,7 +98,9 @@ export const NavBar: React.FC = () => {
         navigate("../appointments/" + id, { replace: true });
       } 
 
-
+      const toReports = () => {
+        navigate("../report", { replace: true });
+    } 
 
       const items: MenuProps['items'] = [
         {
@@ -106,12 +109,19 @@ export const NavBar: React.FC = () => {
           icon: <EditOutlined />,
           onClick: editProfile
         },
-        {
+        (state.currentRole != "Admin") ? ({
           label: t("navBar.myApps"),
           key: '2',
           icon: <SnippetsOutlined />,
           onClick: myAppointments
-        },
+        }) 
+        : 
+        ({
+          label: t("navBar.reports"),
+          key: '2',
+          icon: <SnippetsOutlined />,
+          onClick: toReports
+        }),
         {
           label: t("navBar.logOut"),
           key: '3',
@@ -128,7 +138,6 @@ export const NavBar: React.FC = () => {
         navigate("../register", { replace: true });
     } 
       const toDrCatalogue = () => {
-        state.docPageOn = true;
         navigate("../catalogue", { replace: true });
     } 
 
@@ -138,14 +147,12 @@ export const NavBar: React.FC = () => {
     } 
 
       const toMessages = () => {
-        state.docPageOn = false;
         navigate("../messages/" + id, { replace: true });
     } 
 
-    const toMain = () => {
-      state.docPageOn = false;
-      navigate("../main", { replace: true });
-  } 
+      const toMain = () => {
+        navigate("../main", { replace: true });
+    } 
 
 
     return (
@@ -173,7 +180,7 @@ export const NavBar: React.FC = () => {
                     </Link>
                   </h3>
 
-                  <div>
+                  <div style ={{paddingLeft: "2%"}}>
                         <Radio.Button onClick={() => changeLanguage("ua")}>UA</Radio.Button>
                         <Radio.Button onClick={() => changeLanguage("en")}>EN</Radio.Button>
                   </div>
@@ -185,13 +192,13 @@ export const NavBar: React.FC = () => {
                       ? name.slice(0, 15) + "..."
                       : name + " "
                       : ""}
-                     
-                        <Dropdown menu={menuProps} overlayStyle={{color: "white"}}>
-                          <a onClick={(e) => e.preventDefault()}>
-                              <DownOutlined />
-                          </a>
-                        </Dropdown>
-                   </h3>
+                      
+                      <Dropdown menu={menuProps} overlayStyle={{color: "white"}}>
+                                <a onClick={(e) => e.preventDefault()}>
+                                    <DownOutlined />
+                                </a>
+                      </Dropdown>
+              </h3>
               </div>
               ) : (
               <div style={{ display: 'flex'}}>
@@ -200,7 +207,7 @@ export const NavBar: React.FC = () => {
                         <Radio.Button onClick={() => changeLanguage("ua")}>UA</Radio.Button>
                         <Radio.Button onClick={() => changeLanguage("en")}>EN</Radio.Button>
                   </div>
-                  <h3 style={{ marginLeft: "1100px", marginTop: "2px", color: "white" }}>
+                  <h3 style={{ marginLeft: "75%", marginTop: "2px", color: "white" }}>
                        <Link onClick={logIn} style={{ padding: "15px"}}>{t("navBar.logIn")}</Link>
                        <Link onClick={register} style={{ padding: "15px", color: "white"}}>{t("navBar.register")}</Link>
                    </h3>
