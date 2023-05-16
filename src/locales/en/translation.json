@@ -45,7 +45,11 @@
         "fullTooltip": "Read full reviews"
     },
     "calendar":{
-        "title": "Select a Doctor"
+        "title": "Select a Doctor",
+        "today": "Today",
+        "day": "Day",
+        "week": "Week",
+        "month": "Month"
     },
     "intro":{
         "searchTitle": "Find the specialist you need",
@@ -59,5 +63,47 @@
         "searchButton": "Find",
         "calendarButton": "Calendar",
         "chatButton": "Chat"
+    },
+    "appModal":{
+        "createTitle": "Create Appointment",
+        "editTitle": "Edit Appointment",
+        "title": "Title",
+        "description": "Description",
+        "dateTime": "Appointment DateTime",
+        "selectPat": "Select Patient",
+        "selectDoc": "Select Doctor",
+        "changePat": "Change Patient",
+        "changeDoc": "Change Doctor",
+        "add": "Add",
+        "change": "Change",
+        "delete": "Delete",
+        "approve": "Approve",
+        "cancel": "Cancel"
+    },
+    "editProfile":{
+        "title": "Edit Profile",
+        "surname": "Surname",
+        "name": "Name",
+        "fathername": "Fathername",
+        "introduction": "Introduction",
+        "speciality": "Speciality"
+    },
+    "login":{
+        "title": "Login",
+        "email": "Email",
+        "password": "Password",
+        "signup": "Sign Up",
+        "introduction": "Log In"
+    },
+    "register":{
+        "title": "Register",
+        "surname": "Surname",
+        "name": "Name",
+        "fathername": "Fathername",
+        "email": "Email",
+        "password": "Password",
+        "repeatpassword": "Repeat password",
+        "role": "Role",
+        "speciality": "Speciality"
     }
 }

@@ -45,7 +45,11 @@
         "fullTooltip": "Читати повні відгуки"
     },
     "calendar":{
-        "title": "Оберіть лікаря"
+        "title": "Оберіть лікаря",
+        "today": "Сьогодні",
+        "day": "День",
+        "week": "Тиждень",
+        "month": "Місяць"
     },
     "intro":{
         "searchTitle": "Знайдіть потрібного спеціаліста",
@@ -59,5 +63,47 @@
         "searchButton": "Пошук",
         "calendarButton": "Календар",
         "chatButton": "Чат"
+    },
+    "appModal":{
+        "createTitle": "Створення запису",
+        "editTitle": "Редагування запису",
+        "title": "Назва",
+        "description": "Опис",
+        "dateTime": "Час зустрічі",
+        "selectPat": "Вибір пацієнта",
+        "selectDoc": "Вибір лікаря",
+        "changePat": "Вибір пацієнта",
+        "changeDoc": "Вибір лікаря",
+        "add": "Додати",
+        "change": "Змінити",
+        "delete": "Видалити",
+        "approve": "Підтвердити",
+        "cancel": "Скасувати"
+    },
+    "editProfile":{
+        "title": "Редагування профілю",
+        "surname": "Прізвище",
+        "name": "Ім'я",
+        "fathername": "По-батькові",
+        "introduction": "Відомості",
+        "speciality": "Спеціальність"
+    },
+    "login":{
+        "title": "Увійти",
+        "email": "Електронна пошта",
+        "password": "Пароль",
+        "signup": "Реєстрація",
+        "introduction": "Вхід"
+    },
+    "register":{
+        "title": "Реєстрація",
+        "surname": "Прізвище",
+        "name": "Ім'я",
+        "fathername": "По-батькові",
+        "email": "Електронна пошта",
+        "password": "Пароль",
+        "repeatpassword": "Повтор паролю",
+        "role": "Роль",
+        "speciality": "Спеціальність"
     }
 }

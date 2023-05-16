@@ -67,6 +67,7 @@ export const NavBar: React.FC = () => {
           .then(async (response) => {
             state.currentUserId = user.NameIdentifier;
             actions.setSenderName(response.data.user.name);
+            actions.setSenderId(response.data.user.id);
             setName(response.data.user.name);
             if (user.NameIdentifier !== undefined) {
               userState.current = true;
@@ -163,29 +164,29 @@ export const NavBar: React.FC = () => {
             
              <div style={{ display: 'flex'}} >
 
-                  <MedicineBoxOutlined onClick={toMain} style = {{paddingRight: "2%", color: "white", fontSize: "40px", marginBottom: "15px" }}/>
+                  <MedicineBoxOutlined onClick={toMain} style = {{paddingRight: "4%", color: "white", fontSize: "48px", marginBottom: "15px" }}/>
 
-                  <h3 className = "docCal" style={{paddingLeft: "1%", marginTop: "2px"}}>
-                    <Link onClick={toCalendar} style={{ color: "white" }}>{t("navBar.calendar")}</Link>
-                  </h3>
+                  <h2 className = "docCal" style={{paddingLeft: "1%", marginTop: "2px"}}>
+                    <Link onClick={toCalendar} style={{ color: "white", fontSize: "18px" }}>{t("navBar.calendar")}</Link>
+                  </h2>
 
-                  <h3 className = "docCal" style={{paddingLeft: "4%", marginTop: "2px"}}>
-                    <Link onClick={toDrCatalogue} style={{ color: "white" }}>{t("navBar.doctors")}</Link>
-                  </h3>
+                  <h2 className = "docCal" style={{paddingLeft: "4%", marginTop: "2px"}}>
+                    <Link onClick={toDrCatalogue} style={{ color: "white", fontSize: "18px"  }}>{t("navBar.doctors")}</Link>
+                  </h2>
 
-                  <h3 className = "docCal" style ={ {paddingLeft: "2%", marginTop: "2px"}}>
-                    <Link onClick={toMessages} style={{ color: "white" }} className="messages">
+                  <h2 className = "docCal" style ={ {paddingLeft: "2%", marginTop: "2px"}}>
+                    <Link onClick={toMessages} style={{ color: "white", fontSize: "18px" }} className="messages">
                         <div>{t("navBar.messages")}</div>
                         { messageState.unreadCount > 0 ? <div><span className="badge">{messageState.unreadCount}</span></div> : <div></div> }
                     </Link>
-                  </h3>
+                  </h2>
 
-                  <div style ={{paddingLeft: "2%"}}>
+                  <div style ={{paddingLeft: "1%"}}>
                         <Radio.Button onClick={() => changeLanguage("ua")}>UA</Radio.Button>
                         <Radio.Button onClick={() => changeLanguage("en")}>EN</Radio.Button>
                   </div>
 
-                  <h3 style={{ marginLeft: "45%", marginTop: "2px", color: "white" }}>
+                  <h3 style={{ marginLeft: "30%", marginTop: "2px", color: "white", fontSize: "20px"}}>
                       {t("welcome")} {""}   
                       {name !== undefined
                       ? name?.length > 12
@@ -202,14 +203,14 @@ export const NavBar: React.FC = () => {
               </div>
               ) : (
               <div style={{ display: 'flex'}}>
-                  <MedicineBoxOutlined onClick={toMain} style = {{paddingRight: "2%", color: "white", fontSize: "40px", marginBottom: "15px" }}/>
-                  <div>
+                  <MedicineBoxOutlined onClick={toMain} style = {{paddingRight: "2%", color: "white", fontSize: "48px", marginBottom: "15px" }}/>
+                  <div >
                         <Radio.Button onClick={() => changeLanguage("ua")}>UA</Radio.Button>
                         <Radio.Button onClick={() => changeLanguage("en")}>EN</Radio.Button>
                   </div>
-                  <h3 style={{ marginLeft: "75%", marginTop: "2px", color: "white" }}>
-                       <Link onClick={logIn} style={{ padding: "15px"}}>{t("navBar.logIn")}</Link>
-                       <Link onClick={register} style={{ padding: "15px", color: "white"}}>{t("navBar.register")}</Link>
+                  <h3 style={{ marginLeft: "70%", marginTop: "2px", color: "white" }}>
+                       <Link onClick={logIn} style={{ padding: "15px", fontSize: "18px" }}>{t("navBar.logIn")}</Link>
+                       <Link onClick={register} style={{ padding: "15px", color: "white", fontSize: "18px" }}>{t("navBar.register")}</Link>
                    </h3>
               </div>
           )}

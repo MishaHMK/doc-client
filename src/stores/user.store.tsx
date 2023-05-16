@@ -12,7 +12,8 @@ type State = { roles: any, users: any, specs: any, doctors: IDoctor[], patients:
                doctorIdSelected: any, doctorId: any, doctorName: any, patientId: any, currentUserId: any, 
                currentUserIntroduction: any, IsReviewShown: any, currentRole: any, eventEditingOn: any, 
                currentUserSpeciality: any, paginatedUsers: PaginatedResult, currentEventId: number, currentEventTitle: any, 
-               currentEventDescription: any, currentName: any, currentEventPatientId: any, currentEventDoctorId: any, 
+               currentEventDescription: any, currentName: any, currentSurname: any, currentFathername: any, 
+               currentEventPatientId: any, currentEventDoctorId: any, senderId: string, receiverId: string,
                currentEventStartDate: any, docIdToReview: any, currentEventTime: any, currentEventStatus: any, 
                docSelected : any, docPageOn: any , datePicker: any, messages: IMessage[], 
                paginatedMessages: PaginatedResult, senderName: string, receiverName: string };
@@ -46,6 +47,8 @@ const initialState: State = {
     patientId: '',
     currentRole: '',
     currentName: '',
+    currentSurname: '',
+    currentFathername: '',
     currentUserId: '',
     currentUserIntroduction: '',
     currentUserSpeciality: '',
@@ -60,6 +63,8 @@ const initialState: State = {
     currentEventStatus: false,
     senderName: '',
     receiverName: '',
+    senderId: '',
+    receiverId: '',
     docPageOn: false,
     paginatedUsers: {
       pagedList: [],
@@ -184,6 +189,15 @@ const actions = {
       });
     },
 
+    setSenderId: (send_id: string): Action<State> => 
+    async ({ setState }) => 
+    {
+      setState({
+        senderId: send_id
+      });
+    },
+
+
     setReceiverName: (rec_un: string): Action<State> => 
     async ({ setState }) => 
     {
@@ -191,6 +205,16 @@ const actions = {
         receiverName: rec_un
       });
     },
+
+    setReceiverId: (rec_id: string): Action<State> => 
+    async ({ setState }) => 
+    {
+      setState({
+        receiverId: rec_id
+      });
+    },
+
+
 
     getAppointments: (doctorId: string, patientId: string, role: string) : Action<State> => 
     async ({ setState, getState }) => {
@@ -241,10 +265,13 @@ const actions = {
         setState({
           currentUserId: response.data.id,
           currentName: response.data.name,
+          currentSurname: response.data.surname,
+          currentFathername: response.data.fathername,
           currentUserIntroduction: response.data.introduction,
           currentUserSpeciality: response.data.speciality
         });
 
+        console.log(response.data);
         return response.data;
     },
 

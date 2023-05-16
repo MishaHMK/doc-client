@@ -6,15 +6,13 @@ import { useUserStore } from '../stores/user.store';
 import { IPatient } from '../interfaces/IPatient';
 import { IDoctor } from '../interfaces/IDoctor';
 import { IAppointment } from '../interfaces/IAppointment';
-import { TimePicker } from 'antd';
-import type { Dayjs } from 'dayjs';
 import dayjs from "dayjs";
 import { Select } from 'antd';
 import type { DatePickerProps } from 'antd';
 import { DatePicker } from 'antd';
 import jwt from "jwt-decode";
 import AuthLocalStorage from "../AuthLocalStorage";
-import { type } from "os";
+import { useTranslation, Trans } from 'react-i18next';
 
 export const AppointmentModal: React.FC = () => { 
 
@@ -29,6 +27,9 @@ export const AppointmentModal: React.FC = () => {
         console.log(state.currentEventStartDate);
         //console.log(state.dates);
     });
+
+
+      const { t, i18n } = useTranslation();
 
       const handleCreateCancel = () => {
         actions.makeAppModalInvisible();
@@ -51,7 +52,7 @@ export const AppointmentModal: React.FC = () => {
             editDescription: state.currentEventDescription,
             editPatientId: state.currentEventPatientId,               
             editDoctorId: state.currentEventDoctorId,
-            //editDateTime: state.currentEventStartDate
+            editDateTime: dayjs(state.currentEventStartDate, "YYYY-MM-DD HH:mm") 
         });
     }
 
@@ -152,7 +153,7 @@ export const AppointmentModal: React.FC = () => {
 
       if(state.currentEventId == 0){
         return(  
-        <Modal title="Create Appointment"
+        <Modal title={t("appModal.createTitle")}
            open={state.IsAppShown} 
            onCancel={handleCreateCancel}
            footer={null}>
@@ -161,30 +162,30 @@ export const AppointmentModal: React.FC = () => {
                  <p></p>
                   <Form.Item
                       name="title"
-                      label="Title"
+                      label={t("appModal.title")}
                       rules={[
                         {
                           max: 60
                         },
                       ]}>
-                      <Input placeholder="Title" />
+                      <Input placeholder = {i18n.language == 'ua' ? 'Назва' : 'Title'} />
                   </Form.Item>
                   <Form.Item
                       name="description"
-                      label="Description"
+                      label={t("appModal.description")}
                       rules={[
                         {
                           max: 200
                         },
                       ]}>
-                      <Input placeholder="Description"/>
+                      <Input placeholder= {i18n.language == 'ua' ? 'Опис' : 'Description'}/>
                   </Form.Item>              
                 
                   <Form.Item
-                      label="Appointment DateTime"
+                      label={t("appModal.dateTime")}
                       name="dateTime">
                           <DatePicker format="YYYY-MM-DD HH:mm" 
-                          onChange={dateTimeChange} 
+                            onChange={dateTimeChange} 
                             disabledDate = {disabledDate} 
                             disabledTime = {disabledTime}
                             hideDisabledOptions={true}
@@ -199,9 +200,8 @@ export const AppointmentModal: React.FC = () => {
                       <div>
                         <Form.Item
                             name="patientId"
-                            label="Select Patient">
+                            label={t("appModal.selectPat")}>
                             <Select
-                                  defaultValue={"Select Patient"}
                                   style={{ width: 120 }}
                                   options={state.patients.map((pt : IPatient) => ({ label: pt.name, value: pt.id  }))}
                             />
@@ -215,7 +215,7 @@ export const AppointmentModal: React.FC = () => {
                           type="primary"
                           style={{ background: "#52c41a", borderColor: "green" }}
                           htmlType="submit">
-                          Add 
+                          {t("appModal.add")} 
                       </Button>
                       )}
                   </Form.Item>
@@ -223,7 +223,7 @@ export const AppointmentModal: React.FC = () => {
         </Modal>)
       } 
       else return (
-      <Modal title="Edit Appointment" 
+      <Modal title={t("appModal.editTitle")}
             open={state.IsAppShown} 
             onCancel={handleEditCancel}
             footer={null}>
@@ -237,21 +237,20 @@ export const AppointmentModal: React.FC = () => {
 
              <Form.Item
                  name="editTitle"
-                 label="Title">
+                 label={t("appModal.title")}>
                  <Input/>
              </Form.Item>
 
              <Form.Item
                  name="editDescription"
-                 label="Description">
+                 label={t("appModal.description")}>
                  <Input/>
              </Form.Item>
 
              <Form.Item
                  name="editPatientId"
-                 label="Change Patient">
+                 label={t("appModal.changePat")}>
                  <Select
-                       defaultValue={"Select Patient"}
                        style={{ width: 120 }}
                        options={state.patients.map((pt : IPatient) => ({ label: pt.name, value: pt.id  }))}
                  />
@@ -261,7 +260,7 @@ export const AppointmentModal: React.FC = () => {
                       <div>
                        <Form.Item
                           name="editDoctorId"
-                          label="Change Doctor">
+                          label={t("appModal.changeDoc")}>
                           <Select
                                 defaultValue={state.doctors[0]}
                                 style={{ width: 120 }}
@@ -272,10 +271,10 @@ export const AppointmentModal: React.FC = () => {
                   : <div></div>}
 
               <Form.Item
-                      label="Appointment DateTime"
+                      label={t("appModal.dateTime")}
                       name="editDateTime">
                           <DatePicker //format="YYYY-MM-DD HH:mm" 
-                          defaultValue={dayjs("2023-04-20 12:20:00", "YYYY-MM-DD HH:mm")}
+                          //defaultValue={dayjs("2023-04-20 12:20:00", "YYYY-MM-DD HH:mm")}
                           onChange={dateTimeChange} 
                             disabledDate = {disabledDate} 
                             disabledTime = {disabledTime}
@@ -289,11 +288,11 @@ export const AppointmentModal: React.FC = () => {
 
              <Form.Item>
                <Button type="primary" htmlType="submit">
-                 Change
+                 {t("appModal.change")}
                </Button>
 
                <Button type="primary" onClick={() => {deleteAppointment(state.currentEventId)}} danger> 
-                  Delete 
+                 {t("appModal.delete")}
                </Button>
 
               {(state.currentRole == "Doctor" && state.currentEventStatus == false) ? 
@@ -302,7 +301,7 @@ export const AppointmentModal: React.FC = () => {
                 <Button type="primary" 
                           onClick={() => {approveAppointment()}}
                           style={{ background: "#52c41a", borderColor: "green" }}> 
-                    Approve  
+                    {t("appModal.approve")}  
                 </Button>
               </div> 
                : <br></br>}
@@ -313,7 +312,7 @@ export const AppointmentModal: React.FC = () => {
                 <Button type="primary" 
                     onClick={() => {approveAppointment()}}
                     style={{ background: "#f6546a", borderColor: "red" }}> 
-                      Cancel  
+                      {t("appModal.cancel")} 
                 </Button>
               </div>
              : <br></br>}

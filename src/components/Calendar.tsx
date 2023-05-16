@@ -118,8 +118,14 @@ export const Calendar: React.FC = () => {
                     headerToolbar = {{ 
                         left: 'prev, next, today', 
                         center: 'title',
-                        end: 'dayGridMonth, dayGridWeek, dayGridDay'
+                        end: 'dayGridMonth, dayGridWeek, dayGridDay',
                      }}
+                     buttonText = {{
+                        today: i18n.language == 'ua' ? 'Сьогодні' : 'Today',
+                        day: i18n.language == 'ua' ? 'День' : 'Day',
+                        week: i18n.language == 'ua' ? 'Тиждень' : 'Week',
+                        month: i18n.language == 'ua' ? 'Місяць' : 'Month'
+                    }}
                     initialView = 'dayGridMonth'
                     selectable = {true}
                     editable={true}
@@ -147,6 +153,7 @@ export const Calendar: React.FC = () => {
                           })}
                     eventColor = '#378006'
                     eventClick = {handleEvents}
+                    locale= {i18n.language == 'ua' ? 'uk' : 'en'}
             />  
             </div>
              : <h1></h1>}

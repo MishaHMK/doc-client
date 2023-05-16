@@ -40,6 +40,7 @@ export const Messages: React.FC = () => {
 
     interface DataType {
         senderId: string;
+        email: string;
         message: string;
         senderUserName: string;
         receiverUserName: string;
@@ -47,20 +48,25 @@ export const Messages: React.FC = () => {
       }
 
     const columns: ColumnsType<DataType> = [
-
         {
             title: t("messages.from"),
-            dataIndex: 'senderUserName',
-            width: '20%',
-            render: (senderUserName: any) => (
-                <Link onClick={() => openMessageModal(senderUserName)}>{senderUserName}</Link>
+            dataIndex: "senderUserName",
+            width: '15%',
+            render: (senderUserName: any, elem: any) => (
+                <Link onClick={() => openMessageModal(elem.senderId, senderUserName)}>{senderUserName}</Link>
             )
         },
-
         {
             title: t("messages.message"),
             dataIndex: 'content',
-            width: '50%'
+            width: '50%',
+            render: (content: any) => (
+                <p>{content !== undefined
+                    ? content?.length > 100
+                    ? content.slice(0, 100) + "..."
+                    : content + " "
+                    : ""}</p>
+            )
         },
         {
             title: t("messages.sent"),
@@ -69,7 +75,6 @@ export const Messages: React.FC = () => {
             render: (messageSent: any) => (
                 <TimeAgo
                 locale= {i18n.language == 'ua' ? 'uk' : 'en_US'}
-                //{i18n.language == 'ua' ? 'uk' : 'en_US'}
                 datetime={messageSent}
                 />
             )
@@ -99,17 +104,28 @@ export const Messages: React.FC = () => {
         setContainer("Outbox");
     } 
 
-    const handleChange = (page : any) => {
+    const handleChange = (page : number) => {
         setCurrentPage(page);
     };
 
+    const openMessageModal = (receiverId : string, receiverName: string) => {
+        actions.setReceiverId(receiverId);
+        actions.setReceiverName(receiverName);
+        messageActions.recieveThread(state.senderId, receiverId);
+        actions.makeThreadModalVisible();
+        setContainer("Inbox");
+        console.log(receiverId);
+        console.log(state.senderId);
+    };
+
+/*
     const openMessageModal = (receiverName : any) => {
         actions.setReceiverName(receiverName);
         messageActions.recieveThread(state.senderName, receiverName);
         actions.makeThreadModalVisible();
         setContainer("Inbox");
     };
-
+*/
     const deleteMessage = async (id : any, userName : any) => {
         if(window.confirm('Are you sure?')){
             await msgService.deleteMessage(id, userName);
@@ -126,8 +142,6 @@ export const Messages: React.FC = () => {
                settotalItems(response.data.totalItems);
                setMessages(response.data.pagedList);
         });
-
-        //console.log(user);
     };
 
     return (

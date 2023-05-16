@@ -21,7 +21,8 @@ export const Register: React.FC = () => {
     }, []);
 
     const register = async (values: IRegister) => {
-        const regForm : IRegister = {name: values.name, email: values.email, password: values.password,
+        const regForm : IRegister = {name: values.name, fathername: values.fathername, surname: values.surname,
+                                     email: values.email, password: values.password,
                                      confirmPassword: values.confirmPassword, roleName: values.roleName,
                                      speciality: chosenSpec};
         console.log(regForm);
@@ -63,6 +64,35 @@ export const Register: React.FC = () => {
                 <Input prefix={<UserOutlined className="site-form-item-icon" />} 
                                 placeholder="Name" style={{ width: 400 }}/>
             </Form.Item>
+            
+            <Form.Item
+                name="surname"
+                rules={[
+                {
+                    max: 30,
+                    required: true,
+                    message: 'Please input your surname!',
+                },
+                ]}
+                hasFeedback>
+                <Input prefix={<UserOutlined className="site-form-item-icon" />} 
+                                placeholder="Surname" style={{ width: 400 }}/>
+            </Form.Item>
+
+            <Form.Item
+                name="fathername"
+                rules={[
+                {
+                    max: 30,
+                    required: true,
+                    message: 'Please input your fathername!',
+                },
+                ]}
+                hasFeedback>
+                <Input prefix={<UserOutlined className="site-form-item-icon" />} 
+                                placeholder="Fathername" style={{ width: 400 }}/>
+            </Form.Item>
+
 
             <Form.Item
                 name="email"

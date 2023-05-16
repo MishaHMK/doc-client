@@ -14,20 +14,19 @@ export const MessageThreadModal: React.FC = () => {
     const [sendForm] = useForm();
     const [state, actions] = useUserStore();
     const [messageState, messageActions] = useMessageStore();
-    const [scrollNumber, setScrollNumber] = useState(0);
     const messagesEndRef = React.createRef<HTMLDivElement>();
 
     const { t, i18n } = useTranslation();
 
    useEffect(() => {  
-    messageActions.recieveThread(state.senderName, state.receiverName);
+    messageActions.recieveThread(state.senderId, state.receiverId);
       if(state.IsThreadShown == true){
         scrollToDown();
       }
     }, [state.IsThreadShown]); 
 
    useEffect(() => {  
-    messageActions.recieveThread(state.senderName, state.receiverName);
+    messageActions.recieveThread(state.senderId, state.receiverId);
     scrollToDown();
    }, []);
 
@@ -53,16 +52,18 @@ export const MessageThreadModal: React.FC = () => {
         const messageToCreate : ICreateMessage = {
           content: values.content,
           senderName: state.senderName,
-          recipientName: state.receiverName
+          recipientName: state.receiverName,
+          senderId: state.senderId,
+          recipientId: state.receiverId,
         }
 
         messageActions.sendMessage(messageToCreate);
-        setTimeout(() => messageActions.receiveUnread(state.receiverName), 300);
+        setTimeout(() => messageActions.receiveUnread(state.receiverId), 300);
         sendForm.setFieldsValue({
           content: "",
         });
 
-        messageActions.recieveThread(state.senderName, state.receiverName);
+        messageActions.recieveThread(state.senderId, state.receiverId);
 
         scrollOnSend();
   };
@@ -70,7 +71,7 @@ export const MessageThreadModal: React.FC = () => {
     const deleteMessage = async (id : any, userName : any) => {
       if(window.confirm('Are you sure?')){
           messageActions.removeMessage(id, userName);
-          messageActions.recieveThread(state.senderName, state.receiverName);
+          messageActions.recieveThread(state.senderId, state.receiverId);
       }
   };
 

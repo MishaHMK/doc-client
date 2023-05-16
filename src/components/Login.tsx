@@ -67,10 +67,6 @@ export const Login: React.FC = () => {
                                     prefix={<LockOutlined className="site-form-item-icon" />}/>
                 </Form.Item>
 
-                <Form.Item name="remember" valuePropName="checked">
-                    <Checkbox>Remember me</Checkbox>
-                </Form.Item>
-
                 <Form.Item shouldUpdate>
                     {() => (
                     <Button

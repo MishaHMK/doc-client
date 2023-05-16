@@ -141,7 +141,8 @@ export const DoctorsPage: React.FC = () => {
                 renderItem={(item : any) => (
                 <List.Item>
                     {(currentRole == "Doctor") ?
-                        <Card title={ "Doctor " + item.name + " (" + item.speciality + ") " }
+                        <Card title={ item.surname + " " + item.name + " " + item.fathername +
+                                     " (" + item.speciality + ") " }
                               extra={(usersOnline.includes(item.id)) ? 
                                         <h4 style={{color: '#21bb4b'}}>{t("doctorPage.online")}</h4> : 
                                         <h4>{t("doctorPage.offline")}</h4> } 
@@ -159,7 +160,8 @@ export const DoctorsPage: React.FC = () => {
                             </Tooltip>
                         </Card>
                         :
-                        <Card title={"Doctor " + item.name + " (" + item.speciality + ") " }
+                        <Card title={ item.surname + " " + item.name + " " + item.fathername +
+                                     " (" + item.speciality + ") " }
                             extra={(usersOnline.includes(item.id)) ? 
                                 <h4 style={{color: '#21bb4b'}}>{t("doctorPage.online")}</h4> : 
                                 <h4>{t("doctorPage.offline")}</h4> } 
