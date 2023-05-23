@@ -201,9 +201,10 @@ export const AppointmentModal: React.FC = () => {
                         <Form.Item
                             name="patientId"
                             label={t("appModal.selectPat")}>
-                            <Select
-                                  style={{ width: 120 }}
-                                  options={state.patients.map((pt : IPatient) => ({ label: pt.name, value: pt.id  }))}
+                             <Select
+                                  style={{ width: 280 }}
+                                  options={state.patients.map((pt : IPatient) => 
+                                    ({ label: pt.surname + " " + pt.name + " " + pt.fathername, value: pt.id  }))}
                             />
                         </Form.Item>
                       </div> 
@@ -251,8 +252,9 @@ export const AppointmentModal: React.FC = () => {
                  name="editPatientId"
                  label={t("appModal.changePat")}>
                  <Select
-                       style={{ width: 120 }}
-                       options={state.patients.map((pt : IPatient) => ({ label: pt.name, value: pt.id  }))}
+                       style={{ width: 280 }}
+                       options={state.patients.map((pt : IPatient) => 
+                        ({ label: pt.surname + " " + pt.name + " " + pt.fathername, value: pt.id  }))}
                  />
              </Form.Item>
 
@@ -262,9 +264,9 @@ export const AppointmentModal: React.FC = () => {
                           name="editDoctorId"
                           label={t("appModal.changeDoc")}>
                           <Select
-                                defaultValue={state.doctors[0]}
-                                style={{ width: 120 }}
-                                options={state.doctors.map((dr : IDoctor) => ({ label: dr.name, value: dr.id  }))}
+                                style={{ width: 280 }}
+                                options={state.doctors.map((doc : IDoctor) => 
+                                  ({ label: doc.surname + " " + doc.name + " " + doc.fathername, value: doc.id  }))}
                           />
                       </Form.Item>
                       </div> 

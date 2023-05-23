@@ -97,9 +97,9 @@ export const Calendar: React.FC = () => {
             <div>
                 <label> {t("calendar.title")} </label>
                  <Select
-                    style={{ width: 120 }}
+                    style={{ width: 300 }}
                     options={state.doctors.map((doc : IDoctor) => 
-                         ({ label: "Doctor " + doc.name, value: doc.id  }))}
+                         ({ label: doc.surname + " " + doc.name + " " + doc.fathername, value: doc.id  }))}
                     defaultValue = {state.doctorName}
                     onChange={handleChange}/>
                    <br></br> 

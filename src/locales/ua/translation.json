@@ -86,14 +86,15 @@
         "name": "Ім'я",
         "fathername": "По-батькові",
         "introduction": "Відомості",
-        "speciality": "Спеціальність"
+        "speciality": "Спеціальність",
+        "update": "Оновити"
     },
     "login":{
         "title": "Увійти",
         "email": "Електронна пошта",
         "password": "Пароль",
         "signup": "Реєстрація",
-        "introduction": "Вхід"
+        "signin": "Вхід"
     },
     "register":{
         "title": "Реєстрація",
@@ -105,5 +106,10 @@
         "repeatpassword": "Повтор паролю",
         "role": "Роль",
         "speciality": "Спеціальність"
+    },
+    "footer":{
+        "title": "Веб-застосунок лікарні",
+        "createdby": "Гуменюк Михайло",
+        "adress": "Умовна адреса, вул. Умовна, 00000"
     }
 }

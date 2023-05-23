@@ -86,14 +86,15 @@
         "name": "Name",
         "fathername": "Fathername",
         "introduction": "Introduction",
-        "speciality": "Speciality"
+        "speciality": "Speciality",
+        "update": "Update"
     },
     "login":{
         "title": "Login",
         "email": "Email",
         "password": "Password",
         "signup": "Sign Up",
-        "introduction": "Log In"
+        "signin": "Log In"
     },
     "register":{
         "title": "Register",
@@ -105,5 +106,10 @@
         "repeatpassword": "Repeat password",
         "role": "Role",
         "speciality": "Speciality"
+    },
+    "footer":{
+        "title": "Hospital Application",
+        "createdby": "Made by Mykhailo Humeniuk",
+        "adress": "Adress, st., Postal Index"
     }
 }

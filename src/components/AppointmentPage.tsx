@@ -60,9 +60,9 @@ export const AppointmentPage: React.FC = () => {
     };
 
     return (
-        <div> 
+        <div style = {{marginTop: "3%", marginBottom: "3%"}}> 
 
-            <h1>{t("appointPage.myApp")}</h1>
+            <h1 style = {{marginBottom: "2%"}}>{t("appointPage.myApp")}</h1>
             <Select
                     style={{ width: 150 }}
                     onChange={handleSelect}

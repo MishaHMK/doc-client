@@ -164,7 +164,7 @@ export const NavBar: React.FC = () => {
             
              <div style={{ display: 'flex'}} >
 
-                  <MedicineBoxOutlined onClick={toMain} style = {{paddingRight: "4%", color: "white", fontSize: "48px", marginBottom: "15px" }}/>
+                  <MedicineBoxOutlined onClick={toMain} style = {{paddingRight: "4%", color: "white", fontSize: "48px", marginBottom: "6px" }}/>
 
                   <h2 className = "docCal" style={{paddingLeft: "1%", marginTop: "2px"}}>
                     <Link onClick={toCalendar} style={{ color: "white", fontSize: "18px" }}>{t("navBar.calendar")}</Link>
@@ -203,7 +203,6 @@ export const NavBar: React.FC = () => {
               </div>
               ) : (
               <div style={{ display: 'flex'}}>
-                  <MedicineBoxOutlined onClick={toMain} style = {{paddingRight: "2%", color: "white", fontSize: "48px", marginBottom: "15px" }}/>
                   <div >
                         <Radio.Button onClick={() => changeLanguage("ua")}>UA</Radio.Button>
                         <Radio.Button onClick={() => changeLanguage("en")}>EN</Radio.Button>

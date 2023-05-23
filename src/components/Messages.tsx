@@ -145,8 +145,8 @@ export const Messages: React.FC = () => {
     };
 
     return (
-        <div>
-            <h2>{t("messages.title")}</h2>
+        <div style = {{marginTop: "3%", marginBottom: "3%"}}>
+            <h2 style = {{marginBottom: "3%"}}>{t("messages.title")}</h2>
                 <div>
                     <Button type="primary" icon={<MailOutlined />} size={'large'} onClick = {onUnread}>
                     {t("messages.unread")}

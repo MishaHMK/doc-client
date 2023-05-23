@@ -1,24 +1,29 @@
-import { Layout } from "antd";
-import moment from "moment";
+import { useTranslation, Trans } from 'react-i18next';
+import "./footer.css";
 
 const FooterContainer = () => {
+  const { t, i18n } = useTranslation();
     return (
-      <Layout.Footer style = {{backgroundColor: '#051643', height: '80px'}}>
-        <div>
-          <a href="https://www.facebook.com">
-                Facebook
-          </a>
-          <a href="https://twitter.com">
-                Twitter
-          </a>
-          <a href="https://www.instagram.com">
-                Instagram
-          </a>
-        </div>
+      <footer>
+      <div className="footer-content">
+        <h3 style = {{color: "white", fontFamily: "Arial Black" }}>{t("footer.title")}</h3>
         <p>
-          Humeniuk Mykhailo © {moment().format("YYYY")}
+           {t("footer.createdby")}
         </p>
-      </Layout.Footer>
+        <ul className="socials">
+          <li>
+            <a href="#">
+              +38 000 00 00 000
+            </a>
+          </li>
+          <li>
+            <a href="#">
+               {t("footer.adress")}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </footer>
     );
   };
   export default FooterContainer;

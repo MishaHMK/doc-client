@@ -6,6 +6,7 @@ import { IEditUserForm } from '../interfaces/IEditUserForm';
 import AuthLocalStorage from "../AuthLocalStorage";
 import { useTranslation, Trans } from 'react-i18next';
 import jwt from "jwt-decode";
+import { IListElement } from '../interfaces/IListElement';
 
 export const EditProfile: React.FC = () => {
 
@@ -65,8 +66,16 @@ export const EditProfile: React.FC = () => {
         setChosenSpec(value);
     } 
 
+    const specsUA: IListElement[] = [
+        {label: "Усі", value: "Any"},
+        {label: "Педіатрія", value: "Pediatrics"},
+        {label: "Нейрологія", value: "Neurology"},
+        {label: "Кардіологія", value: "Cardiology"},
+        {label: "Радіологія", value: "Radiology"},
+    ]
+
     return (
-        <div> 
+        <div style = {{marginTop: "3%", marginBottom: "3%"}}> 
             <Form 
                  form = {editForm} onFinish={handleUpdate} 
                  name="control-hooks"
@@ -113,7 +122,8 @@ export const EditProfile: React.FC = () => {
                             <div>
                                 <Select
                                     style={{ width: '100%' }}
-                                    options={state.specs.map((sp : string) => ({ label: sp, value: sp }))}
+                                    options={i18n.language == 'ua' ? specsUA.map((sp : any) => ({ label: sp.label, value: sp.value })) :
+                                    state.specs.map((sp : any) => ({ label: sp, value: sp }))}
                                     defaultValue = {state.currentUserSpeciality}
                                     onChange={handleSelectSpec}
                                 />
@@ -129,7 +139,7 @@ export const EditProfile: React.FC = () => {
                           type="primary"
                           style={{ background: "#52c41a", borderColor: "green" }}
                           htmlType="submit">
-                          Update
+                          {t("editProfile.update")}
                       </Button>
                       )}
                   </Form.Item>

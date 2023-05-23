@@ -8,12 +8,13 @@ import { NavBar } from './components/NavBar';
 import { Intro } from './components/Intro';
 import { DoctorsPage } from './components/DoctorsPage';
 import { ReviewPage } from './components/ReviewPage';
+import FooterContainer from './components/Footer';
 import { AppointmentPage } from './components/AppointmentPage';
 import { EditProfile } from './components/EditProfile';
 import { Messages } from './components/Messages';
 import { AppointReport } from './components/AppointReport';
-import { BrowserRouter, Route, Routes, Link} from "react-router-dom";
-import { Layout, ConfigProvider} from "antd";
+import { BrowserRouter, Route, Routes} from "react-router-dom";
+import { ConfigProvider} from "antd";
 
 function App() {
 
@@ -41,10 +42,11 @@ function App() {
                       <Route path="reviews/:id" element={<ReviewPage/>} />
                       <Route path="report" element={<AppointReport/>} />
                       <Route path="" element={<Login/>} />
-                  </Routes>
+                  </Routes> 
+                  <FooterContainer></FooterContainer>   
           </BrowserRouter>
-      </div>
-    </div>
+      </div> 
+    </div>  
   </ConfigProvider>
   );
 }

@@ -66,19 +66,19 @@ const actions = {
     },
 
     sendMessage: (createMessage: ICreateMessage) : Action<State> => 
-    async ({ setState, getState }) => {    
+    async () => {    
         hubConnection.invoke("SendMessage", createMessage)
               .catch(error => console.log(error));             
     },
 
     recieveThread: (sender: string, other: string) : Action<State> => 
-    async ({ setState, getState }) => {    
+    async () => {    
         hubConnection.invoke("RecieveThread", sender, other)
               .catch(error => console.log(error));        
     },
 
     receiveUnread: (reciever: string) : Action<State> => 
-    async ({ setState, getState }) => {    
+    async () => {    
         hubConnection.invoke("RecieveUnread", reciever)
               .catch(error => console.log(error));          
     },

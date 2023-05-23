@@ -21,11 +21,8 @@ axios.interceptors.request.use(
   }
 );
 
-const get = async (
-  url: string,
-  data?: any,
-  paramsSerializer?: any
-): Promise<HttpResponse> => {
+const get = async (url: string, data?: any, paramsSerializer?: any)
+: Promise<HttpResponse> => {
   const response = await axios.get(BASE_URL + url, {
     params: data,
     paramsSerializer: paramsSerializer,

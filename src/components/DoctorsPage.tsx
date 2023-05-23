@@ -12,6 +12,7 @@ import { useMessageStore } from "../stores/message.store";
 import { ReviewModal } from './ReviewModal';
 import Link from 'antd/es/typography/Link';
 import { useTranslation, Trans } from 'react-i18next';
+import { IListElement } from '../interfaces/IListElement';
 
 const pageSize = 4;
 const { Search } = Input;
@@ -19,6 +20,8 @@ const { Search } = Input;
 export const DoctorsPage: React.FC = () => {
     const token = AuthLocalStorage.getToken() as string;
     const navigate = useNavigate();
+
+    
     let userService = new UserApi();
     const [state, actions] = useUserStore();
     const [signalState, signalActions] = useSignalrStore();
@@ -103,11 +106,41 @@ export const DoctorsPage: React.FC = () => {
         state.docIdToReview = doctorId;
         state.docNameToReview = doctorName;
         actions.makeReviewModalVisible();
-    };   
+    };  
+    
+    const transSpecToUA = (arg: string) : string => {          
+        var response = "";
+        switch (arg) {
+            case "Pediatrics":
+                response = "Педіатрія";
+                break;
+            case "Neurology":
+                response = "Нейрологія";
+                break;
+            case "Cardiology":
+                response = "Кардіологія";
+                break;
+            case "Radiology":
+                response = "Радіологія";
+                break;
+            default:
+                console.log("No such day exists!");
+                break;
+        }
+        return response;
+    } 
+
+    const specsUA: IListElement[] = [
+        {label: "Усі", value: "Any"},
+        {label: "Педіатрія", value: "Pediatrics"},
+        {label: "Нейрологія", value: "Neurology"},
+        {label: "Кардіологія", value: "Cardiology"},
+        {label: "Радіологія", value: "Radiology"},
+    ]
 
     return (
-        <div className = "docpage"> 
-            <h2>{t("doctorPage.title")}</h2>
+        <div style = {{marginTop: "3%", marginBottom: "3%"}}> 
+            <h2 style = {{marginBottom: "2%"}}>{t("doctorPage.title")}</h2>
 
             <Space direction="horizontal">
 
@@ -123,10 +156,12 @@ export const DoctorsPage: React.FC = () => {
                 />
 
                 <Select
-                    style={{ width: 120 }}
+                    style={{ width: 140 }}
                     onChange={handleSelect}
-                    options={state.specs.map((sp : any) => ({ label: sp, value: sp }))}
-                    defaultValue = "Speciality"
+                    options={i18n.language == 'ua' ? specsUA.map((sp : any) => ({ label: sp.label, value: sp.value })) :
+                             state.specs.map((sp : any) => ({ label: sp, value: sp }))
+                    }
+                    defaultValue = {i18n.language == 'ua' ? "Cпеціальність":"Speciality"}
                 />
 
             </Space>
@@ -137,18 +172,19 @@ export const DoctorsPage: React.FC = () => {
 
             <List
                 grid={{ column: 2 }}
-                dataSource={users}
+                dataSource={users}  
                 renderItem={(item : any) => (
                 <List.Item>
                     {(currentRole == "Doctor") ?
-                        <Card title={ item.surname + " " + item.name + " " + item.fathername +
-                                     " (" + item.speciality + ") " }
-                              extra={(usersOnline.includes(item.id)) ? 
-                                        <h4 style={{color: '#21bb4b'}}>{t("doctorPage.online")}</h4> : 
-                                        <h4>{t("doctorPage.offline")}</h4> } 
+                        <Card title=
+                        {i18n.language == 'ua' ? 
+                        item.surname + " " + item.name + " " + item.fathername + " (" + transSpecToUA(item.speciality) + ") "
+                        : item.surname + " " + item.name + " " + item.fathername + " (" + item.speciality + ") "}
+                              extra={(usersOnline.includes(item.id))  
+                                         ?  <h4 style={{color: '#21bb4b'}}>{t("doctorPage.online")}</h4>  
+                                         : <h4>{t("doctorPage.offline")}</h4> } 
                               bordered = {true}
-                              style = {{boxShadow: '10px 5px 5px grey'}}
-                            >
+                              style = {{boxShadow: '10px 5px 5px grey'}}>
                         
                             <i>{item.introduction}</i>
                             <br></br>

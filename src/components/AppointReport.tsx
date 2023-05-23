@@ -127,8 +127,8 @@ export const AppointReport: React.FC = () => {
     ]
 
     return (
-        <div>  
-          <h2>REPORT</h2>
+        <div style = {{marginTop: "3%", marginBottom: "10%"}}>  
+          <h2 style = {{ marginBottom: "3%"}}>REPORT</h2>
           { reports.length < 0 ? (
             <div>
                 <DatePicker onChange={onStartChange} />
@@ -142,8 +142,10 @@ export const AppointReport: React.FC = () => {
                    <Button onClick={exportToExcel}> Export to Excel</Button>
 
                    <Table
+                                style = {{fontSize: "20px"}}
                                 columns={columns}
-                                dataSource={reports}>
+                                dataSource={reports}
+                                >
                    </Table>
             </div>
           )}        

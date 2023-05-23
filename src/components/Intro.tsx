@@ -75,15 +75,15 @@ export const Intro: React.FC = () => {
 
     return (
         <div>
-            <div style = {{paddingLeft:'24%', paddingTop:'5%'}}>
+            <div style = {{paddingLeft:'24%', paddingTop:'5%', paddingBottom:'5%'}}>
                     <div style={contentStyle}> 
                         <Carousel autoplay autoplaySpeed = {5000} dots={true} style = {{paddingBottom:'8%'}}>
                             <div>
-                                <h1 className='carousel' style = {{paddingTop:'3%'}}>{t("intro.searchTitle")}</h1>
-                                <ReconciliationFilled style = {{paddingTop:'3%', color: "white", fontSize: "120px"}}/>
-                                <h3 style = {{paddingTop:'3%', color: "white"}}>{t("intro.searchTextLine1")} <br></br> 
+                                <h1 className='carousel' style = {{paddingTop:'5%'}}>{t("intro.searchTitle")}</h1>
+                                <ReconciliationFilled style = {{paddingTop:'5%', color: "white", fontSize: "120px"}}/>
+                                <h3 style = {{paddingTop:'5%', color: "white"}}>{t("intro.searchTextLine1")} <br></br> 
                                                                                 {t("intro.searchTextLine2")}</h3>
-                                <div style = {{paddingTop:'3%'}}>
+                                <div style = {{paddingTop:'5%'}}>
                                     <Button onClick={toDrCatalogue}
                                             type="primary" shape="round">
                                             {t("intro.searchButton")}
