@@ -107,6 +107,17 @@
         "role": "Role",
         "speciality": "Speciality"
     },
+    "reportPage":{
+        "title": "Report",
+        "downloadBtn": "Export to Excel",
+        "docFullName": "Doctor Full Name",
+        "patFullName": "Patient Full Name",
+        "titleCol": "Title",
+        "description": "Description",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "approved": "Approved"
+    },
     "footer":{
         "title": "Hospital Application",
         "createdby": "Made by Mykhailo Humeniuk",

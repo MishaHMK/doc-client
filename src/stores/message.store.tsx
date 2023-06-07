@@ -68,7 +68,7 @@ const actions = {
     sendMessage: (createMessage: ICreateMessage) : Action<State> => 
     async () => {    
         hubConnection.invoke("SendMessage", createMessage)
-              .catch(error => console.log(error));             
+              .catch(error => console.log(error));          
     },
 
     recieveThread: (sender: string, other: string) : Action<State> => 

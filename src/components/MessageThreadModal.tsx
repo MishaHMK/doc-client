@@ -58,7 +58,7 @@ export const MessageThreadModal: React.FC = () => {
         }
 
         messageActions.sendMessage(messageToCreate);
-        setTimeout(() => messageActions.receiveUnread(state.receiverId), 300);
+        
         sendForm.setFieldsValue({
           content: "",
         });
@@ -72,6 +72,7 @@ export const MessageThreadModal: React.FC = () => {
       if(window.confirm('Are you sure?')){
           messageActions.removeMessage(id, userName);
           messageActions.recieveThread(state.senderId, state.receiverId);
+          console.log("ddddd");
       }
   };
 
@@ -80,12 +81,12 @@ export const MessageThreadModal: React.FC = () => {
            open={state.IsThreadShown} 
            onCancel={handleCancel}
            footer={ <Form form = {sendForm} onFinish={handleSubmit}>
-                      <Input.Group compact>
-                        <br></br>
-                        <Button onClick={scrollToDown} shape="circle"
-                                style={{ marginRight: 20 }} ><DownOutlined /></Button>
+                    <Input.Group compact> <br></br>
+                      <Button onClick={scrollToDown} shape="circle"
+                              style={{ marginRight: 20 }} ><DownOutlined /></Button>
                         <Form.Item name="content">
-                          <Input placeholder = {t("messages.thread.placeholder").toString()} style={{ width: 300, textAlign: "left" }}/>
+                          <Input placeholder = {t("messages.thread.placeholder").toString()} 
+                                style={{ width: 300, textAlign: "left" }}/>
                         </Form.Item>
                         <Button type="primary" htmlType="submit"
                                 style={{ marginRight: 60 }} ><SendOutlined /></Button>
@@ -101,21 +102,22 @@ export const MessageThreadModal: React.FC = () => {
                     <List 
                       dataSource={messageState.messageThreadSource}
                       renderItem={(item: any) => (
-                        <List.Item key={item.senderId}>
-                              <List.Item.Meta
-                              style={{ width: 'calc(100% - 60px)' }}
-                              title={<div><a>{item.senderUserName + " "}</a> 
-                                          <TimeAgo datetime={item.messageSent} style = {{paddingRight: "3%"}}/>
+                      <List.Item key={item.senderId}>
+                        <List.Item.Meta
+                          style={{ width: 'calc(100% - 60px)' }}
+                          title={<div><a>{item.senderUserName + " "}</a> 
+                                <TimeAgo
+                                    locale= {i18n.language == 'ua' ? 'uk' : 'en_US'}
+                                    datetime={item.messageSent}
+                                    style = {{paddingRight: "3%"}}/>
 
-                                          <Button danger shape="circle"
-                                            onClick={() => deleteMessage(item.id, state.senderName)}>
-                                               <RestOutlined /></Button>
+                                <Button danger shape="circle"
+                                        onClick={() => deleteMessage(item.id, state.senderName)}>
+                                        <RestOutlined /></Button>
                                   </div>}
                               description={item.content}/>
                           </List.Item>
-                      )}
-                    />   
-      
+                      )}/>   
             </div>     
         </Modal>)
 }

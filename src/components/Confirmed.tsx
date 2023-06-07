@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
 import Link from 'antd/es/typography/Link';
+import { MailOutlined} from '@ant-design/icons';
 
 export const Confirmed: React.FC = () => {
     	
@@ -40,12 +41,13 @@ export const Confirmed: React.FC = () => {
     return (
         <div>    
             {(status == true) ?  
-            <div style={{marginTop: "10%"}}>
-                <h1>Email succesfully confirmed!</h1> 
+            <div style={{marginTop: "3%"}}>
+                <MailOutlined style={{ fontSize: "200px", marginBottom: 100 }}/>
+                <h1>Пошту успішно підтверджено!</h1> 
    
-                <Link onClick={logIn} style={{ padding: "15px"}}>
+                <Link onClick={logIn} style={{ padding: "10px"}}>
                     <div style={{marginTop: "3%", fontSize: 24, fontWeight: 'bold'}} >
-                         Log In
+                         Увійти
                     </div> 
                 </Link>
             </div>

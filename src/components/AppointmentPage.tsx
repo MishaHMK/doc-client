@@ -42,7 +42,6 @@ export const AppointmentPage: React.FC = () => {
 
     useEffect(() => {  
         fetchData();
-        console.log(i18n.language);
     }, [i18n.language, currentPage, sortItem, orderBy, selectedStatus]);
 
 
@@ -50,7 +49,6 @@ export const AppointmentPage: React.FC = () => {
         const decoded: any = jwt_decode(token);
         setCurrentRole(decoded.Role);
         setUserId(decoded.NameIdentifier);
-        console.log(decoded.NameIdentifier);
 
         await appointService.getMyAppointments(decoded.NameIdentifier, currentPage, pageSize, decoded.Role, selectedStatus, sortItem, orderBy)
             .then(async (response) => {
@@ -85,29 +83,29 @@ export const AppointmentPage: React.FC = () => {
                             title =
                             { 
                                 i18n.language == 'ua' ? 
-                                item.title 
-                                           + " " + format(new Date(item.startDate), 'dd.MM.yyyy') 
-                                           + " (" 
-                                           + daysUA[new Date(item.startDate).getDay()]
-                                           + ") " + format(new Date(item.startDate), 'HH:mm')
+                                 "Кабінет №" + item.officeNumber + " — " + format(new Date(item.startDate), 'dd.MM.yyyy') 
+                                     + " (" 
+                                     + daysUA[new Date(item.startDate).getDay()]
+                                     + ") " + format(new Date(item.startDate), 'HH:mm')
                                 :
-                                item.title 
-                                           + " " + format(new Date(item.startDate), 'dd.MM.yyyy') 
-                                           + " (" 
-                                           + daysEN[new Date(item.startDate).getDay()]
-                                           + ") " + format(new Date(item.startDate), 'HH:mm')
+                                "Office №" + item.officeNumber + " " + format(new Date(item.startDate), 'dd.MM.yyyy') 
+                                    + " (" 
+                                    + daysEN[new Date(item.startDate).getDay()]
+                                    + ") " + format(new Date(item.startDate), 'HH:mm')
                             }
                             extra={(item.isApproved == true) ? 
                                 <h4 style={{color: '#21bb4b'}}>{t("appointPage.approved")}</h4> : 
                                 <h4 style={{color: '#CC0000'}}>{t("appointPage.unapproved")}</h4> } 
                             bordered = {true}
                             style = {{boxShadow: '10px 5px 5px grey', width: '800px', marginLeft: '23%'}}>
+                         <b>{item.title }</b>  
+                         <br></br>      
                         <i>{item.description}</i>
                         <br></br>
                         <br></br>
                         <div className="appointContainer">
-                            <h4 style={{}}>{t("appointPage.doctor")}: {item.doctorName} </h4>
-                            <h4 style={{}}>{t("appointPage.patient")}: {item.patientName} </h4>
+                            <h4 style={{}}>{t("appointPage.doctor")}: {item.doctorSurname + " " + item.doctorName} </h4>
+                            <h4 style={{}}>{t("appointPage.patient")}: {item.patientSurname + " " + item.patientName} </h4>
                         </div>
                     </Card>
                 </List.Item>

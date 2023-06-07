@@ -49,15 +49,15 @@ export const ReviewPage: React.FC = () => {
         
 
     return (
-        <div className = "docpage"> 
-            <h2>Reviews</h2>
+        <div style = {{marginTop: "3%", marginBottom: "10%"}}> 
+            <h2 style = {{marginBottom: "2%"}}>Відгуки</h2>
 
             <List
                 grid={{ column: 3 }}
                 dataSource={reviews}
                 renderItem={(item : any) => (
                 <List.Item>
-                        <Card title={ "Review by " + item.patientName + " ( " + format(new Date(item.postedOn), 'dd.MM.yyyy')  + " )"}
+                        <Card title={ "Відгук від " + item.patientName + " ( " + format(new Date(item.postedOn), 'dd.MM.yyyy')  + " )"}
                               bordered = {true}
                               style = {{boxShadow: '10px 5px 5px grey'}}
                             >

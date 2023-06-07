@@ -8,7 +8,8 @@ import { IMessage } from '../interfaces/IMessage';
 import { IAppDate } from '../interfaces/IAppDate';
 
 type State = { roles: any, users: any, specs: any, doctors: IDoctor[], patients: IPatient[], dates: string[],
-               appointments: any, times: any, IsAppShown: any, docNameToReview: any, IsThreadShown: any, 
+               appointments: any, times: any, IsAppShown: any, docNameToReview: any, 
+               IsThreadShown: any,  docSurnameToReview: any, docFatherNameToReview: any, 
                doctorIdSelected: any, doctorId: any, doctorName: any, patientId: any, currentUserId: any, 
                currentUserIntroduction: any, IsReviewShown: any, currentRole: any, eventEditingOn: any, 
                currentUserSpeciality: any, paginatedUsers: PaginatedResult, currentEventId: number, currentEventTitle: any, 
@@ -39,6 +40,8 @@ const initialState: State = {
     IsReviewShown: false,
     docIdToReview: '',
     docNameToReview: '',
+    docFatherNameToReview: '',
+    docSurnameToReview: '',
     docSelected:false,
     doctorIdSelected: '',
     doctorId: '',
@@ -247,7 +250,6 @@ const actions = {
     getAppointment: (id: any) : Action<State> => 
     async ({ setState, getState }) => {
         const response = await axios.get("https://localhost:44375/api/Appointment/GetCalendarDataById/" + id);
-        console.log(response.data.startDate);
         setState({
           currentEventId: response.data.id,
           currentEventTitle: response.data.title,

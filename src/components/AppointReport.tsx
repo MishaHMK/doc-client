@@ -83,39 +83,38 @@ export const AppointReport: React.FC = () => {
           dataIndex: 'id',
           width: '5%'
       },
-
       {
-          title: 'Doctor Name',
+          title: t("reportPage.docFullName"),
           dataIndex: 'doctorName',
           width: '15%'
       },
       {
-          title: 'Patient Name',
+          title: t("reportPage.patFullName"),
           dataIndex: 'patientName',
           width: '15%'
       },
       {
-        title: 'Title',
+        title: t("reportPage.titleCol"),
         dataIndex: 'title',
         width: '15%'
       },
       {
-        title: 'Description',
+        title: t("reportPage.description"),
         dataIndex: 'description',
         width: '20%'
       },
       {
-        title: 'Start Date',
+        title: t("reportPage.startDate"),
         dataIndex: 'startDate',
         width: '10%'
       },
       {
-        title: 'End Date',
+        title: t("reportPage.endDate"),
         dataIndex: 'endDate',
         width: '10%'
       },
       {
-        title: 'Approved',
+        title: t("reportPage.approved"),
         dataIndex: 'isApproved',
         width: '10%',
         render: (isApproved: any) => (
@@ -128,7 +127,7 @@ export const AppointReport: React.FC = () => {
 
     return (
         <div style = {{marginTop: "3%", marginBottom: "10%"}}>  
-          <h2 style = {{ marginBottom: "3%"}}>REPORT</h2>
+          <h2 style = {{ marginBottom: "3%"}}>{t("reportPage.title")}</h2>
           { reports.length < 0 ? (
             <div>
                 <DatePicker onChange={onStartChange} />
@@ -139,13 +138,15 @@ export const AppointReport: React.FC = () => {
                 <DatePicker onChange={onStartChange} />
                 <DatePicker onChange={onEndChange} />
 
-                   <Button onClick={exportToExcel}> Export to Excel</Button>
+                   <Button onClick={exportToExcel} 
+                           style={{ background: "#52c41a", borderColor: "green", color: "white" }}> 
+                           {t("reportPage.downloadBtn")}
+                   </Button>
 
                    <Table
-                                style = {{fontSize: "20px"}}
-                                columns={columns}
-                                dataSource={reports}
-                                >
+                        style = {{fontSize: "20px"}}
+                        columns={columns}
+                        dataSource={reports}>
                    </Table>
             </div>
           )}        

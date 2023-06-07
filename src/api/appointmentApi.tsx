@@ -17,6 +17,7 @@ export default class AppointmentApi {
             throw new Error(error.message);
           });
 
+        console.log(response.data);
         return response;
     };
 

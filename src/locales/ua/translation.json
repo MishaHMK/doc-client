@@ -107,9 +107,20 @@
         "role": "Роль",
         "speciality": "Спеціальність"
     },
+    "reportPage":{
+        "title": "Звіт",
+        "downloadBtn": "Завантажити Excel",
+        "docFullName": "ПІБ Лікаря",
+        "patFullName": "ПІБ Пацієнта",
+        "titleCol": "Назва",
+        "description": "Опис",
+        "startDate": "Дата початку",
+        "endDate": "Дата завершення",
+        "approved": "Підтвердження"
+    },
     "footer":{
         "title": "Веб-застосунок лікарні",
         "createdby": "Гуменюк Михайло",
-        "adress": "Умовна адреса, вул. Умовна, 00000"
+        "adress": "вул. Умовна, x, 00000"
     }
 }

@@ -7,6 +7,7 @@ import { useUserStore } from '../stores/user.store';
 import AuthorizeApi from "../api/authorizeApi";
 import { LockOutlined, UserOutlined, MailOutlined} from '@ant-design/icons';
 import { useTranslation, Trans } from 'react-i18next';
+import { IListElement } from '../interfaces/IListElement';
 
 export const Register: React.FC = () => {
 
@@ -45,13 +46,26 @@ export const Register: React.FC = () => {
         setChosenSpec(value);
     } 
 
+    const specsUA: IListElement[] = [
+        {label: "Усі", value: "Any"},
+        {label: "Педіатрія", value: "Pediatrics"},
+        {label: "Нейрологія", value: "Neurology"},
+        {label: "Кардіологія", value: "Cardiology"},
+        {label: "Радіологія", value: "Radiology"},
+    ]
+
+    const rolesUA: IListElement[] = [
+        {label: "Пацієнт", value: "Patient"},
+        {label: "Лікар", value: "Doctor"}
+    ]
+
     return (
         <div> 
         <Form 
           onFinish = {register}>
 
             <Form.Item>
-                <h2>  {t("register.title")}</h2>
+                <h1 style = {{marginTop: "2%"}}>  {t("register.title")}</h1>
             </Form.Item>
 
             <Form.Item
@@ -169,7 +183,8 @@ export const Register: React.FC = () => {
                       if (!value || getFieldValue('password') === value) {
                         return Promise.resolve();
                       }
-                      return Promise.reject(new Error('The two passwords do not match!'));
+                      return Promise.reject(new Error(i18n.language == 'ua' 
+                              ? 'Два паролі не збігаються' : 'The two passwords do not match!'));
                     },
                   })
                 ]}>
@@ -189,11 +204,13 @@ export const Register: React.FC = () => {
                     message: 'Please select Role!'
                 },
                 ]}>
+
                 <Select
-                    defaultValue={'Role'}
-                    style={{ width: 120, marginTop: '25px' }}
+                    defaultValue={i18n.language == 'ua' ? "Роль" : "Role"}
+                    style={{ width: 150, marginTop: '25px' }}
                     onChange={handleSelectRole}
-                    options={roles.map((role : string) => ({ label: role, value: role }))}
+                    options={i18n.language == 'ua' ? rolesUA.map((sp : any) => ({ label: sp.label, value: sp.value })) :
+                                                     roles.map((role : string) => ({ label: role, value: role }))}
                 />
             </Form.Item>
 
@@ -203,9 +220,10 @@ export const Register: React.FC = () => {
                 name="speciality">
                 <div>
                     <Select
-                        style={{ width: 120 }}
-                        options={state.specs.map((sp : string) => ({ label: sp, value: sp }))}
-                        defaultValue = "Speciality"
+                        style={{ width: 150 }}
+                        options= {i18n.language == 'ua' ? specsUA.map((sp : any) => ({ label: sp.label, value: sp.value })) :
+                                                         state.specs.map((role : string) => ({ label: role, value: role }))}
+                        defaultValue = {i18n.language == 'ua' ? "Спеціальність" : "Speciality"}
                         onChange={handleSelectSpec}
                     />
                     <br></br>

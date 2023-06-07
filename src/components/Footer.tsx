@@ -1,4 +1,5 @@
 import { useTranslation, Trans } from 'react-i18next';
+import { FacebookOutlined, InstagramOutlined, TwitterOutlined} from '@ant-design/icons';
 import "./footer.css";
 
 const FooterContainer = () => {
@@ -7,9 +8,6 @@ const FooterContainer = () => {
       <footer>
       <div className="footer-content">
         <h3 style = {{color: "white", fontFamily: "Arial Black" }}>{t("footer.title")}</h3>
-        <p>
-           {t("footer.createdby")}
-        </p>
         <ul className="socials">
           <li>
             <a href="#">
@@ -20,6 +18,11 @@ const FooterContainer = () => {
             <a href="#">
                {t("footer.adress")}
             </a>
+          </li>
+          <li style ={{fontSize: 32}}>
+            <FacebookOutlined />
+            <InstagramOutlined />
+            <TwitterOutlined />
           </li>
         </ul>
       </div>

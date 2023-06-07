@@ -40,23 +40,25 @@ export const ReviewModal: React.FC = () => {
 
         reviewService.createReview(review);
      }
+     
+     const { TextArea } = Input;
 
 
     return(  
-        <Modal title="Create Review"
+        <Modal title="Створити відгук"
            open={state.IsReviewShown} 
            onCancel={handleReviewCancel}
            footer={null}>
-              <h3>Doctor {state.docNameToReview}</h3>
+              <h3 style = {{marginBottom: 10}}>{state.docSurnameToReview + " " + state.docNameToReview + " "+ state.docFatherNameToReview}</h3>
               <Form form = {reviewForm} onFinish={handleSubmit}>
                    <Form.Item
                       name="description"
-                      label="Description">
-                      <Input placeholder="Description" />
+                      label="Опис">
+                      <TextArea placeholder="Description" />
                   </Form.Item>
                   <Form.Item
                       name="score"
-                      label="Score">
+                      label="Оцінка">
                       <Rate allowHalf/>  
                   </Form.Item>
                   
@@ -66,7 +68,7 @@ export const ReviewModal: React.FC = () => {
                           type="primary"
                           style={{ background: "#52c41a", borderColor: "green" }}
                           htmlType="submit">
-                          Review
+                          Відправити
                       </Button>
                       )}
                   </Form.Item>

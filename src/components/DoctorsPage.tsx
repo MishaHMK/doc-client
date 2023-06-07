@@ -32,7 +32,7 @@ export const DoctorsPage: React.FC = () => {
     const [orderBy, setOrderBy] = useState("");
     const [sortItem, setSortItem] = useState("");
     const [currentRole, setCurrentRole] = useState<any>();
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState(Array());
     const [usersOnline, setUsersOnline] = useState<any>();
     const [messageState, messageActions] = useMessageStore();
 
@@ -40,18 +40,17 @@ export const DoctorsPage: React.FC = () => {
 
     useEffect(() => {  
         fetchData();
-    }, [currentPage, searchName, sortItem, orderBy, selectedSpec, usersOnline, signalState.onlineUsers]);
+        console.log(users);
+    }, [currentPage, searchName, orderBy, selectedSpec, usersOnline]);
 
     const fetchData = async () => {
         const decoded: any = jwt_decode(token);
         setCurrentRole(decoded.Role);
 
-        await userService.getPagedUsers(currentPage, pageSize, searchName, selectedSpec, sortItem, orderBy)
-            .then(async (response) => {
-               settotalItems(response.data.totalItems);
-               setUsers(response.data.pagedList);
-        });
+        let response = await userService.getPagedUsers(currentPage, pageSize, searchName, selectedSpec, sortItem, orderBy);
 
+        setUsers(response.data.pagedList);
+        settotalItems(response.data.totalItems);
         setUsersOnline(signalState.onlineUsers);
     };
         
@@ -64,8 +63,8 @@ export const DoctorsPage: React.FC = () => {
         setSearchName(value);
     };
 
-    const handleSelect = (value : any) => {
-        setSelectedSpec(value);
+    const handleSelect = async (value : any) => {
+        setSelectedSpec(value);     
     };
 
     const sortNameByAsc = () => {
@@ -102,9 +101,11 @@ export const DoctorsPage: React.FC = () => {
         actions.makeThreadModalVisible();
     };
 
-    const openReviewModal  = (doctorId: any, doctorName: any) => {
+    const openReviewModal  = (doctorId: any, doctorName: any, surname: any, fathername: any) => {
         state.docIdToReview = doctorId;
         state.docNameToReview = doctorName;
+        state.docFatherNameToReview = fathername;
+        state.docSurnameToReview = surname;
         actions.makeReviewModalVisible();
     };  
     
@@ -138,6 +139,15 @@ export const DoctorsPage: React.FC = () => {
         {label: "Радіологія", value: "Radiology"},
     ]
 
+    const specsEn: IListElement[] = [
+        {label: "Any", value: "Any"},
+        {label: "Pediatrics", value: "Pediatrics"},
+        {label: "Neurology", value: "Neurology"},
+        {label: "Cardiology", value: "Cardiology"},
+        {label: "Radiology", value: "Radiology"},
+    ]
+
+
     return (
         <div style = {{marginTop: "3%", marginBottom: "3%"}}> 
             <h2 style = {{marginBottom: "2%"}}>{t("doctorPage.title")}</h2>
@@ -159,9 +169,8 @@ export const DoctorsPage: React.FC = () => {
                     style={{ width: 140 }}
                     onChange={handleSelect}
                     options={i18n.language == 'ua' ? specsUA.map((sp : any) => ({ label: sp.label, value: sp.value })) :
-                             state.specs.map((sp : any) => ({ label: sp, value: sp }))
-                    }
-                    defaultValue = {i18n.language == 'ua' ? "Cпеціальність":"Speciality"}
+                                                     specsEn.map((sp : any) => ({ label: sp.label, value: sp.value}))}
+                    defaultValue = {i18n.language == 'ua' ? "Cпеціальність": "Speciality"}
                 />
 
             </Space>
@@ -189,7 +198,7 @@ export const DoctorsPage: React.FC = () => {
                             <i>{item.introduction}</i>
                             <br></br>
                             <br></br>
-                               <Rate disabled = {true} allowHalf defaultValue={item.averageRate}></Rate>
+                               <Rate disabled = {true} allowHalf value={item.averageRate}></Rate>
                             <br></br>
                             <Tooltip placement="right" title={t("doctorPage.fullTooltip")}>
                                <Link onClick={() => goToReviews(item.id, item.name)}>{t("doctorPage.reviews")}</Link>
@@ -197,7 +206,7 @@ export const DoctorsPage: React.FC = () => {
                         </Card>
                         :
                         <Card title={ item.surname + " " + item.name + " " + item.fathername +
-                                     " (" + item.speciality + ") " }
+                                     " (" + transSpecToUA(item.speciality)+ ") " }
                             extra={(usersOnline.includes(item.id)) ? 
                                 <h4 style={{color: '#21bb4b'}}>{t("doctorPage.online")}</h4> : 
                                 <h4>{t("doctorPage.offline")}</h4> } 
@@ -209,7 +218,8 @@ export const DoctorsPage: React.FC = () => {
                                     <PlusCircleOutlined key="app" onClick={() => goToAppoint(item.id, item.name)}/>
                                 </Tooltip>,
                                 <Tooltip placement="top" title={t("doctorPage.revTooltip")}>
-                                    <StarOutlined key="review" onClick={() => openReviewModal(item.id, item.name)}/>
+                                    <StarOutlined key="review" onClick={() => 
+                                        openReviewModal(item.id, item.name, item.surname, item.fathername)}/>
                                 </Tooltip>
 
                             ]}
@@ -217,9 +227,10 @@ export const DoctorsPage: React.FC = () => {
                             style = {{boxShadow: '10px 5px 5px grey', width: '700px'}}
                             >
                             <i>{item.introduction}</i>
+                            
                             <br></br>
                             <br></br>
-                                <Rate disabled = {true} allowHalf defaultValue={item.averageRate}></Rate>
+                                <Rate disabled = {true} allowHalf value={item.averageRate}></Rate>
                             <br></br>
                             <Tooltip placement="right" title={t("doctorPage.fullTooltip")}>
                                <Link onClick={() => goToReviews(item.id, item.name)}>{t("doctorPage.reviews")}</Link>

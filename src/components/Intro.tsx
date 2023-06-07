@@ -91,11 +91,11 @@ export const Intro: React.FC = () => {
                                 </div>
                             </div>
                             <div>
-                                <h1 className='carousel' style = {{paddingTop:'3%'}}>{t("intro.calendarTitle")}</h1>
-                                <CalendarFilled style = {{paddingTop:'3%', color: "white", fontSize: "120px"}}/>
-                                <h3 style = {{paddingTop:'3%', color: "white"}}>{t("intro.calendarTextLine1")} <br></br> 
+                                <h1 className='carousel' style = {{paddingTop:'5%'}}>{t("intro.calendarTitle")}</h1>
+                                <CalendarFilled style = {{paddingTop:'5%', color: "white", fontSize: "120px"}}/>
+                                <h3 style = {{paddingTop:'5%', color: "white"}}>{t("intro.calendarTextLine1")} <br></br> 
                                                                                 {t("intro.calendarTextLine2")}</h3>
-                                <div style = {{paddingTop:'3%'}}>
+                                <div style = {{paddingTop:'5%'}}>
                                     <Button onClick={toCalendar}
                                             type="primary" shape="round">
                                             {t("intro.calendarButton")}
@@ -103,10 +103,10 @@ export const Intro: React.FC = () => {
                                 </div>
                             </div>
                             <div>
-                                <h1 className='carousel' style = {{paddingTop:'3%'}}>{t("intro.chatTitle")}</h1>
-                                <MessageFilled style = {{paddingTop:'3%', color: "white", fontSize: "120px"}}/>
-                                <h3 style = {{paddingTop:'3%', color: "white"}}>{t("intro.chatTextLine")} <br></br> </h3>
-                                <div style = {{paddingTop:'3%'}}>
+                                <h1 className='carousel' style = {{paddingTop:'5%'}}>{t("intro.chatTitle")}</h1>
+                                <MessageFilled style = {{paddingTop:'5%', color: "white", fontSize: "120px"}}/>
+                                <h3 style = {{paddingTop:'5%', color: "white"}}>{t("intro.chatTextLine")} <br></br> </h3>
+                                <div style = {{paddingTop:'5%'}}>
                                     <Button onClick={toMessages}
                                             type="primary" shape="round">
                                             {t("intro.chatButton")}
